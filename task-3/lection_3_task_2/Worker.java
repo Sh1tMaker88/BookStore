@@ -17,15 +17,15 @@ public class Worker {
         Bouquet bouq = new Bouquet(list);
         System.out.println(list);
 
-        calculatePriceOfBouquet(bouq.bouquet);
+        calculatePriceOfBouquet(bouq);
     }
 
-    public static void calculatePriceOfBouquet(List<Flower> list){
+    public static void calculatePriceOfBouquet(Bouquet b){
         double sum = 0;
-        for (Flower fl : list){
+        for (Flower fl : b.bouquet){
             sum += fl.getPrice();
         }
-        System.out.println("You collected bouquet from " + list.size() + " flowers, and it's cost is " + sum + "$");
+        System.out.println("You collected bouquet from " + b.bouquet.size() + " flowers, and it's cost is " + sum + "$");
     }
 
     public static void collectBouquet(List<Flower> list, Flower... args){
