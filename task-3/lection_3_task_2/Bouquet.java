@@ -6,6 +6,9 @@ import java.util.List;
 public class Bouquet {
     List<Flower> bouquet;
 
+    public Bouquet() {
+
+    }
     public Bouquet(List<Flower> bouquet) {
         this.bouquet = bouquet;
     }
