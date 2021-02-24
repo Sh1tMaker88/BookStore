@@ -3,32 +3,49 @@ package service;
 import api.dao.IBookDao;
 import api.dao.IRequestDao;
 import api.service.IBookService;
+import dao.BookDao;
+import dao.RequestDao;
 import models.Book;
 import models.BookStatus;
 import util.IdGenerator;
 import util.comparators.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BookService implements IBookService {
+public class BookService implements IBookService{
+
+    private static BookService instance;
     private final IBookDao bookDao;
     private final IRequestDao requestDao;
 
-    public BookService(IBookDao bookDao, IRequestDao requestDao) {
-        this.bookDao = bookDao;
-        this.requestDao = requestDao;
+    private BookService() {
+        this.bookDao = BookDao.getInstance();
+        this.requestDao = RequestDao.getInstance();
+    }
+
+    public static BookService getInstance(){
+        if (instance == null) {
+            instance = new BookService();
+        }
+        return instance;
+    }
+
+    public IBookDao getBookDao() {
+        return bookDao;
+    }
+
+    public IRequestDao getRequestDao() {
+        return requestDao;
     }
 
     @Override
-    //fix request stuff
     public Book addBookToStock(String name, String author, int yearOfPublish, double price, String isbn, int pageNumber) {
         Book book = new Book(name, author, yearOfPublish, price, isbn, pageNumber);
         book.setId(IdGenerator.generateBookId());
         if (requestDao.getAll().stream().anyMatch(e->e.getBook().equals(book))){
-            RequestService requestService = new RequestService(requestDao, bookDao);
+            RequestService requestService = RequestService.getInstance();
             requestService.closeRequest(book.getId());
         }
         bookDao.create(book);

@@ -1,5 +1,7 @@
 package api.service;
 
+import api.dao.IOrderDao;
+import api.dao.IRequestDao;
 import models.Book;
 import models.Order;
 import models.OrderStatus;
@@ -10,7 +12,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IOrderService {
+
+    IOrderDao getOrderDao();
+
+    IRequestDao getRequestDao();
+
     Order addOrder(String customerName, List<Book> books);
+
 
     void cancelOrder(int orderId);
 

@@ -1,5 +1,7 @@
 package api.service;
 
+import api.dao.IBookDao;
+import api.dao.IRequestDao;
 import models.Book;
 import models.BookStatus;
 import service.BookSort;
@@ -16,5 +18,9 @@ public interface IBookService {
     List<Book> booksNotBoughtMoreThanSixMonth();
 
     List<Book> sortBooksBy(BookSort bookSort);
+
+    IBookDao getBookDao();
+
+    IRequestDao getRequestDao();
 
 }

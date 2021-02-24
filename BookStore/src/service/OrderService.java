@@ -3,6 +3,8 @@ package service;
 import api.dao.IOrderDao;
 import api.dao.IRequestDao;
 import api.service.IOrderService;
+import dao.OrderDao;
+import dao.RequestDao;
 import models.*;
 import util.IdGenerator;
 import util.comparators.OrderDateOfDoneComparator;
@@ -10,18 +12,31 @@ import util.comparators.OrderPriceComparator;
 import util.comparators.OrderStatusComparator;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class OrderService implements IOrderService {
 
+    private static OrderService instance;
     private final IOrderDao orderDao;
     private final IRequestDao requestDao;
 
-    public OrderService(IOrderDao orderDao, IRequestDao requestDao) {
-        this.orderDao = orderDao;
-        this.requestDao = requestDao;
+    private OrderService() {
+        orderDao = OrderDao.getInstance();
+        requestDao = RequestDao.getInstance();
+    }
+
+    public static OrderService getInstance(){
+        return Objects.requireNonNullElse(instance, new OrderService());
+    }
+
+    public IOrderDao getOrderDao() {
+        return orderDao;
+    }
+
+    public IRequestDao getRequestDao() {
+        return requestDao;
     }
 
     @Override

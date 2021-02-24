@@ -1,5 +1,7 @@
 package api.service;
 
+import api.dao.IBookDao;
+import api.dao.IRequestDao;
 import models.Book;
 import models.Order;
 import models.Request;
@@ -9,6 +11,11 @@ import service.RequestSort;
 import java.util.List;
 
 public interface IRequestService {
+
+    IRequestDao getRequestDao();
+
+    IBookDao getBookDao();
+
     Book closeRequest(int requestID);
 
     void closeRequest(Book book);

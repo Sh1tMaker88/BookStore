@@ -3,6 +3,8 @@ package service;
 import api.dao.IBookDao;
 import api.dao.IRequestDao;
 import api.service.IRequestService;
+import dao.BookDao;
+import dao.RequestDao;
 import models.Book;
 import models.BookStatus;
 import models.Request;
@@ -10,15 +12,29 @@ import util.IdGenerator;
 import util.comparators.RequestAlphabeticalComparator;
 
 import java.util.List;
+import java.util.Objects;
 
 public class RequestService implements IRequestService {
 
+    private static RequestService instance;
     private final IRequestDao requestDao;
     private final IBookDao bookDao;
 
-    public RequestService(IRequestDao requestDao, IBookDao bookDao) {
-        this.requestDao = requestDao;
-        this.bookDao = bookDao;
+    private RequestService() {
+        this.requestDao = RequestDao.getInstance();
+        this.bookDao = BookDao.getInstance();
+    }
+
+    public static RequestService getInstance() {
+        return Objects.requireNonNullElse(instance, new RequestService());
+    }
+
+    public IRequestDao getRequestDao() {
+        return requestDao;
+    }
+
+    public IBookDao getBookDao() {
+        return bookDao;
     }
 
     @Override

@@ -8,19 +8,20 @@ import dao.BookDao;
 import dao.OrderDao;
 import dao.RequestDao;
 import models.Book;
+import models.Order;
 import service.BookService;
 import service.BookSort;
 import service.OrderService;
 import service.RequestService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Store {
 
-    private static final IBookDao bookDao = new BookDao();
-    private static final IRequestDao requestDao = new RequestDao();
-    private static final IOrderDao orderDao = new OrderDao();
-    private static final IRequestService requestService = new RequestService(requestDao, bookDao);
-    private static final IBookService bookService = new BookService(bookDao, requestDao);
-    private static final IOrderService orderService = new OrderService(orderDao, requestDao);
+    private static final IRequestService requestService = RequestService.getInstance();
+    private static final IBookService bookService = BookService.getInstance();
+    private static final IOrderService orderService = OrderService.getInstance();
 
 
     public static void main(String[] args) {
@@ -34,9 +35,16 @@ public class Store {
         Book book4 = bookService.addBookToStock
                 ("Code Complete", "McConnell", 2004,52.5," 0-7356-1967-0", 869);
 
-        System.out.println(bookDao.getAll());
+        List<Book> listBooks = new ArrayList<>();
+        listBooks.add(book2);
+        listBooks.add(book3);
+
+        Order order1 =  orderService.addOrder("Vadim", listBooks);
+        System.out.println(order1);
+
+        System.out.println(bookService.getBookDao().getAll());
         System.out.println(bookService.sortBooksBy(BookSort.NAME));
 
-        System.out.println(bookDao.getAll());
+        System.out.println(bookService.getBookDao().getAll());
     }
 }
