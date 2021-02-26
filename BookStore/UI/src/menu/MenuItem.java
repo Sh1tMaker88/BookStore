@@ -19,9 +19,16 @@ public class MenuItem implements IAction{
 
     }
 
-    public void doAction(){}
+    public void doAction(){
+        action.execute();
+    }
 
     public Menu getNextMenu(){
         return nextMenu;
+    }
+
+    @Override
+    public String toString() {
+        return "\n" + title;
     }
 }

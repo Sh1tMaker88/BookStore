@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 public class BookService implements IBookService{
 
     private static BookService instance;
-    private final IBookDao bookDao;
-    private final IRequestDao requestDao;
+    private IBookDao bookDao;
+    private IRequestDao requestDao;
 
     private BookService() {
         this.bookDao = BookDao.getInstance();
@@ -53,9 +53,9 @@ public class BookService implements IBookService{
     }
 
     @Override
-    public Book discardBook(int bookId, BookStatus status) {
+    public Book discardBook(int bookId) {
         Book book = bookDao.getById(bookId);
-        book.setBookStatus(status);
+        book.setBookStatus(BookStatus.OUT_OF_STOCK);
         bookDao.update(book);
         return book;
     }

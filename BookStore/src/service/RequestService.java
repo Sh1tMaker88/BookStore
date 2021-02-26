@@ -8,6 +8,7 @@ import dao.RequestDao;
 import models.Book;
 import models.BookStatus;
 import models.Request;
+import models.RequestStatus;
 import util.IdGenerator;
 import util.comparators.RequestAlphabeticalComparator;
 
@@ -17,8 +18,8 @@ import java.util.Objects;
 public class RequestService implements IRequestService {
 
     private static RequestService instance;
-    private final IRequestDao requestDao;
-    private final IBookDao bookDao;
+    private IRequestDao requestDao;
+    private IBookDao bookDao;
 
     private RequestService() {
         this.requestDao = RequestDao.getInstance();
@@ -63,15 +64,25 @@ public class RequestService implements IRequestService {
             Request realRequest = requestDao.getById(request.getId());
             realBook.setBookStatus(BookStatus.IN_STOCK);
             bookDao.update(realBook);
-            requestDao.delete(realRequest);
+            realRequest.setRequestStatus(RequestStatus.CLOSED);
+            requestDao.update(realRequest);
         }
     }
 
     @Override
     public Request addRequest(Book book) {
         Request request = new Request(book);
-        request.setId(IdGenerator.generateRequestId());
-        requestDao.create(request);
+        if (bookDao.getAll().contains(book)){
+            Book b = bookDao.getAll().stream()
+                    .filter(e->e.getId()==book.getId())
+                    .findFirst().get();
+            Book realBook = bookDao.getById(b.getId());
+            realBook.setBookStatus(BookStatus.OUT_OF_STOCK);
+            bookDao.update(realBook);
+        } else {
+            request.setId(IdGenerator.generateRequestId());
+            requestDao.create(request);
+        }
         return request;
     }
 

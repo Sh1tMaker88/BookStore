@@ -6,10 +6,28 @@ public class Request extends AIdentity{
     private Book book;
     private LocalDateTime requestDate;
     private int requestCount;
+    private RequestStatus requestStatus;
 
     public Request(Book book) {
         this.book = book;
         this.requestDate = LocalDateTime.now();
+        requestStatus = RequestStatus.OPEN;
+    }
+
+    public int getRequestCount() {
+        return requestCount;
+    }
+
+    public void setRequestCount(int requestCount) {
+        this.requestCount = requestCount;
+    }
+
+    public RequestStatus getRequestStatus() {
+        return requestStatus;
+    }
+
+    public void setRequestStatus(RequestStatus requestStatus) {
+        this.requestStatus = requestStatus;
     }
 
     public Book getBook() {

@@ -1,13 +1,16 @@
 package service;
 
+import api.dao.IBookDao;
 import api.dao.IOrderDao;
 import api.dao.IRequestDao;
 import api.service.IOrderService;
+import dao.BookDao;
 import dao.OrderDao;
 import dao.RequestDao;
 import models.*;
 import util.IdGenerator;
 import util.comparators.OrderDateOfDoneComparator;
+import util.comparators.OrderIdComparator;
 import util.comparators.OrderPriceComparator;
 import util.comparators.OrderStatusComparator;
 
@@ -19,16 +22,22 @@ import java.util.stream.Collectors;
 public class OrderService implements IOrderService {
 
     private static OrderService instance;
-    private final IOrderDao orderDao;
-    private final IRequestDao requestDao;
+    private IBookDao bookDao;
+    private IOrderDao orderDao;
+    private IRequestDao requestDao;
 
     private OrderService() {
+        bookDao = BookDao.getInstance();
         orderDao = OrderDao.getInstance();
         requestDao = RequestDao.getInstance();
     }
 
     public static OrderService getInstance(){
         return Objects.requireNonNullElse(instance, new OrderService());
+    }
+
+    public IBookDao getBookDao(){
+        return bookDao;
     }
 
     public IOrderDao getOrderDao() {
@@ -43,6 +52,7 @@ public class OrderService implements IOrderService {
     public Order addOrder(String customerName, List<Book> books) {
         Order order = new Order(customerName, books);
         order.setId(IdGenerator.generateOrderId());
+        //increase number that points how much this book has been ordered
         for (Book b : books){
             b.setOrderCount(b.getOrderCount() + 1);
             if (b.getBookStatus().equals(BookStatus.OUT_OF_STOCK)){
@@ -133,6 +143,9 @@ public class OrderService implements IOrderService {
     public List<Order> sortOrdersBy(OrderSort orderSort) {
         List<Order> listToSort =  orderDao.getAll();
         switch (orderSort){
+            case ID:
+                listToSort.sort(new OrderIdComparator());
+                break;
             case PRICE:
                 listToSort.sort(new OrderPriceComparator());
                 break;

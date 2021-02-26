@@ -1,6 +1,7 @@
 package src.menu;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Menu {
@@ -26,5 +27,12 @@ public class Menu {
 
     public void addMenuItem(MenuItem item){
         menuItems.add(item);
+    }
+
+    @Override
+    public String toString() {
+        return "  " + name + Arrays.toString(menuItems.toArray()).replace("[", "")
+                .replace("]", "")
+                .replace(",", "");
     }
 }

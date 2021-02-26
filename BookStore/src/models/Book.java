@@ -8,7 +8,7 @@ public class Book extends AIdentity {
     private String author;
     private String isbn;
     private int pageNumber;
-    private BookStatus bookStatus = BookStatus.IN_STOCK;
+    private BookStatus bookStatus;
     private double price;
     private int orderCount = 0;
     private int yearOfPublish;
@@ -22,6 +22,7 @@ public class Book extends AIdentity {
         this.price = price;
         this.isbn = isbn;
         this.pageNumber = pageNumber;
+        this.bookStatus = BookStatus.IN_STOCK;
     }
 
     public LocalDate getArrivalDate() {
@@ -106,7 +107,7 @@ public class Book extends AIdentity {
 
     @Override
     public String toString() {
-        return "Book{" + super.toString() +
+        return "Book{" + "bookId=" + getId() +
                 ", name='" + name + '\'' +
                 ", author='" + author + '\'' +
                 ", bookStatus=" + bookStatus +

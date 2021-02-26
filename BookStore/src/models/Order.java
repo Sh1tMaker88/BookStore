@@ -82,11 +82,11 @@ public class Order extends AIdentity {
 
     @Override
     public String toString() {
-        return "Order{" + super.toString() +
+        return "Order{" + "orderId=" + getId() +
                 ", status=" + status +
                 ", books=" + books +
                 ", totalPrice=" + totalPrice +
                 ", customerName='" + customerName + '\'' +
-                "} ";
+                "}\n";
     }
 }

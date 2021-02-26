@@ -1,7 +1,10 @@
 package src.menu;
 
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Objects;
-import java.util.Scanner;
 
 //singleton
 public class MenuController {
@@ -9,6 +12,7 @@ public class MenuController {
     private static MenuController instance;
     private Builder builder;
     private Navigator navigator;
+    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     private MenuController(){
         builder = Builder.getInstance();
@@ -21,19 +25,22 @@ public class MenuController {
     }
 
 
-    public void run(){
-        System.out.println("Welcome to menu.");
-        Scanner scanner = new Scanner(System.in);
+    public void run() throws IOException {
+        System.out.printf("%8s\nWelcome to menu\n%8s\n", "***", "***");
         navigator.setCurrentMenu(builder.getRootMenu());
         navigator.printMenu();
         boolean flag = true;
         while (flag) {
-            int index = scanner.nextInt();
+            int index = Integer.parseInt(reader.readLine());
             if (index == 0){
                 flag = false;
+                System.out.printf("%7s\nClosing menu\n%7s", "***", "***");
+            } else if (index > 0 && index <= navigator.getCurrentMenu().getMenuItems().size()){
+                navigator.navigate(index - 1);
+                navigator.printMenu();
+            } else {
+                System.out.println("Out of size, use numbers in menu only");
             }
-            navigator.navigate(index);
-            navigator.printMenu();
         }
     }
 }

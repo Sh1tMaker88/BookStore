@@ -30,4 +30,8 @@ public class Navigator {
     public void setCurrentMenu(Menu currentMenu) {
         this.currentMenu = currentMenu;
     }
+
+    public Menu getCurrentMenu() {
+        return currentMenu;
+    }
 }

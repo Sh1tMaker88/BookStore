@@ -1,5 +1,6 @@
 package api.service;
 
+import api.dao.IBookDao;
 import api.dao.IOrderDao;
 import api.dao.IRequestDao;
 import models.Book;
@@ -12,6 +13,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IOrderService {
+
+    IBookDao getBookDao();
 
     IOrderDao getOrderDao();
 
