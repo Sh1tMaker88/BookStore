@@ -2,8 +2,8 @@ package dao;
 
 import api.dao.IOrderDao;
 import models.Order;
+import service.BookService;
 
-import java.util.Objects;
 
 public class OrderDao extends AbstractDao<Order> implements IOrderDao {
 
@@ -13,7 +13,10 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
     }
 
     public static OrderDao getInstance(){
-        return Objects.requireNonNullElse(instance, new OrderDao());
+        if (instance == null) {
+            instance = new OrderDao();
+        }
+        return instance;
     }
 
     @Override

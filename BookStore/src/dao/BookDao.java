@@ -3,8 +3,6 @@ package dao;
 import api.dao.IBookDao;
 import models.Book;
 
-import java.util.Objects;
-
 public class BookDao extends AbstractDao<Book> implements IBookDao {
 
     private static BookDao instance;
@@ -14,7 +12,10 @@ public class BookDao extends AbstractDao<Book> implements IBookDao {
     }
 
     public static BookDao getInstance(){
-        return Objects.requireNonNullElse(instance, new BookDao());
+        if (instance == null) {
+            instance = new BookDao();
+        }
+        return instance;
     }
 
     @Override

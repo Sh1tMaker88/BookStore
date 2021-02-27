@@ -2,8 +2,8 @@ package dao;
 
 import api.dao.IRequestDao;
 import models.Request;
+import service.BookService;
 
-import java.util.Objects;
 
 public class RequestDao extends AbstractDao<Request> implements IRequestDao {
 
@@ -13,6 +13,9 @@ public class RequestDao extends AbstractDao<Request> implements IRequestDao {
     }
 
     public static RequestDao getInstance(){
-        return Objects.requireNonNullElse(instance, new RequestDao());
+        if (instance == null) {
+            instance = new RequestDao();
+        }
+        return instance;
     }
 }

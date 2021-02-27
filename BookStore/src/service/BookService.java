@@ -4,6 +4,7 @@ import api.dao.IBookDao;
 import api.dao.IRequestDao;
 import api.service.IBookService;
 import dao.BookDao;
+import dao.OrderDao;
 import dao.RequestDao;
 import models.Book;
 import models.BookStatus;
@@ -17,8 +18,8 @@ import java.util.stream.Collectors;
 public class BookService implements IBookService{
 
     private static BookService instance;
-    private IBookDao bookDao;
-    private IRequestDao requestDao;
+    private final IBookDao bookDao;
+    private final IRequestDao requestDao;
 
     private BookService() {
         this.bookDao = BookDao.getInstance();

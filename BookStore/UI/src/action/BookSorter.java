@@ -8,7 +8,6 @@ import java.util.*;
 
 public class BookSorter implements IAction{
 
-    Facade facade = Facade.getInstance();
     private Map<Integer, Comparator<Book>> sortBooksBy;
     private List<Book> books;
     private int id;

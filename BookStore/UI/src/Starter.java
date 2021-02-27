@@ -31,6 +31,7 @@ public class Starter {
         Order order2 = facade.getOrderService().addOrder("Helen", orderedBooks2);
 
         System.out.println(facade.getOrderService().getOrderDao().getAll());
+        System.out.println("------------");
 
         LocalDate lc = LocalDate.parse("2018-08-30");
         LocalDate lc2 = LocalDate.now();

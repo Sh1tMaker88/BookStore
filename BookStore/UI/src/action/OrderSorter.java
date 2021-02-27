@@ -11,7 +11,6 @@ import java.util.Map;
 
 public class OrderSorter implements IAction{
 
-    Facade facade = Facade.getInstance();
     private Map<Integer, Comparator<Order>> sortOrdersBy;
     private List<Order> orders;
     private int id;

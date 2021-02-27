@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 public class OrderService implements IOrderService {
 
     private static OrderService instance;
-    private IBookDao bookDao;
-    private IOrderDao orderDao;
-    private IRequestDao requestDao;
+    private final IBookDao bookDao;
+    private final IOrderDao orderDao;
+    private final IRequestDao requestDao;
 
     private OrderService() {
         bookDao = BookDao.getInstance();
@@ -33,7 +33,10 @@ public class OrderService implements IOrderService {
     }
 
     public static OrderService getInstance(){
-        return Objects.requireNonNullElse(instance, new OrderService());
+        if (instance == null) {
+            instance = new OrderService();
+        }
+        return instance;
     }
 
     public IBookDao getBookDao(){

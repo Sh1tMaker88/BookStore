@@ -24,7 +24,10 @@ public class Facade {
     }
 
     public static Facade getInstance(){
-        return Objects.requireNonNullElse(instance, new Facade());
+        if (instance == null) {
+            instance = new Facade();
+        }
+        return instance;
     }
 
     public IOrderService getOrderService() {

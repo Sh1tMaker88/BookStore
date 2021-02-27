@@ -18,8 +18,8 @@ import java.util.Objects;
 public class RequestService implements IRequestService {
 
     private static RequestService instance;
-    private IRequestDao requestDao;
-    private IBookDao bookDao;
+    private final IRequestDao requestDao;
+    private final IBookDao bookDao;
 
     private RequestService() {
         this.requestDao = RequestDao.getInstance();
@@ -27,7 +27,10 @@ public class RequestService implements IRequestService {
     }
 
     public static RequestService getInstance() {
-        return Objects.requireNonNullElse(instance, new RequestService());
+        if (instance == null) {
+            instance = new RequestService();
+        }
+        return instance;
     }
 
     public IRequestDao getRequestDao() {
