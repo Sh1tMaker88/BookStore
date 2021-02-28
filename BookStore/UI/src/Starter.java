@@ -17,6 +17,8 @@ public class Starter {
     static {
         try (InputStream configuration = new FileInputStream("resources/logger.properties")) {
             LogManager.getLogManager().readConfiguration(configuration);
+            System.setProperty("java.util.logging.SimpleFormatter.format",
+                    "[%1$tF %1$tT] -%4$s- (%2$s) \"%5$s%6$s\"%n");
         } catch (IOException e) {
             System.err.println("There is no file configuration" + e.toString());
         }

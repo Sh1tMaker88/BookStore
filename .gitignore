@@ -4,6 +4,7 @@
 *.class
 
 # Log file
+logBook.0.0.txt
 *.log
 
 # BlueJ files
