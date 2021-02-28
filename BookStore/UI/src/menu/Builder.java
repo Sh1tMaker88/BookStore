@@ -10,6 +10,7 @@ import src.action.orderActions.CancelOrder;
 import src.action.orderActions.ChangeOrderStatus;
 import src.action.orderActions.GetAllOrders;
 import src.action.requestActions.AddRequest;
+import src.action.requestActions.CloseRequest;
 import src.action.requestActions.GetAllRequests;
 
 //singleton
@@ -120,7 +121,7 @@ public class Builder {
         rootMenu.addMenuItem(new MenuItem("2 - Add request",
                 new AddRequest(), RequestSortMenuGetAll()));
         rootMenu.addMenuItem(new MenuItem("3 - Close request",
-                new AddRequest(), RequestSortMenuGetAll()));
+                new CloseRequest(), RequestSortMenuGetAll()));
         rootMenu.addMenuItem(new MenuItem("4 - Back to root menu",
                 ()-> System.out.println("-Back-"), getRootMenu()));
         return rootMenu;

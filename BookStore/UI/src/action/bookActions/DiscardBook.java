@@ -2,36 +2,42 @@ package src.action.bookActions;
 
 import src.Facade;
 import src.action.IAction;
+import src.exceptions.ActionException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DiscardBook implements IAction {
 
+    private static final Logger LOGGER = Logger.getLogger(DiscardBook.class.getName());
     final Facade facade = Facade.getInstance();
 
     @Override
     public void execute() {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("If you want to see the list of all books enter '-1', if back to root menu enter '0'");
-            System.out.println("To discard book enter book ID");
+            LOGGER.log(Level.INFO, "If you want to see the list of all books enter '-1', if back to root menu enter '0'");
+            LOGGER.log(Level.INFO, "To discard book enter book ID");
             int id = Integer.parseInt(reader.readLine());
             if (id == -1){
                 System.out.println(facade.getBookService().getBookDao().getAll());
-                System.out.println("Enter book ID");
+                LOGGER.log(Level.INFO, "Enter book ID");
                 id = Integer.parseInt(reader.readLine());
                 facade.getBookService().discardBook(id);
-                System.out.println("You discarded book " + facade.getBookService().getBookDao().getById(id));
+                LOGGER.log(Level.INFO, "You discarded book " + facade.getBookService().getBookDao().getById(id));
             } else if (id == 0){
 
             } else {
                 facade.getBookService().discardBook(id);
-                System.out.println("You discarded book " + facade.getBookService().getBookDao().getById(id));
+                LOGGER.log(Level.INFO, "You discarded book " + facade.getBookService().getBookDao().getById(id));
             }
+        } catch (ActionException e) {
+            LOGGER.log(Level.WARNING, "Execute of DiscardBook failed", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, e.getLocalizedMessage(), e);
         }
     }
 }

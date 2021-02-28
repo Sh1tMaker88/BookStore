@@ -10,11 +10,6 @@ public class GetAllRequests {
     final Facade facade = Facade.getInstance();
 
     public List<Request> doIt() {
-//        try {
         return facade.getRequestService().getRequestDao().getAll();
-//        }
-//        catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 }

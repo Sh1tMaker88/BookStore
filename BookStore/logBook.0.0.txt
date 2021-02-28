@@ -1,0 +1,4 @@
+февр. 27, 2021 10:36:39 PM service.BookService <init>
+INFO: Just check
+февр. 27, 2021 10:36:39 PM service.BookService <init>
+WARNING: Just check

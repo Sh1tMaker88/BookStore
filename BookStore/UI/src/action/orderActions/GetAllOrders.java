@@ -10,11 +10,6 @@ public class GetAllOrders {
     final Facade facade = Facade.getInstance();
 
     public List<Order> doIt() {
-//        try {
         return facade.getOrderService().getOrderDao().getAll();
-//        }
-//        catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 }

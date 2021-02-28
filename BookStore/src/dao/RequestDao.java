@@ -2,7 +2,6 @@ package dao;
 
 import api.dao.IRequestDao;
 import models.Request;
-import service.BookService;
 
 
 public class RequestDao extends AbstractDao<Request> implements IRequestDao {

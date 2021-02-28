@@ -22,7 +22,6 @@ public interface IOrderService {
 
     Order addOrder(String customerName, List<Book> books);
 
-
     void cancelOrder(int orderId);
 
     void changeOrderStatus(int orderId, OrderStatus status);
@@ -31,7 +30,7 @@ public interface IOrderService {
 
     List<Order> ordersDoneByPeriodOfTime(LocalDateTime fromDate, LocalDateTime tillDate);
 
-    List<Order> ordersDoneByPeriodOfTime(LocalDateTime fromDate, LocalDateTime tillDate, OrderSort orderSort);
+//    List<Order> ordersDoneByPeriodOfTime(LocalDateTime fromDate, LocalDateTime tillDate, OrderSort orderSort);
 
     void showDetails(Order order);
 

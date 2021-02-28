@@ -1,17 +1,22 @@
 package src.action.requestActions;
 
 import models.Book;
+import service.OrderService;
 import src.Facade;
 import src.action.IAction;
 import src.action.bookActions.AddBookToStock;
+import src.exceptions.ActionException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AddRequest implements IAction {
 
+    private static final Logger LOGGER = Logger.getLogger(AddRequest.class.getName());
     final Facade facade = Facade.getInstance();
 
     @Override
@@ -19,22 +24,21 @@ public class AddRequest implements IAction {
 
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("To add request you must enter book ID or enter a new book\n" +
+            LOGGER.log(Level.INFO, "To add request you must enter book ID or enter a new book\n" +
                     "1 - to enter book ID\n2 - to enter new book");
             int num = Integer.parseInt(reader.readLine());
 
             if (num == 1) {
-                System.out.println("If you want see list of all books enter 0, or enter book ID");
+                LOGGER.log(Level.INFO, "If you want see list of all books enter 0, or enter book ID");
                 num = Integer.parseInt(reader.readLine());
                 if (num == 0){
                     System.out.println(facade.getBookService().getBookDao().getAll());
-                    System.out.println("Enter book ID to add request");
+                    LOGGER.log(Level.INFO, "Enter book ID to add request");
                 }
                 num = Integer.parseInt(reader.readLine());
                 Book book = facade.getBookService().getBookDao().getById(num);
                 facade.getRequestService().addRequest(book);
             } else if (num == 2){
-
 //                System.out.println("You can add book by 2 ways:\n- printing parameter 1 by 1\n" +
 //                        "- give all parameters(book name, book author, 'int' yearOfPublish, " +
 //                        "'double' price, 'String' isbn, pageNumber) separated by ','");
@@ -69,10 +73,11 @@ public class AddRequest implements IAction {
                 facade.getBookService().discardBook(book.getId());
                 facade.getRequestService().addRequest(book);
             } else {
-                System.out.println("Incorrect input");
+                LOGGER.log(Level.INFO, "Incorrect input");
             }
         } catch (IOException e) {
-            System.err.println(e.getLocalizedMessage());
+            LOGGER.log(Level.WARNING, e.getLocalizedMessage());
+            throw new ActionException("Action CancelOrder-execute failed");
         }
     }
 }

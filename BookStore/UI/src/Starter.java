@@ -4,12 +4,24 @@ import models.Book;
 import models.Order;
 import src.menu.MenuController;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.LogManager;
 
 public class Starter {
+
+    static {
+        try (InputStream configuration = new FileInputStream("resources/logger.properties")) {
+            LogManager.getLogManager().readConfiguration(configuration);
+        } catch (IOException e) {
+            System.err.println("There is no file configuration" + e.toString());
+        }
+    }
+
     public static void main(String[] args) throws IOException {
 
         Facade facade = Facade.getInstance();

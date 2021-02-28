@@ -3,13 +3,17 @@ package src.action.orderActions;
 import models.OrderStatus;
 import src.Facade;
 import src.action.IAction;
+import src.exceptions.ActionException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ChangeOrderStatus implements IAction {
 
+    private static final Logger LOGGER = Logger.getLogger(ChangeOrderStatus.class.getName());
     final Facade facade = Facade.getInstance();
 
 
@@ -17,14 +21,13 @@ public class ChangeOrderStatus implements IAction {
     public void execute() {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("If you want to see the list of all orders enter '-1', if back to root menu enter '0'");
-
+            LOGGER.log(Level.INFO, "If you want to see the list of all orders enter '-1', if back to root menu enter '0'");
             int id = Integer.parseInt(reader.readLine());
             if (id == -1) {
                 System.out.println(facade.getOrderService().getOrderDao().getAll());
-                System.out.println("To change order status enter order ID");
+                LOGGER.log(Level.INFO, "To change order status enter order ID");
                 id = Integer.parseInt(reader.readLine());
-                System.out.println("Enter order status:\n" +
+                LOGGER.log(Level.INFO, "Enter order status:\n" +
                         "'1' - to set as new, '2' - to set as cancel, '3' - to set as done)");
                 String status = reader.readLine();
                 OrderStatus statusTo;
@@ -39,17 +42,18 @@ public class ChangeOrderStatus implements IAction {
                         statusTo = OrderStatus.DONE;
                         break;
                     default:
-                        System.out.println("There is no such status");
+                        LOGGER.log(Level.INFO, "There is no such status");
                         statusTo = facade.getOrderService().getOrderDao().getById(id).getStatus();
                         break;
                 }
                 facade.getOrderService().changeOrderStatus(id, statusTo);
-                System.out.println("You changed status order " + facade.getOrderService().getOrderDao().getById(id));
+                LOGGER.log(Level.INFO, "You changed status order " + facade.getOrderService().getOrderDao().getById(id));
             } else if (id == 0) {
 
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, e.getLocalizedMessage());
+            throw new ActionException("Action AddOrder-execute failed");
         }
     }
 }

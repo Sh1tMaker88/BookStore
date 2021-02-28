@@ -10,11 +10,6 @@ public class GetAllBooks {
     final Facade facade = Facade.getInstance();
 
     public List<Book> doIt() {
-//        try {
         return facade.getBookService().getBookDao().getAll();
-//        }
-//        catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 }
