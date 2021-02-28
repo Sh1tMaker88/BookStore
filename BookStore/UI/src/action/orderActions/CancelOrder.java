@@ -1,5 +1,7 @@
 package src.action.orderActions;
 
+import exceptions.DaoException;
+import exceptions.ServiceException;
 import src.Facade;
 import src.action.IAction;
 import src.exceptions.ActionException;
@@ -35,6 +37,8 @@ public class CancelOrder implements IAction {
                 facade.getOrderService().cancelOrder(id);
                 LOGGER.log(Level.INFO, "You discarded order " + facade.getOrderService().getOrderDao().getById(id));
             }
+        } catch (DaoException e) {
+            LOGGER.log(Level.WARNING, "Method cancelOrder failed", e);
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, e.getLocalizedMessage());
             throw new ActionException("Action CancelOrder-execute failed");

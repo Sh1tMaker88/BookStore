@@ -1,5 +1,6 @@
 package src.action.requestActions;
 
+import exceptions.DaoException;
 import src.Facade;
 import src.action.IAction;
 import src.exceptions.ActionException;
@@ -34,6 +35,8 @@ public class CloseRequest implements IAction {
                 facade.getRequestService().closeRequest(id);
                 LOGGER.log(Level.INFO, "You closed request " + facade.getRequestService().getRequestDao().getById(id));
             }
+        } catch (DaoException e) {
+            LOGGER.log(Level.WARNING, "Method cancelOrder failed", e);
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, e.getLocalizedMessage());
             throw new ActionException("Action CancelOrder-execute failed");

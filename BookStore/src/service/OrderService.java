@@ -97,8 +97,8 @@ public class OrderService implements IOrderService {
                 LOGGER.log(Level.INFO, "There is no such order");
             }
         } catch (DaoException e) {
-            LOGGER.log(Level.WARNING, "Method addOrder failed", e);
-            throw new ServiceException("Method addOrder failed", e);
+            LOGGER.log(Level.WARNING, "Method cancelOrder failed", e);
+            throw new ServiceException("Method cancelOrder failed", e);
         }
     }
 

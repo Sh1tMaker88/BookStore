@@ -1,11 +1,12 @@
 package models;
 
-import java.time.LocalDate;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class Order extends AIdentity {
+public class Order extends AIdentity implements Serializable {
 
+    static final long serialVersionUID = 1L;
     private OrderStatus status = OrderStatus.NEW;
     private List<Book> books;
     private double totalPrice;

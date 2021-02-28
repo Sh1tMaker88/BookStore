@@ -1,5 +1,6 @@
 package src.action.bookActions;
 
+import exceptions.DaoException;
 import models.Book;
 import service.BookService;
 import src.Facade;
@@ -46,6 +47,8 @@ public class AddBookToStock implements IAction {
             }
             LOGGER.log(Level.INFO, "You have added book:\n" + bookToAdd);
 
+        } catch (DaoException e) {
+            LOGGER.log(Level.WARNING, "Method cancelOrder failed", e);
         } catch (ActionException e) {
             LOGGER.log(Level.WARNING, "Execute of AddBookToStock failed", e);
         } catch (IOException e) {

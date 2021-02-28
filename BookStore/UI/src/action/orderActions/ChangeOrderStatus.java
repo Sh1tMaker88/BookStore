@@ -1,5 +1,6 @@
 package src.action.orderActions;
 
+import exceptions.DaoException;
 import models.OrderStatus;
 import src.Facade;
 import src.action.IAction;
@@ -51,6 +52,8 @@ public class ChangeOrderStatus implements IAction {
             } else if (id == 0) {
 
             }
+        } catch (DaoException e) {
+            LOGGER.log(Level.WARNING, "Method cancelOrder failed", e);
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, e.getLocalizedMessage());
             throw new ActionException("Action AddOrder-execute failed");

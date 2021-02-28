@@ -64,6 +64,23 @@ public class BookService implements IBookService {
     }
 
     @Override
+    public Book addBookToStock(Book book) {
+        try {
+            book.setId(IdGenerator.generateBookId());
+            if (requestDao.getAll().stream().anyMatch(e -> e.getBook().equals(book))) {
+                RequestService requestService = RequestService.getInstance();
+                requestService.closeRequest(book.getId());
+            }
+            LOGGER.log(Level.INFO, "Creating book");
+            bookDao.create(book);
+            return book;
+        } catch (DaoException e) {
+            LOGGER.log(Level.WARNING, "Method addBookToStock failed", e);
+            throw new ServiceException("Method addBookToStock failed", e);
+        }
+    }
+
+    @Override
     public Book discardBook(int bookId) {
         try {
             LOGGER.log(Level.INFO, "Discarding book with id=" + bookId);

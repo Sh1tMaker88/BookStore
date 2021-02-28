@@ -1,8 +1,11 @@
 package models;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Request extends AIdentity{
+public class Request extends AIdentity implements Serializable {
+
+    static final long serialVersionUID = 1L;
     private Book book;
     private LocalDateTime requestDate;
     private int requestCount;

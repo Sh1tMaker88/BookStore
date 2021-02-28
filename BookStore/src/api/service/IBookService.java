@@ -11,6 +11,8 @@ import java.util.List;
 public interface IBookService {
     Book addBookToStock(String name, String author, int yearOfPublish, double price, String isbn, int pageNumber);
 
+    Book addBookToStock(Book book);
+
     Book discardBook(int bookId);
 
     void showDescription(Book book);

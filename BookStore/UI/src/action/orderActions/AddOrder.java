@@ -1,5 +1,6 @@
 package src.action.orderActions;
 
+import exceptions.DaoException;
 import models.Book;
 import service.OrderService;
 import src.Facade;
@@ -49,6 +50,8 @@ public class AddOrder implements IAction {
                 }
             }
             System.out.println(facade.getOrderService().addOrder(customerName, list));
+        } catch (DaoException e) {
+            LOGGER.log(Level.WARNING, "Method cancelOrder failed", e);
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, e.getLocalizedMessage());
             throw new ActionException("Action AddOrder-execute failed");

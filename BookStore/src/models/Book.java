@@ -1,9 +1,11 @@
 package models;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Book extends AIdentity {
+public class Book extends AIdentity implements Serializable {
 
+    static final long serialVersionUID = 1L;
     private String name;
     private String author;
     private String isbn;
