@@ -1,7 +1,10 @@
 package models;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class Request extends AIdentity implements Serializable {
 
@@ -52,9 +55,11 @@ public class Request extends AIdentity implements Serializable {
     @Override
     public String toString() {
         return "Request{" +
-                "id= " + getId() +
-                ", book=" + book +
-                ", requestDate=" + requestDate +
+                "requestID=" + getId() +
+                ", requestDate=" + requestDate.format(DateTimeFormatter.ofPattern("yyyy-MMM-dd", Locale.ENGLISH)) +
+                ", requestStatus=" + requestStatus +
+                ", book=" + book.toString().replace("\n", "") +
                 "} ";
     }
 }
+//requestDate=2021-3-02

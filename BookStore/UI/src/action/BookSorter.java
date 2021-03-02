@@ -1,9 +1,9 @@
 package src.action;
 
 import models.Book;
-import src.Facade;
 import src.action.bookActions.GetAllBooks;
 import src.action.bookActions.GetBooksNotBoughtMoreThanSixMonth;
+import src.exceptions.ActionException;
 import util.comparators.*;
 
 import java.util.*;
@@ -11,12 +11,12 @@ import java.util.*;
 public class BookSorter implements IAction{
 
     private Map<Integer, Comparator<Book>> sortBooksBy;
-    private List<Book> books = new ArrayList<>();
-    private int id;
+    private List<Book> books;
+    private int sortId;
     String method;
 
-    public BookSorter(int id, String method){
-        this.id = id;
+    public BookSorter(int sortId, String method){
+        this.sortId = sortId;
         this.method = method;
         sortBooksBy = new HashMap<>();
         sortBooksBy.put(1, new BookIdComparator());
@@ -32,16 +32,20 @@ public class BookSorter implements IAction{
 
     @Override
     public void execute() {
-        switch (method){
-            case "getAll":
-                setBooks(new GetAllBooks().doIt());
-                break;
-            case "oldBooks":
-                setBooks(new GetBooksNotBoughtMoreThanSixMonth().doIt());
-                break;
+        try {
+            switch (method) {
+                case "getAll":
+                    setBooks(new GetAllBooks().doIt());
+                    break;
+                case "oldBooks":
+                    setBooks(new GetBooksNotBoughtMoreThanSixMonth().doIt());
+                    break;
+            }
+            books.sort(sortBooksBy.get(sortId));
+            System.out.println(books);
+        } catch (ActionException e){
+            e.printStackTrace();
         }
-        books.sort(sortBooksBy.get(id));
-        System.out.println(books);
     }
 
 }

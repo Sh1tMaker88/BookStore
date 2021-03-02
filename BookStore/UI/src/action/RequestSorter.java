@@ -2,6 +2,7 @@ package src.action;
 
 import models.Request;
 import src.action.requestActions.GetAllRequests;
+import src.exceptions.ActionException;
 import util.comparators.*;
 
 import java.util.Comparator;
@@ -13,11 +14,11 @@ public class RequestSorter implements IAction{
 
     private Map<Integer, Comparator<Request>> sortRequestsBy;
     private List<Request> requests;
-    private int id;
+    private int sortId;
     String method;
 
-    public RequestSorter(int id, String method){
-        this.id = id;
+    public RequestSorter(int sortId, String method){
+        this.sortId = sortId;
         this.method = method;
         sortRequestsBy = new HashMap<>();
         sortRequestsBy.put(1, new RequestIdComparator());
@@ -30,13 +31,17 @@ public class RequestSorter implements IAction{
 
     @Override
     public void execute() {
-        switch (method) {
-            case "getAll":
-                setRequests(new GetAllRequests().doIt());
-                break;
-        }
+        try {
+            switch (method) {
+                case "getAll":
+                    setRequests(new GetAllRequests().doIt());
+                    break;
+            }
 
-        requests.sort(sortRequestsBy.get(id));
-        System.out.println(requests);
+            requests.sort(sortRequestsBy.get(sortId));
+            System.out.println(requests);
+        } catch(ActionException e){
+            e.printStackTrace();
+        }
     }
 }

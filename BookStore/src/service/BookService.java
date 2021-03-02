@@ -49,14 +49,7 @@ public class BookService implements IBookService {
     public Book addBookToStock(String name, String author, int yearOfPublish, double price, String isbn, int pageNumber) {
         try {
             Book book = new Book(name, author, yearOfPublish, price, isbn, pageNumber);
-            book.setId(IdGenerator.generateBookId());
-            if (requestDao.getAll().stream().anyMatch(e -> e.getBook().equals(book))) {
-                RequestService requestService = RequestService.getInstance();
-                requestService.closeRequest(book.getId());
-            }
-            LOGGER.log(Level.INFO, "Creating book");
-            bookDao.create(book);
-            return book;
+            return addBookToStock(book);
         } catch (DaoException e) {
             LOGGER.log(Level.WARNING, "Method addBookToStock failed", e);
             throw new ServiceException("Method addBookToStock failed", e);
@@ -71,7 +64,7 @@ public class BookService implements IBookService {
                 RequestService requestService = RequestService.getInstance();
                 requestService.closeRequest(book.getId());
             }
-            LOGGER.log(Level.INFO, "Creating book");
+            LOGGER.log(Level.INFO, "Creating book" + book);
             bookDao.create(book);
             return book;
         } catch (DaoException e) {

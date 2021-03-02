@@ -31,7 +31,7 @@ public class Menu {
 
     @Override
     public String toString() {
-        return "  " + name + Arrays.toString(menuItems.toArray()).replace("[", "")
+        return " " + name + Arrays.toString(menuItems.toArray()).replace("[", "")
                 .replace("]", "")
                 .replace(",", "");
     }

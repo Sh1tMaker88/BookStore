@@ -110,11 +110,11 @@ public class Book extends AIdentity implements Serializable {
 
     @Override
     public String toString() {
-        return "Book{" + "bookId=" + getId() +
+        return "Book(" + "bookId=" + getId() +
                 ", name='" + name + '\'' +
                 ", author='" + author + '\'' +
                 ", bookStatus=" + bookStatus +
                 ", price=" + price +
-                "} \n";
+                ")\n";
     }
 }

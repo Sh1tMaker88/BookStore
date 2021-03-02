@@ -26,7 +26,7 @@ public class Builder {
 
     public void buildMenu(){
         rootMenu = new Menu();
-        rootMenu.setName("Root menu");
+        rootMenu.setName("<Root menu>");
         rootMenu.addMenuItem(new MenuItem("1 - Orders",() -> System.out.println("-Going to orders menu-\n"),
                 createOrderMenu()));
         rootMenu.addMenuItem(new MenuItem("2 - Books", () -> System.out.println("-Going to books menu-\n"),
@@ -41,7 +41,7 @@ public class Builder {
 
     private Menu createOrderMenu() {
         var rootMenu = new Menu();
-        rootMenu.setName("Order menu");
+        rootMenu.setName("<Order menu>");
         rootMenu.addMenuItem(new MenuItem("1 - See all orders", () -> System.out.println("-Choose sort for output-"),
                 OrderSortMenuGetAll()));
         rootMenu.addMenuItem(new MenuItem("2 - Add order", new AddOrder(),
@@ -71,7 +71,7 @@ public class Builder {
 
     private Menu createBookMenu(){
         var rootMenu = new Menu();
-        rootMenu.setName("Book creation menu");
+        rootMenu.setName("<Book menu>");
         rootMenu.addMenuItem(new MenuItem("1 - See all books", ()-> System.out.println("-Choose sort for output-"),
                 BookSortMenuGetAll()));
         rootMenu.addMenuItem(new MenuItem("2 - Add book to stock", new AddBookToStock(),
@@ -87,7 +87,7 @@ public class Builder {
 
     private Menu BookSortMenuSixMonthOld(){
         var rootMenu = new Menu();
-        rootMenu.setName("Book sort menu");
+        rootMenu.setName("<Book sort menu>");
         rootMenu.addMenuItem(new MenuItem("1 - Sort by book ID", new BookSorter(1, "oldBooks"),
                 getRootMenu()));
         rootMenu.addMenuItem(new MenuItem("2 - Sort by book name", new BookSorter(2, "oldBooks"),
@@ -119,7 +119,7 @@ public class Builder {
 
     private Menu createRequestsMenu(){
         var rootMenu = new Menu();
-        rootMenu.setName("Requests menu");
+        rootMenu.setName("<Requests menu>");
         rootMenu.addMenuItem(new MenuItem("1 - See all requests", ()-> System.out.println("-Choose sort for output-"),
                 RequestSortMenuGetAll()));
         rootMenu.addMenuItem(new MenuItem("2 - Add request", new AddRequest(),

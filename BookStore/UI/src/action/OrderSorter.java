@@ -1,8 +1,8 @@
 package src.action;
 
 import models.Order;
-import src.Facade;
 import src.action.orderActions.GetAllOrders;
+import src.exceptions.ActionException;
 import util.comparators.*;
 
 import java.util.Comparator;
@@ -14,11 +14,11 @@ public class OrderSorter implements IAction{
 
     private Map<Integer, Comparator<Order>> sortOrdersBy;
     private List<Order> orders;
-    private int id;
+    private int sortId;
     String method;
 
-    public OrderSorter(int id, String method){
-        this.id = id;
+    public OrderSorter(int sortId, String method){
+        this.sortId = sortId;
         this.method = method;
         sortOrdersBy = new HashMap<>();
         sortOrdersBy.put(1, new OrderIdComparator());
@@ -33,13 +33,18 @@ public class OrderSorter implements IAction{
 
     @Override
     public void execute() {
-        switch (method) {
-            case "getAll":
-                setOrders(new GetAllOrders().doIt());
-                break;
+        try {
+            switch (method) {
+                case "getAll":
+                    setOrders(new GetAllOrders().doIt());
+                    break;
+            }
+            setOrders(new GetAllOrders().doIt());
+            orders.sort(sortOrdersBy.get(sortId));
+            System.out.println(orders);
         }
-        setOrders(new GetAllOrders().doIt());
-        orders.sort(sortOrdersBy.get(id));
-        System.out.println(orders);
+        catch (ActionException e){
+            e.printStackTrace();
+        }
     }
 }

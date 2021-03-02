@@ -1,6 +1,7 @@
 package src.action.bookActions;
 
 import exceptions.DaoException;
+import exceptions.ServiceException;
 import src.Facade;
 import src.action.IAction;
 import src.exceptions.ActionException;
@@ -35,12 +36,14 @@ public class DiscardBook implements IAction {
                 facade.getBookService().discardBook(id);
                 LOGGER.log(Level.INFO, "You discarded book " + facade.getBookService().getBookDao().getById(id));
             }
-        } catch (DaoException e) {
-            LOGGER.log(Level.WARNING, "Method cancelOrder failed", e);
-        } catch (ActionException e) {
-            LOGGER.log(Level.WARNING, "Execute of DiscardBook failed", e);
+        } catch (DaoException | ServiceException e) {
+            LOGGER.log(Level.WARNING, "Method execute failed", e);
+            e.printStackTrace();
+        }  catch (ActionException e) {
+            LOGGER.log(Level.WARNING, "Execute of execute failed", e);
+            e.printStackTrace();
         } catch (IOException e) {
-            LOGGER.log(Level.WARNING, e.getLocalizedMessage(), e);
+            e.printStackTrace();
         }
     }
 }

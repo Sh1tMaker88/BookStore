@@ -2,6 +2,7 @@ package models;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 public class Order extends AIdentity implements Serializable {
@@ -83,11 +84,11 @@ public class Order extends AIdentity implements Serializable {
 
     @Override
     public String toString() {
-        return "Order{" + "orderId=" + getId() +
+        return  "Order{" + "orderId=" + getId() +
                 ", status=" + status +
-                ", books=" + books +
                 ", totalPrice=" + totalPrice +
                 ", customerName='" + customerName + '\'' +
+                ", books:\n" + books.toString().replaceAll("^\\[|\\]$", "") +
                 "}\n";
     }
 }
