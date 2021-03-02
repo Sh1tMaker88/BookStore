@@ -25,6 +25,7 @@ public class Book extends AIdentity implements Serializable {
         this.isbn = isbn;
         this.pageNumber = pageNumber;
         this.bookStatus = BookStatus.IN_STOCK;
+        this.arrivalDate = LocalDate.now();
     }
 
     public LocalDate getArrivalDate() {

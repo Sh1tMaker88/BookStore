@@ -9,7 +9,9 @@ public class GetAllRequests {
 
     final Facade facade = Facade.getInstance();
 
+
     public List<Request> doIt() {
-        return facade.getRequestService().getRequestDao().getAll();
+        List<Request> list = facade.getRequestService().getRequestDao().getAll();
+        return list;
     }
 }
