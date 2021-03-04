@@ -34,7 +34,7 @@ public class MenuController {
             int index = Integer.parseInt(reader.readLine());
             if (index == 0){
                 flag = false;
-                System.out.printf("%7s\nClosing menu\n%7s", "***", "***");
+                System.out.printf("%7s\nClosing menu\n%7s\n", "***", "***");
             } else if (index > 0 && index <= navigator.getCurrentMenu().getMenuItems().size()){
                 navigator.navigate(index - 1);
                 navigator.printMenu();
