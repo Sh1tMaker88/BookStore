@@ -13,9 +13,9 @@ public class Starter {
 //        Facade facade = Facade.getInstance();
 //        System.out.println(facade.getOrderService().getOrderDao().getAll());
 //        System.out.println("----------------");
-//        new Initializer();
 
-
+        new Initializer();
+        int i = Initializer.monthToSetBookAsUnsold;
         new Deserializator();
         MenuController.getInstance().run();
         new Serializator();

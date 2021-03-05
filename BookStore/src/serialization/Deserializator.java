@@ -60,7 +60,6 @@ public class Deserializator {
         } catch (FileNotFoundException | ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            System.out.println("Reach end of deserialization of books");
         }
     }
 
@@ -86,7 +85,6 @@ public class Deserializator {
         } catch (FileNotFoundException | ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            System.out.println("Reach end of deserialization of requests");
         }
     }
 
@@ -126,7 +124,6 @@ public class Deserializator {
         } catch (FileNotFoundException | ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            System.out.println("Reach end of deserialization of orders");
         }
     }
 }
