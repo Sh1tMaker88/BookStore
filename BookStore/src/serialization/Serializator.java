@@ -58,10 +58,10 @@ public class Serializator {
         ObjectOutputStream outputStreamRequestsId = new ObjectOutputStream
                 (new FileOutputStream("resources/serializationFiles/requestsId.bin"))){
             List<Request> requests = facade.getRequestService().getRequestDao().getAll();
-            Map<Book, Integer> idMap = new HashMap<>();
+            Map<Request, Integer> idMap = new HashMap<>();
             for (Request request : requests) {
                 outputStreamRequests.writeObject(request);
-                idMap.put(request.getBook(), request.getId());
+                idMap.put(request, request.getId());
             }
             outputStreamRequestsId.writeObject(idMap);
             LOGGER.log(Level.INFO, "Request serialization completed");

@@ -12,8 +12,12 @@ import models.BookStatus;
 import util.IdGenerator;
 import util.comparators.*;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -24,10 +28,24 @@ public class BookService implements IBookService {
     private static BookService instance;
     private final IBookDao bookDao;
     private final IRequestDao requestDao;
+    private boolean closeRequestAfterAddingBook;
+    private Integer monthToSetBookAsUnsold;
 
     private BookService() {
         this.bookDao = BookDao.getInstance();
         this.requestDao = RequestDao.getInstance();
+
+        try {
+            FileInputStream fis  = new FileInputStream("resources/logger.properties");
+            Properties prop = new Properties();
+            prop.load(fis);
+            this.closeRequestAfterAddingBook =
+                    Boolean.parseBoolean(prop.getProperty("CLOSE_REQUEST_AFTER_ADDING_BOOK_TO_STOCK"));
+            this.monthToSetBookAsUnsold = Integer.parseInt(prop.getProperty("UNSOLD_BOOK_MONTH"));
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, "Properties file not found");
+        }
+
     }
 
     public static BookService getInstance() {
@@ -60,9 +78,11 @@ public class BookService implements IBookService {
     public Book addBookToStock(Book book) {
         try {
             book.setId(IdGenerator.generateBookId());
-            if (requestDao.getAll().stream().anyMatch(e -> e.getBook().equals(book))) {
-                RequestService requestService = RequestService.getInstance();
-                requestService.closeRequest(book.getId());
+            if (closeRequestAfterAddingBook) {
+                if (requestDao.getAll().stream().anyMatch(e -> e.getBook().equals(book))) {
+                    RequestService requestService = RequestService.getInstance();
+                    requestService.closeRequest(book.getId());
+                }
             }
             LOGGER.log(Level.INFO, "Creating book" + book);
             bookDao.create(book);
@@ -97,7 +117,7 @@ public class BookService implements IBookService {
     public List<Book> booksNotBoughtMoreThanSixMonth() {
         try {
             List<Book> list = bookDao.getAll();
-            LocalDate lc = LocalDate.now().minusMonths(6);
+            LocalDate lc = LocalDate.now().minusMonths(monthToSetBookAsUnsold);
             list = list.stream().filter(e -> e.getArrivalDate().compareTo(lc) < 0)
                     .collect(Collectors.toList());
             return list;

@@ -3,10 +3,11 @@ package models;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class Order extends AIdentity implements Serializable {
 
-    static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 2L;
     private OrderStatus status = OrderStatus.NEW;
     private List<Book> books;
     private double totalPrice;
@@ -79,6 +80,24 @@ public class Order extends AIdentity implements Serializable {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Double.compare(order.totalPrice, totalPrice) == 0 &&
+                status == order.status &&
+                Objects.equals(books, order.books) &&
+                Objects.equals(customerName, order.customerName) &&
+                Objects.equals(orderDate, order.orderDate) &&
+                Objects.equals(DateOfDone, order.DateOfDone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(status, books, totalPrice, customerName, orderDate, DateOfDone);
     }
 
     @Override

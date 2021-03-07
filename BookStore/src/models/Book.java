@@ -2,10 +2,11 @@ package models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Book extends AIdentity implements Serializable {
 
-    static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 2L;
     private String name;
     private String author;
     private String isbn;
@@ -106,6 +107,31 @@ public class Book extends AIdentity implements Serializable {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    //todo override equals methods for models
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return pageNumber == book.pageNumber &&
+                Double.compare(book.price, price) == 0 &&
+                orderCount == book.orderCount &&
+                yearOfPublish == book.yearOfPublish &&
+                name.equals(book.name) &&
+                author.equals(book.author) &&
+                isbn.equals(book.isbn) &&
+                bookStatus == book.bookStatus &&
+                Objects.equals(description, book.description) &&
+                Objects.equals(arrivalDate, book.arrivalDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, author, isbn, pageNumber, bookStatus, price, orderCount, yearOfPublish, description, arrivalDate);
     }
 
     @Override

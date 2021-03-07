@@ -9,16 +9,13 @@ import models.Request;
 import src.Facade;
 import util.IdGenerator;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.HashMap;
+import java.io.*;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Deserializator {
+
 
     private static final Logger LOGGER = Logger.getLogger(Deserializator.class.getName());
     private final Facade facade = Facade.getInstance();
@@ -47,8 +44,7 @@ public class Deserializator {
                 Object bookObj = inputStreamBooks.readObject();
                 if (bookObj instanceof Book) {
                     for (Map.Entry<Book, Integer> entry : idMap.entrySet()) {
-                        if (((Book) bookObj).getName().equals(entry.getKey().getName()) &&
-                                ((Book) bookObj).getIsbn().equals(entry.getKey().getIsbn())) {
+                        if (bookObj.equals(entry.getKey())) {
                             ((Book) bookObj).setId(entry.getValue());
                         }
                     }
@@ -68,13 +64,12 @@ public class Deserializator {
                 (new FileInputStream("resources/serializationFiles/requests.bin"));
              ObjectInputStream inputStreamRequestsId = new ObjectInputStream
                      (new FileInputStream("resources/serializationFiles/requestsId.bin"))) {
-            Map<Book, Integer> idMap = (Map<Book, Integer>) inputStreamRequestsId.readObject();
+            Map<Request, Integer> idMap = (Map<Request, Integer>) inputStreamRequestsId.readObject();
             while (true) {
                 Object requestObj = inputStreamRequests.readObject();
                 if (requestObj instanceof Request) {
-                    for (Map.Entry<Book, Integer> entry : idMap.entrySet()) {
-                        if (((Request) requestObj).getBook().getName().equals(entry.getKey().getName()) &&
-                                ((Request) requestObj).getBook().getIsbn().equals(entry.getKey().getIsbn())) {
+                    for (Map.Entry<Request, Integer> entry : idMap.entrySet()) {
+                        if (requestObj.equals(entry.getKey())) {
                             ((Request) requestObj).setId(entry.getValue());
                         }
                     }
@@ -102,17 +97,14 @@ public class Deserializator {
                 if (orderObj instanceof Order) {
                     //setting ID to order
                     for (Map.Entry<Order, Integer> entry : idMapOrders.entrySet()) {
-                        if (((Order) orderObj).getCustomerName().equals(entry.getKey().getCustomerName()) &&
-                                ((Order) orderObj).getOrderDate().equals(entry.getKey().getOrderDate()) &&
-                                ((Order) orderObj).getTotalPrice() == entry.getKey().getTotalPrice()) {
+                        if (orderObj.equals(entry.getKey())) {
                             ((Order) orderObj).setId(entry.getValue());
                         }
                     }
                     //setting ID to books in order
                     for (Book b : ((Order) orderObj).getBooks()) {
                         for (Map.Entry<Book, Integer> entry : idMapBooks.entrySet()){
-                            if (b.getName().equals(entry.getKey().getName()) &&
-                                    b.getIsbn().equals(entry.getKey().getIsbn())){
+                            if (b.equals(entry.getKey())){
                                 b.setId(entry.getValue());
                             }
                         }

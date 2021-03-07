@@ -13,8 +13,6 @@ import java.util.logging.LogManager;
 
 public class Initializer {
 
-    static int monthToSetBookAsUnsold;
-
     static {
         try (InputStream configuration = new FileInputStream("resources/logger.properties")) {
 //            LogManager.getLogManager().readConfiguration(
@@ -22,9 +20,6 @@ public class Initializer {
             LogManager.getLogManager().readConfiguration(configuration);
             System.setProperty("java.util.logging.SimpleFormatter.format",
                     "[%1$tF %1$tT] -%4$s- (%2$s) \"%5$s%6$s\"%n");
-            Properties properties = new Properties();
-            properties.load(configuration);
-            monthToSetBookAsUnsold = Integer.valueOf(properties.getProperty("UNSOLD_BOOK"));
         } catch (IOException e) {
             System.err.println("There is no file configuration" + e.toString());
         }
@@ -33,7 +28,7 @@ public class Initializer {
     public Initializer() {
 
 //        Facade facade = Facade.getInstance();
-
+//
 //        Book book1 = facade.getBookService().addBookToStock
 //                ("King", "Arthur", 2001, 43.2, "2342345", 522);
 //        Book book2 = facade.getBookService().addBookToStock

@@ -15,7 +15,6 @@ public class Starter {
 //        System.out.println("----------------");
 
         new Initializer();
-        int i = Initializer.monthToSetBookAsUnsold;
         new Deserializator();
         MenuController.getInstance().run();
         new Serializator();

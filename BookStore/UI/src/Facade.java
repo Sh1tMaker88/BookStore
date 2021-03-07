@@ -8,6 +8,7 @@ import service.BookService;
 import service.OrderService;
 import service.RequestService;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class Facade {

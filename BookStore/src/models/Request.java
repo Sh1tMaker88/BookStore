@@ -5,10 +5,11 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Request extends AIdentity implements Serializable {
 
-    static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 2L;
     private Book book;
     private LocalDateTime requestDate;
     private int requestCount;
@@ -50,6 +51,21 @@ public class Request extends AIdentity implements Serializable {
 
     public void setRequestDate(LocalDateTime requestDate) {
         this.requestDate = requestDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Request request = (Request) o;
+        return Objects.equals(book, request.book) &&
+                Objects.equals(requestDate, request.requestDate) &&
+                requestStatus == request.requestStatus;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(book, requestDate, requestStatus);
     }
 
     @Override
