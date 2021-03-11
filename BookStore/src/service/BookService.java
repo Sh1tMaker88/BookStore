@@ -40,8 +40,9 @@ public class BookService implements IBookService {
             Properties prop = new Properties();
             prop.load(fis);
             this.closeRequestAfterAddingBook =
-                    Boolean.parseBoolean(prop.getProperty("CLOSE_REQUEST_AFTER_ADDING_BOOK_TO_STOCK"));
-            this.monthToSetBookAsUnsold = Integer.parseInt(prop.getProperty("UNSOLD_BOOK_MONTH"));
+                    Boolean.parseBoolean
+                            (prop.getProperty("CLOSE_REQUEST_AFTER_ADDING_BOOK_TO_STOCK", "false"));
+            this.monthToSetBookAsUnsold = Integer.parseInt(prop.getProperty("UNSOLD_BOOK_MONTH", "-1"));
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "Properties file not found");
         }

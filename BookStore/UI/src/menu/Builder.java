@@ -1,5 +1,6 @@
 package src.menu;
 
+import org.w3c.dom.ls.LSOutput;
 import src.action.*;
 import src.action.bookActions.AddBookToStock;
 import src.action.bookActions.DiscardBook;
@@ -33,6 +34,7 @@ public class Builder {
                 createBookMenu()));
         rootMenu.addMenuItem(new MenuItem("3 - Requests", () -> System.out.println("-Going to requests menu-\n"),
                 createRequestsMenu()));
+        rootMenu.addMenuItem(new MenuItem("0 - Shut down program", null,null));
     }
 
     public Menu getRootMenu(){

@@ -35,8 +35,8 @@ public class AddRequest implements IAction {
                 if (num == 0){
                     System.out.println(facade.getBookService().getBookDao().getAll());
                     LOGGER.log(Level.INFO, "Enter book ID to add request");
+                    num = Integer.parseInt(reader.readLine());
                 }
-                num = Integer.parseInt(reader.readLine());
                 Book book = facade.getBookService().getBookDao().getById(num);
                 facade.getRequestService().addRequest(book);
             } else if (num == 2){
