@@ -1,6 +1,5 @@
 import menu.MenuController;
-import serialization.Deserializator;
-import serialization.Serializator;
+import serialization.*;
 
 import java.io.IOException;
 

@@ -139,9 +139,9 @@ public class Book extends AIdentity implements Serializable {
         return "Book(" + "bookId=" + getId() +
                 ", name='" + name + '\'' +
                 ", author='" + author + '\'' +
-                ", bookStatus=" + bookStatus +
+                ", status=" + bookStatus +
                 ", price=" + price +
-                ", arrival date=" + arrivalDate +
+                ", arrivalDate=" + arrivalDate +
                 ")\n";
     }
 }

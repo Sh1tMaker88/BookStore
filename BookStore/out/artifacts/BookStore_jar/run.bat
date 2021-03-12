@@ -1,1 +1,0 @@
-start javaw -jar %~dp0BookStore.jar %*
