@@ -2,4 +2,3 @@ rootProject.name = 'StoreProject'
 include 'UI'
 include 'Server'
 include 'Annotations'
-

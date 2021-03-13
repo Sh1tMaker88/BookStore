@@ -52,7 +52,6 @@ public class Deserializator {
                     bookDao.create((Book) bookObj);
                     IdGenerator.setBookId(IdGenerator.getBookId() + 1);
                 }
-
             }
         } catch (FileNotFoundException | ClassNotFoundException e) {
             e.printStackTrace();

@@ -1,5 +1,6 @@
 package service;
 
+import annotations.InjectValueFromProperties;
 import api.dao.IBookDao;
 import api.dao.IRequestDao;
 import api.service.IBookService;
@@ -9,15 +10,13 @@ import exceptions.DaoException;
 import exceptions.ServiceException;
 import models.Book;
 import models.BookStatus;
+import propertyInjector.PropertyInjector;
 import util.IdGenerator;
 import util.comparators.*;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -28,25 +27,33 @@ public class BookService implements IBookService {
     private static BookService instance;
     private final IBookDao bookDao;
     private final IRequestDao requestDao;
+
+    @InjectValueFromProperties(configName = "server", propertyName = "closeRequestAfterAddingBook", type = "boolean")
     private boolean closeRequestAfterAddingBook;
-    private Integer monthToSetBookAsUnsold;
+    @InjectValueFromProperties(configName = "server", propertyName = "monthToSetBookAsUnsold", type = "int")
+    private int monthToSetBookAsUnsold;
 
     private BookService() {
         this.bookDao = BookDao.getInstance();
         this.requestDao = RequestDao.getInstance();
-
+        PropertyInjector propertyInjector = PropertyInjector.getInstance();
+        //delete after
         try {
-            FileInputStream fis  = new FileInputStream("Server/src/main/resources/server.properties");
-            Properties prop = new Properties();
-            prop.load(fis);
-            this.closeRequestAfterAddingBook =
-                    Boolean.parseBoolean
-                            (prop.getProperty("CLOSE_REQUEST_AFTER_ADDING_BOOK_TO_STOCK", "false"));
-            this.monthToSetBookAsUnsold = Integer.parseInt(prop.getProperty("UNSOLD_BOOK_MONTH", "-1"));
+            propertyInjector.injectProperty(this);
         } catch (IOException e) {
-            LOGGER.log(Level.WARNING, "Properties file not found");
+            e.printStackTrace();
         }
-
+//        try {
+//            FileInputStream fis  = new FileInputStream("Server/src/main/resources/myProp.properties");
+//            Properties prop = new Properties();
+//            prop.load(fis);
+//            this.closeRequestAfterAddingBook =
+//                    Boolean.parseBoolean
+//                            (prop.getProperty("CLOSE_REQUEST_AFTER_ADDING_BOOK", "false"));
+//            this.monthToSetBookAsUnsold = Integer.parseInt(prop.getProperty("UNSOLD_BOOK_MONTH", "-1"));
+//        } catch (IOException e) {
+//            LOGGER.log(Level.WARNING, "Properties file not found");
+//        }
     }
 
     public static BookService getInstance() {

@@ -37,9 +37,9 @@ public class Serializator {
 
     public void bookSerialization(){
         try (ObjectOutputStream outputStreamBooks = new ObjectOutputStream
-                (new FileOutputStream("UI/src/main/resources/serializationFiles/books.bin"));
+                (new FileOutputStream("Server/src/main/resources/serializationFiles/books.bin"));
         ObjectOutputStream outputStreamBooksId = new ObjectOutputStream
-                (new FileOutputStream("UI/src/main/resources/serializationFiles/booksId.bin"))){
+                (new FileOutputStream("Server/src/main/resources/serializationFiles/booksId.bin"))){
             List<Book> books = bookDao.getAll();
             Map<Book, Integer> idMap = new HashMap<>();
             for (Book book : books) {
@@ -57,9 +57,9 @@ public class Serializator {
 
     public void requestSerialization(){
         try (ObjectOutputStream outputStreamRequests = new ObjectOutputStream
-                (new FileOutputStream("UI/src/main/resources/serializationFiles/requests.bin"));
+                (new FileOutputStream("Server/src/main/resources/serializationFiles/requests.bin"));
         ObjectOutputStream outputStreamRequestsId = new ObjectOutputStream
-                (new FileOutputStream("UI/src/main/resources/serializationFiles/requestsId.bin"))){
+                (new FileOutputStream("Server/src/main/resources/serializationFiles/requestsId.bin"))){
             List<Request> requests = requestDao.getAll();
             Map<Request, Integer> idMap = new HashMap<>();
             for (Request request : requests) {
@@ -77,9 +77,9 @@ public class Serializator {
 
     public void orderSerialization(){
         try(ObjectOutputStream outputStreamOrders = new ObjectOutputStream
-                (new FileOutputStream("UI/src/main/resources/serializationFiles/orders.bin"));
+                (new FileOutputStream("Server/src/main/resources/serializationFiles/orders.bin"));
         ObjectOutputStream outputStreamOrdersId = new ObjectOutputStream
-                (new FileOutputStream("UI/src/main/resources/serializationFiles/ordersId.bin"))){
+                (new FileOutputStream("Server/src/main/resources/serializationFiles/ordersId.bin"))){
             List<Order> orders = orderDao.getAll();
             Map<Order, Integer> idMap = new HashMap<>();
             for (Order order : orders) {
