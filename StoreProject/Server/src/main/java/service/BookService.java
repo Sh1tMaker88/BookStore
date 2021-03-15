@@ -30,7 +30,7 @@ public class BookService implements IBookService {
 
     @InjectValueFromProperties(configName = "server", propertyName = "closeRequestAfterAddingBook", type = "boolean")
     private boolean closeRequestAfterAddingBook;
-    @InjectValueFromProperties(configName = "server", propertyName = "monthToSetBookAsUnsold", type = "int")
+    @InjectValueFromProperties(configName = "server")
     private int monthToSetBookAsUnsold;
 
     private BookService() {

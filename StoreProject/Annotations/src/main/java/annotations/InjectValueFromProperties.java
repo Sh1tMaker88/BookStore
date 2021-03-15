@@ -10,7 +10,9 @@ import java.lang.annotation.Target;
 public @interface InjectValueFromProperties {
     String configName() default "server";
 
-    String propertyName() default "none";
+    String propertyName() default "";
 
-    String type() default "none";
+    String type() default "";
+
+
 }

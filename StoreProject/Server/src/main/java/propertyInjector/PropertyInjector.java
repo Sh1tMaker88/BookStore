@@ -3,22 +3,13 @@ package propertyInjector;
 import annotations.InjectValueFromProperties;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 public class PropertyInjector {
-//    @InjectValueFromProperties(configName = "annotations.properties", propertyName = "closeRequestAfterAddingBook", type = "boolean")
-//    boolean closeRequestAfterAddingBook;
-//    @InjectValueFromProperties(configName = "annotations.properties", propertyName = "unsoldBookMonth", type = "int")
-//    int unsoldBookMonth;
-//    @InjectValueFromProperties(configName = "annotations.properties", propertyName = "nameHero", type = "String")
-//    String nameHero = "";
 
     private static PropertyInjector instance;
     String pathToProperties = "";
@@ -47,34 +38,16 @@ public class PropertyInjector {
                     pathToProperties = string;
                     getProperties();
                 }
-                //searching properties for this field in properties file and set it, if it correct
-                for (Map.Entry<String, String> entry : propertiesMap.entrySet()) {
-                    if (entry.getKey().replace("_", "").equalsIgnoreCase(annotation.propertyName())) {
-                        field.setAccessible(true);
-                        try {
-                            if (field.getType().isPrimitive()) {
-                                switch (annotation.type().toLowerCase()) {
-                                    case "boolean":
-                                        field.setBoolean(obj, Boolean.parseBoolean(entry.getValue()));
-                                        break;
-                                    case "int":
-                                    case "integer":
-                                        field.setInt(obj, Integer.parseInt(entry.getValue()));
-                                        break;
-                                    case "double":
-                                        field.setDouble(obj, Double.parseDouble(entry.getValue()));
-                                }
-                            } else {
-                                String[] fieldType = field.getType().toString().split(".");
-                                if (fieldType[fieldType.length - 1].equalsIgnoreCase(annotation.type())) {
-                                    if (annotation.type().equals("String")) {
-                                        field.set(obj, entry.getValue());
-                                    }
-                                }
-                            }
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
+                String propValue = annotation.propertyName().isBlank() ? propertiesMap.get(field.getName().toLowerCase()) :
+                        propertiesMap.get(annotation.propertyName().toLowerCase());
+                //if TYPE value of annotation is present
+                if (!annotation.type().isEmpty()) {
+                    SetValue.castFieldAndSetValue(obj, field, annotation.type(), propValue);
+                } else /*if TYPE value of annotation isn't set*/ {
+                    if (field.getType().isPrimitive()) {
+                        SetValue.castFieldAndSetValue(obj, field, field.getType().toString(), propValue);
+                    } else {
+                        SetValue.castFieldAndSetValue(obj, field, "String", propValue);
                     }
                 }
             }
@@ -88,7 +61,11 @@ public class PropertyInjector {
         BufferedReader reader = new BufferedReader(new FileReader(pathToProperties));
         while (reader.ready()) {
             String[] prop = reader.readLine().split("=");
-            propertiesMap.put(prop[0].trim(), prop[1].trim());
+            propertiesMap.put(prop[0].replace("_", "").toLowerCase().trim(), prop[1].trim());
         }
     }
+
+//    private <T> T castingObject(Class<T> castTo, Object castFrom) {
+//        return (T) TypeConve
+//    }
 }
