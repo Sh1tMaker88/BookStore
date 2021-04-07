@@ -1,6 +1,6 @@
-import facade.Facade;
-import models.Book;
-import models.Order;
+import com.facade.Facade;
+import com.models.Book;
+import com.models.Order;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class Initializer {
 //
 //        facade.getRequestService().addRequest(
 //                new Book("Some book", "Crazy Author", 2021, 20.2, "adsfjnh32df", 333));
-//        System.out.println(facade.getRequestService().getRequestDao().getAll());
+//        System.out.println(com.facade.getRequestService().getRequestDao().getAll());
 
     }
 }

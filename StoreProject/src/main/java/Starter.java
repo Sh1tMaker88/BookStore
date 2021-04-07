@@ -1,24 +1,19 @@
-import annotations.ClassToInjectProperty;
-import dao.AbstractDao;
-import menu.MenuController;
+import com.annotations.ClassToInjectProperty;
+import com.menu.MenuController;
 import org.reflections.Reflections;
-import serialization.*;
-import service.BookService;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import com.serialization.*;
 
 import java.util.Set;
 
 public class Starter {
     public static void main(String[] args) {
 
-//        -Djava.util.logging.config.file=<file path>
-//        facade.Facade facade = facade.Facade.getInstance();
-//        System.out.println(facade.getOrderService().getOrderDao().getAll());
-//        System.out.println("----------------");
-
 //        Reflections reflections = Reflections.collect();
 
-//        new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage(packageToScan)))
-        Reflections reflections = new Reflections(AbstractDao.class.getClassLoader());
+        Reflections reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage("com")));
+//        Reflections reflections = new Reflections(BookService.class.getClassLoader());
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(ClassToInjectProperty.class);
         System.out.println(classes);
 
