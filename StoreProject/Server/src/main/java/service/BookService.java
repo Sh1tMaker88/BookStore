@@ -1,5 +1,6 @@
 package service;
 
+import annotations.ClassToInjectProperty;
 import annotations.InjectValueFromProperties;
 import api.dao.IBookDao;
 import api.dao.IRequestDao;
@@ -21,6 +22,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+//todo delete getters for dao
+
+@ClassToInjectProperty
 public class BookService implements IBookService {
 
     private static final Logger LOGGER = Logger.getLogger(BookService.class.getName());
@@ -30,7 +34,7 @@ public class BookService implements IBookService {
 
     @InjectValueFromProperties(configName = "server", propertyName = "closeRequestAfterAddingBook", type = "boolean")
     private boolean closeRequestAfterAddingBook;
-    @InjectValueFromProperties(configName = "server")
+    @InjectValueFromProperties
     private int monthToSetBookAsUnsold;
 
     private BookService() {
@@ -102,7 +106,7 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public Book discardBook(int bookId) {
+    public Book discardBook(Long bookId) {
         try {
             LOGGER.log(Level.INFO, "Discarding book with id=" + bookId);
             Book book = bookDao.getById(bookId);

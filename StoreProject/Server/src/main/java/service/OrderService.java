@@ -80,10 +80,10 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void cancelOrder(int orderId) {
+    public void cancelOrder(Long orderId) {
         try {
             LOGGER.log(Level.INFO, "Cancelling order with id=" + orderId);
-            if (orderDao.getAll().stream().anyMatch(el -> el.getId() == orderId)) {
+            if (orderDao.getAll().stream().anyMatch(el -> el.getId().equals(orderId))) {
                 Order order = orderDao.getById(orderId);
                 order.setStatus(OrderStatus.CANCEL);
 
@@ -103,10 +103,10 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void changeOrderStatus(int orderId, OrderStatus status) {
+    public void changeOrderStatus(Long orderId, OrderStatus status) {
         try {
             LOGGER.log(Level.INFO, "Changing order status with id=" + orderId);
-            if (orderDao.getAll().stream().anyMatch(el -> el.getId() == orderId)) {
+            if (orderDao.getAll().stream().anyMatch(el -> el.getId().equals(orderId))) {
                 Order order = orderDao.getById(orderId);
                 order.setStatus(status);
                 //if order is cancelled decrease number that points how much this book has been ordered

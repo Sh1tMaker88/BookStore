@@ -22,26 +22,25 @@ public class AddRequest implements IAction {
     @Override
     public void execute() {
 
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             LOGGER.log(Level.INFO, "To add request you must enter book ID or enter a new book\n" +
                     "1 - to enter book ID\n2 - to enter new book");
-            int num = Integer.parseInt(reader.readLine());
-            if (num == 1) {
+            Long num = Long.parseLong(reader.readLine());
+            if (num.equals(1L)) {
                 LOGGER.log(Level.INFO, "If you want see list of all books enter 0, or enter book ID");
-                num = Integer.parseInt(reader.readLine());
-                if (num == 0){
+                num = Long.parseLong(reader.readLine());
+                if (num.equals(0L)){
                     System.out.println(facade.getBookService().getBookDao().getAll());
                     LOGGER.log(Level.INFO, "Enter book ID to add request");
-                    num = Integer.parseInt(reader.readLine());
+                    num = Long.parseLong(reader.readLine());
                 }
                 Book book = facade.getBookService().getBookDao().getById(num);
                 facade.getRequestService().addRequest(book);
-            } else if (num == 2){
+            } else if (num.equals(2L)){
                 new AddBookToStock().execute();
                 Book lastAddedBook = facade.getBookService().getBookDao().getAll()
                         .stream()
-                        .max(Comparator.comparingInt(Book::getId))
+                        .max(Comparator.comparingLong(Book::getId))
                         .get();
                 Book book = facade.getBookService().getBookDao().getById(lastAddedBook.getId());
                 facade.getBookService().discardBook(book.getId());
@@ -53,7 +52,7 @@ public class AddRequest implements IAction {
             LOGGER.log(Level.WARNING, "Method execute failed", e);
             e.printStackTrace();
         } catch (IOException e) {
-            LOGGER.log(Level.WARNING, e.getLocalizedMessage());
+            LOGGER.log(Level.WARNING, "Execute of execute failed", e);
             e.printStackTrace();
         }
     }

@@ -41,7 +41,7 @@ public class Serializator {
         ObjectOutputStream outputStreamBooksId = new ObjectOutputStream
                 (new FileOutputStream("Server/src/main/resources/serializationFiles/booksId.bin"))){
             List<Book> books = bookDao.getAll();
-            Map<Book, Integer> idMap = new HashMap<>();
+            Map<Book, Long> idMap = new HashMap<>();
             for (Book book : books) {
                 outputStreamBooks.writeObject(book);
                 idMap.put(book, book.getId());
@@ -61,7 +61,7 @@ public class Serializator {
         ObjectOutputStream outputStreamRequestsId = new ObjectOutputStream
                 (new FileOutputStream("Server/src/main/resources/serializationFiles/requestsId.bin"))){
             List<Request> requests = requestDao.getAll();
-            Map<Request, Integer> idMap = new HashMap<>();
+            Map<Request, Long> idMap = new HashMap<>();
             for (Request request : requests) {
                 outputStreamRequests.writeObject(request);
                 idMap.put(request, request.getId());
@@ -81,7 +81,7 @@ public class Serializator {
         ObjectOutputStream outputStreamOrdersId = new ObjectOutputStream
                 (new FileOutputStream("Server/src/main/resources/serializationFiles/ordersId.bin"))){
             List<Order> orders = orderDao.getAll();
-            Map<Order, Integer> idMap = new HashMap<>();
+            Map<Order, Long> idMap = new HashMap<>();
             for (Order order : orders) {
                 idMap.put(order, order.getId());
                 outputStreamOrders.writeObject(order);

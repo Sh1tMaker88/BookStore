@@ -12,7 +12,7 @@ public interface IBookService {
 
     Book addBookToStock(Book book);
 
-    Book discardBook(int bookId);
+    Book discardBook(Long bookId);
 
     void showDescription(Book book);
 

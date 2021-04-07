@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public class Request extends AIdentity implements Serializable {
 
-    static final long serialVersionUID = 2L;
+    static final long serialVersionUID = 3L;
     private Book book;
     private LocalDateTime requestDate;
     private int requestCount;

@@ -44,7 +44,7 @@ public class RequestService implements IRequestService {
     }
 
     @Override
-    public Book closeRequest(int requestID) {
+    public Book closeRequest(Long requestID) {
         try {
             LOGGER.log(Level.INFO, "Closing request with id=" + requestID);
             Request request = requestDao.getById(requestID);

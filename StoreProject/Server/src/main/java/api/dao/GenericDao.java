@@ -6,7 +6,7 @@ public interface GenericDao<T> {
 
     void create(T entity);
 
-    T getById(int id);
+    T getById(Long id);
 
     List<T> getAll();
 

@@ -19,12 +19,12 @@ public class AddBookToStock implements IAction {
     final Facade facade = Facade.getInstance();
 
     @Override
-    public void execute()  {
-        try {
+    public void execute() {
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             LOGGER.log(Level.INFO, "You can add book by 2 ways:\n- printing parameter 1 by 1\n" +
                     "- give all parameters(book name, book author, 'int' yearOfPublish, " +
                     "'double' price, 'String' isbn, pageNumber) separated by ','");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String line = reader.readLine();
             String[] params = line.split(",");
             Book bookToAdd;
@@ -46,14 +46,11 @@ public class AddBookToStock implements IAction {
                 bookToAdd = facade.getBookService().addBookToStock(line, author, yearOfPublish, price, isbn, pages);
             }
             LOGGER.log(Level.INFO, "You have added book:\n" + bookToAdd);
-
         } catch (DaoException | ServiceException e) {
             LOGGER.log(Level.WARNING, "Method execute failed", e);
             e.printStackTrace();
-        } catch (ActionException e) {
+        } catch (ActionException | IOException e) {
             LOGGER.log(Level.WARNING, "Execute of execute failed", e);
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }

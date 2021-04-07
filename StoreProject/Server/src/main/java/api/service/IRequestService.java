@@ -14,7 +14,7 @@ public interface IRequestService {
 
     IBookDao getBookDao();
 
-    Book closeRequest(int requestID);
+    Book closeRequest(Long requestID);
 
     void closeRequest(Book book);
 

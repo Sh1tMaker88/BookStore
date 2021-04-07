@@ -6,6 +6,8 @@ import facade.Facade;
 import models.Book;
 import action.IAction;
 
+//todo delete all models import from actions
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,8 +25,7 @@ public class AddOrder implements IAction {
 
         final Facade facade = Facade.getInstance();
 
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             LOGGER.log(Level.INFO, "Enter customer name");
             String customerName = reader.readLine();
             boolean flag = true;
@@ -33,9 +34,10 @@ public class AddOrder implements IAction {
             //add some books to list
             while (flag) {
                 LOGGER.log(Level.INFO, "Enter book ID");
-                int id = Integer.parseInt(reader.readLine());
+                Long id = Long.parseLong(reader.readLine());
                 //if there is this ID add book to list
-                boolean isAnyID = facade.getBookService().getBookDao().getAll().stream().anyMatch(e -> e.getId() == id);
+                boolean isAnyID = facade.getBookService().getBookDao().getAll().stream().
+                        anyMatch(e -> e.getId().equals(id));
                 if (isAnyID) {
                     Book book = facade.getBookService().getBookDao().getById(id);
                     list.add(book);
@@ -48,12 +50,12 @@ public class AddOrder implements IAction {
                     flag = false;
                 }
             }
-            System.out.println(facade.getOrderService().addOrder(customerName, list));
+            facade.getOrderService().addOrder(customerName, list);
         } catch (DaoException | ServiceException e) {
             LOGGER.log(Level.WARNING, "Method execute failed", e);
             e.printStackTrace();
         } catch (IOException e) {
-            LOGGER.log(Level.WARNING, e.getLocalizedMessage());
+            LOGGER.log(Level.WARNING, "Execute of execute failed", e);
             e.printStackTrace();
         }
     }

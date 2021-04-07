@@ -20,14 +20,13 @@ public class ChangeOrderStatus implements IAction {
 
     @Override
     public void execute() {
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             LOGGER.log(Level.INFO, "If you want to see the list of all orders enter '-1', if back to root menu enter '0'");
-            int id = Integer.parseInt(reader.readLine());
-            if (id == -1) {
+            Long id = Long.parseLong(reader.readLine());
+            if (id.equals(-1L)) {
                 System.out.println(facade.getOrderService().getOrderDao().getAll());
                 LOGGER.log(Level.INFO, "To change order status enter order ID");
-                id = Integer.parseInt(reader.readLine());
+                id = Long.parseLong(reader.readLine());
                 LOGGER.log(Level.INFO, "Enter order status:\n" +
                         "'1' - to set as new, '2' - to set as cancel, '3' - to set as done)");
                 String status = reader.readLine();
@@ -49,14 +48,14 @@ public class ChangeOrderStatus implements IAction {
                 }
                 facade.getOrderService().changeOrderStatus(id, statusTo);
                 LOGGER.log(Level.INFO, "You changed status order " + facade.getOrderService().getOrderDao().getById(id));
-            } else if (id == 0) {
+            } else if (id.equals(0L)) {
 
             }
         } catch (DaoException | ServiceException e) {
             LOGGER.log(Level.WARNING, "Method execute failed", e);
             e.printStackTrace();
         } catch (IOException e) {
-            LOGGER.log(Level.WARNING, e.getLocalizedMessage());
+            LOGGER.log(Level.WARNING, "Execute of execute failed", e);
             e.printStackTrace();
         }
     }

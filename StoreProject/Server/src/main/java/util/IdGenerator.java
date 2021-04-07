@@ -7,46 +7,46 @@ import java.util.logging.Logger;
 public class IdGenerator implements Serializable {
 
     private static final Logger LOGGER = Logger.getLogger(IdGenerator.class.getName());
-    private static int bookId = 1;
-    private static int orderId = 1;
-    private static int requestId = 1;
+    private static Long bookId = 1L;
+    private static Long orderId = 1L;
+    private static Long requestId = 1L;
 
-    public static int generateBookId(){
+    public static Long generateBookId(){
         LOGGER.log(Level.INFO, "Setting bookID");
         return bookId++;
     }
 
-    public static int generateOrderId(){
+    public static Long generateOrderId(){
         LOGGER.log(Level.INFO, "Setting orderID");
         return orderId++;
     }
 
-    public static int generateRequestId(){
+    public static Long generateRequestId(){
         LOGGER.log(Level.INFO, "Setting requestID");
         return requestId++;
     }
 
-    public static void setBookId(int bookId) {
+    public static void setBookId(Long bookId) {
         IdGenerator.bookId = bookId;
     }
 
-    public static void setOrderId(int orderId) {
+    public static void setOrderId(Long orderId) {
         IdGenerator.orderId = orderId;
     }
 
-    public static void setRequestId(int requestId) {
+    public static void setRequestId(Long requestId) {
         IdGenerator.requestId = requestId;
     }
 
-    public static int getBookId() {
+    public static Long getBookId() {
         return bookId;
     }
 
-    public static int getOrderId() {
+    public static Long getOrderId() {
         return orderId;
     }
 
-    public static int getRequestId() {
+    public static Long getRequestId() {
         return requestId;
     }
 }

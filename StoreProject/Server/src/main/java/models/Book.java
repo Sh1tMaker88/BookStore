@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Book extends AIdentity implements Serializable {
 
-    static final long serialVersionUID = 2L;
+    static final long serialVersionUID = 3L;
     private String name;
     private String author;
     private String isbn;
@@ -108,8 +108,6 @@ public class Book extends AIdentity implements Serializable {
     public void setPrice(double price) {
         this.price = price;
     }
-
-    //todo override equals methods for models
 
 
     @Override

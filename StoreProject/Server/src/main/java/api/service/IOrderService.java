@@ -21,9 +21,9 @@ public interface IOrderService {
 
     Order addOrder(String customerName, List<Book> books);
 
-    void cancelOrder(int orderId);
+    void cancelOrder(Long orderId);
 
-    void changeOrderStatus(int orderId, OrderStatus status);
+    void changeOrderStatus(Long orderId, OrderStatus status);
 
     double priceGetByPeriodOfTime(LocalDateTime fromDate, LocalDateTime tillDate);
 

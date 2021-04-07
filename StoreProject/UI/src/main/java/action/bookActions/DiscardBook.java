@@ -19,18 +19,18 @@ public class DiscardBook implements IAction {
 
     @Override
     public void execute() {
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            LOGGER.log(Level.INFO, "If you want to see the list of all books enter '-1', if back to root menu enter '0'");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+            LOGGER.log(Level.INFO, "If you want to see the list of all books enter '-1', " +
+                    "if back to root menu enter '0'");
             LOGGER.log(Level.INFO, "To discard book enter book ID");
-            int id = Integer.parseInt(reader.readLine());
-            if (id == -1){
+            Long id = Long.parseLong(reader.readLine());
+            if (id.equals(-1L)){
                 System.out.println(facade.getBookService().getBookDao().getAll());
                 LOGGER.log(Level.INFO, "Enter book ID");
-                id = Integer.parseInt(reader.readLine());
+                id = Long.parseLong(reader.readLine());
                 facade.getBookService().discardBook(id);
                 LOGGER.log(Level.INFO, "You discarded book " + facade.getBookService().getBookDao().getById(id));
-            } else if (id == 0){
+            } else if (id.equals(0L)){
 
             } else {
                 facade.getBookService().discardBook(id);
@@ -39,10 +39,8 @@ public class DiscardBook implements IAction {
         } catch (DaoException | ServiceException e) {
             LOGGER.log(Level.WARNING, "Method execute failed", e);
             e.printStackTrace();
-        }  catch (ActionException e) {
+        }  catch (ActionException | IOException e) {
             LOGGER.log(Level.WARNING, "Execute of execute failed", e);
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }

@@ -20,9 +20,9 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     }
 
     @Override
-    public T getById(int id) {
+    public T getById(Long id) {
         for (T entity : list) {
-            if (id == entity.getId()) {
+            if (id.equals(entity.getId())) {
                 return entity;
             }
         }
@@ -41,7 +41,6 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     }
 
     @Override
-    //todo
     public T update(T entity) {
         return entity;
     }

@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class Order extends AIdentity implements Serializable {
 
-    static final long serialVersionUID = 2L;
+    static final long serialVersionUID = 3L;
     private OrderStatus status = OrderStatus.NEW;
     private List<Book> books;
     private double totalPrice;
