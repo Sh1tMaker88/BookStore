@@ -10,6 +10,7 @@ import com.action.orderActions.ChangeOrderStatus;
 import com.action.requestActions.AddRequest;
 import com.action.requestActions.CloseRequest;
 import com.action.OrderSorter;
+import com.annotations.ClassToInjectProperty;
 
 //singleton
 public class Builder {

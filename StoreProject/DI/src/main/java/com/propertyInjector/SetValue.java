@@ -4,9 +4,11 @@ import java.lang.reflect.Field;
 
 public class SetValue {
 
-    public static void castFieldAndSetValue(Object obj, Field field, String toType, String value){
+    public static void castFieldAndSetValue(Class<?> obj, Field field, String toType, String value){
         field.setAccessible(true);
         try {
+
+//            obj.getDeclaredConstructor().newInstance()
             if (field.getType().isPrimitive()) {
                 switch (toType.toLowerCase()) {
                     case "byte":

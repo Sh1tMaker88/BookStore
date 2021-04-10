@@ -33,20 +33,14 @@ public class BookService implements IBookService {
     private final IRequestDao requestDao;
 
     @InjectValueFromProperties(configName = "server", propertyName = "closeRequestAfterAddingBook", type = "boolean")
-    private boolean closeRequestAfterAddingBook;
+    private static boolean closeRequestAfterAddingBook;
     @InjectValueFromProperties
-    private int monthToSetBookAsUnsold;
+    private static int monthToSetBookAsUnsold;
 
     private BookService() {
         this.bookDao = BookDao.getInstance();
         this.requestDao = RequestDao.getInstance();
-        PropertyInjector propertyInjector = PropertyInjector.getInstance();
-        //delete after
-        try {
-            propertyInjector.injectProperty(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 //        try {
 //            FileInputStream fis  = new FileInputStream("Server/src/main/resources/myProp.properties");
 //            Properties prop = new Properties();

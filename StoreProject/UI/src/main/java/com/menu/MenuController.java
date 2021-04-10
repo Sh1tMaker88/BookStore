@@ -1,6 +1,8 @@
 package com.menu;
 
 
+import com.propertyInjector.PropertyInjector;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,6 +23,8 @@ public class MenuController {
         builder = Builder.getInstance();
         builder.buildMenu();
         navigator = Navigator.getInstance();
+        PropertyInjector propertyInjector = PropertyInjector.getInstance();
+        propertyInjector.injectProperty();
     }
 
     public static MenuController getInstance(){

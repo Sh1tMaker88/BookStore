@@ -1,3 +1,5 @@
+package com;
+
 import com.facade.Facade;
 import com.models.Book;
 import com.models.Order;
@@ -10,15 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.LogManager;
 
+//todo config path naming
+
 public class Initializer {
 
     static {
         try (InputStream configuration = new FileInputStream("UI/src/main/resources/logger.properties")) {
 //            LogManager.getLogManager().readConfiguration(
-//                    Starter.class.getResourceAsStream("/logging.properties"));
+//                    com.Starter.class.getResourceAsStream("/logging.properties"));
+//            System.setProperty("java.util.logging.SimpleFormatter.format",
+//                    "[%1$tF %1$tT] -%4$s- (%2$s) \"%5$s%6$s\"%n");
             LogManager.getLogManager().readConfiguration(configuration);
-            System.setProperty("java.util.logging.SimpleFormatter.format",
-                    "[%1$tF %1$tT] -%4$s- (%2$s) \"%5$s%6$s\"%n");
         } catch (IOException e) {
             System.err.println("There is no file configuration" + e.toString());
         }

@@ -1,5 +1,9 @@
+package com;
+
 import com.annotations.ClassToInjectProperty;
 import com.menu.MenuController;
+import com.propertyInjector.ClassScanner;
+import com.service.BookService;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
@@ -12,10 +16,9 @@ public class Starter {
 
 //        Reflections reflections = Reflections.collect();
 
-        Reflections reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage("com")));
-//        Reflections reflections = new Reflections(BookService.class.getClassLoader());
-        Set<Class<?>> classes = reflections.getTypesAnnotatedWith(ClassToInjectProperty.class);
-        System.out.println(classes);
+        ClassScanner classScanner = ClassScanner.getInstance();
+        System.out.println(classScanner.scanForClasses());
+//        System.out.println(classScanner.scanForFields());
 
         new Initializer();
         new Deserializator();
