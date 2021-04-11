@@ -2,6 +2,7 @@ package com.menu;
 
 
 import com.propertyInjector.PropertyInjector;
+import com.service.BookService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +26,8 @@ public class MenuController {
         navigator = Navigator.getInstance();
         PropertyInjector propertyInjector = PropertyInjector.getInstance();
         propertyInjector.injectProperty();
+        System.out.println("___---" + BookService.getInstance().monthToSetBookAsUnsold);
+        System.out.println("___---" + BookService.getInstance().closeRequestAfterAddingBook);
     }
 
     public static MenuController getInstance(){

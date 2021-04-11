@@ -13,12 +13,8 @@ import java.util.Set;
 
 public class Starter {
     public static void main(String[] args) {
-
-//        Reflections reflections = Reflections.collect();
-
         ClassScanner classScanner = ClassScanner.getInstance();
         System.out.println(classScanner.scanForClasses());
-//        System.out.println(classScanner.scanForFields());
 
         new Initializer();
         new Deserializator();

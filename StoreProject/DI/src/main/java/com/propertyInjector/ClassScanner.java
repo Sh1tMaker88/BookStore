@@ -2,8 +2,6 @@ package com.propertyInjector;
 
 import com.annotations.ClassToInjectProperty;
 import org.reflections.Reflections;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
 
 import java.util.Set;
 
@@ -22,12 +20,9 @@ public class ClassScanner {
     }
 
     public Set<Class<?>> scanForClasses() {
-        Reflections reflections = new Reflections(new ConfigurationBuilder().
-                setUrls(ClasspathHelper.forPackage("com")));
+//        Reflections reflections = new Reflections(new ConfigurationBuilder().
+//                setUrls(ClasspathHelper.forPackage("com")));
+        Reflections reflections = new Reflections("com");
         return reflections.getTypesAnnotatedWith(ClassToInjectProperty.class);
     }
-
-//        public <T> T createObject(Class<T> type) {
-//        Class<T> clas =
-//    }
 }

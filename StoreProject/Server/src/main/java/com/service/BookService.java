@@ -2,6 +2,7 @@ package com.service;
 
 import com.annotations.ClassToInjectProperty;
 import com.annotations.InjectValueFromProperties;
+import com.annotations.Singleton;
 import com.api.dao.IBookDao;
 import com.api.dao.IRequestDao;
 import com.api.service.IBookService;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 //todo delete getters for com.dao
 
+@Singleton
 @ClassToInjectProperty
 public class BookService implements IBookService {
 
@@ -33,9 +35,9 @@ public class BookService implements IBookService {
     private final IRequestDao requestDao;
 
     @InjectValueFromProperties(configName = "server", propertyName = "closeRequestAfterAddingBook", type = "boolean")
-    private static boolean closeRequestAfterAddingBook;
+    public boolean closeRequestAfterAddingBook;
     @InjectValueFromProperties
-    private static int monthToSetBookAsUnsold;
+    public int monthToSetBookAsUnsold;
 
     private BookService() {
         this.bookDao = BookDao.getInstance();
