@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 public class PropertyInjector implements IObjectConfigurator {
 
+    //todo delete instance
     private static PropertyInjector instance;
     private static final Logger LOGGER = Logger.getLogger(PropertyInjector.class.getName());
     private Set<Class<?>> classes = new HashSet<>();
@@ -26,7 +27,7 @@ public class PropertyInjector implements IObjectConfigurator {
     private Map<String, String> propertiesMap = new HashMap<>();
     private ApplicationContext context;
 
-    private PropertyInjector() {
+    public PropertyInjector() {
     }
 
     public static PropertyInjector getInstance() {
@@ -41,16 +42,23 @@ public class PropertyInjector implements IObjectConfigurator {
             if (field.isAnnotationPresent(InjectValueFromProperties.class)) {
                 field.setAccessible(true);
                 InjectValueFromProperties annotation = field.getAnnotation(InjectValueFromProperties.class);
+                //get properties as map if it needed
+                String path = PropertiesPath.valueOf(annotation.configName().toUpperCase()).getPath();
+                try {
+                    getProperties(path);
+                } catch (IOException e) {
+                    LOGGER.log(Level.WARNING, "No properties file to inject property", e);
+                }
                 String propValue = annotation.propertyName().isBlank() ? propertiesMap.get(field.getName().toLowerCase()) :
                         propertiesMap.get(annotation.propertyName().toLowerCase());
-                Object obj = context.getObject(field.getType());
+//                Object obj = context.getObject(field.getType());
                 if (!annotation.type().isEmpty()) {
-                    SetValue.castFieldAndSetValue(obj, field, annotation.type(), propValue);
+                    SetValue.castFieldAndSetValue(t, field, annotation.type(), propValue);
                 } else /*if TYPE value of annotation isn't set*/ {
                     if (field.getType().isPrimitive()) {
-                        SetValue.castFieldAndSetValue(obj, field, field.getType().toString(), propValue);
+                        SetValue.castFieldAndSetValue(t, field, field.getType().toString(), propValue);
                     } else {
-                        SetValue.castFieldAndSetValue(obj, field, "String", propValue);
+                        SetValue.castFieldAndSetValue(t, field, "String", propValue);
                     }
                 }
             }

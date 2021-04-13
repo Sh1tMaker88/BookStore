@@ -4,6 +4,7 @@ import com.action.IAction;
 import com.exceptions.DaoException;
 import com.exceptions.ServiceException;
 import com.facade.Facade;
+import com.propertyInjector.ApplicationContext;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
 public class CancelOrder implements IAction {
 
     private static final Logger LOGGER = Logger.getLogger(CancelOrder.class.getName());
-    final Facade facade = Facade.getInstance();
+    final Facade facade = ApplicationContext.getInstance().getObject(Facade.class);
 
     @Override
     public void execute() {

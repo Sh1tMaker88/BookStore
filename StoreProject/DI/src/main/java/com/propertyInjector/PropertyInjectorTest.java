@@ -34,6 +34,7 @@ public class PropertyInjectorTest {
 
     public static void main(String[] args) throws IOException {
 //        ApplicationContext context = Runner.run("com", new HashMap<>(Map.of(IPoliceman.class, PolicemanImpl.class);
+
         PropertyInjectorTest prop = PropertyInjectorTest.getInstance();
         prop.injectProperty(prop);
         System.out.println(prop.closeRequestAfterAddingBook +  ", " + prop.unsoldBookMonth + ", " + prop.nameHero);

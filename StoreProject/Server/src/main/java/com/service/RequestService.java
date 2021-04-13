@@ -1,5 +1,7 @@
 package com.service;
 
+import com.annotations.InjectByType;
+import com.annotations.Singleton;
 import com.api.dao.IBookDao;
 import com.api.dao.IRequestDao;
 import com.api.service.IRequestService;
@@ -8,6 +10,7 @@ import com.dao.RequestDao;
 import com.exceptions.DaoException;
 import com.exceptions.ServiceException;
 import com.models.*;
+import com.propertyInjector.ApplicationContext;
 import com.propertyInjector.PropertyInjector;
 import com.util.IdGenerator;
 import com.util.comparators.RequestAlphabeticalComparator;
@@ -17,24 +20,27 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Singleton
 public class RequestService implements IRequestService {
 
     private static final Logger LOGGER = Logger.getLogger(RequestService.class.getName());
-    private static RequestService instance;
+//    private static RequestService instance;
+    @InjectByType
     private final IRequestDao requestDao;
+    @InjectByType
     private final IBookDao bookDao;
 
-    private RequestService() {
-        this.requestDao = RequestDao.getInstance();
-        this.bookDao = BookDao.getInstance();
+    public RequestService() {
+        this.requestDao = ApplicationContext.getInstance().getObject(RequestDao.class);
+        this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
     }
 
-    public static RequestService getInstance() {
-        if (instance == null) {
-            instance = new RequestService();
-        }
-        return instance;
-    }
+//    public static RequestService getInstance() {
+//        if (instance == null) {
+//            instance = new RequestService();
+//        }
+//        return instance;
+//    }
 
     public IRequestDao getRequestDao() {
         return requestDao;

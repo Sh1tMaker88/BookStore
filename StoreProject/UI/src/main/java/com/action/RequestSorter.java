@@ -10,9 +10,12 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RequestSorter implements IAction{
 
+    private static final Logger LOGGER = Logger.getLogger(RequestSorter.class.getName());
     private Map<Integer, Comparator<Request>> sortRequestsBy;
     private List<Request> requests;
     private int sortId;
@@ -42,7 +45,7 @@ public class RequestSorter implements IAction{
             requests.sort(sortRequestsBy.get(sortId));
             System.out.println(requests);
         } catch(ActionException e){
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Method execute failed", e);
         }
     }
 }

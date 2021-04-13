@@ -12,9 +12,12 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class OrderSorter implements IAction{
 
+    private static final Logger LOGGER = Logger.getLogger(OrderSorter.class.getName());
     private Map<Integer, Comparator<Order>> sortOrdersBy;
     private List<Order> orders;
     private int sortId;
@@ -47,7 +50,7 @@ public class OrderSorter implements IAction{
             System.out.println(orders);
         }
         catch (ActionException e){
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Method execute failed", e);
         }
     }
 }

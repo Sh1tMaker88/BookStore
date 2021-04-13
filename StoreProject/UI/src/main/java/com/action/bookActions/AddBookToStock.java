@@ -6,6 +6,7 @@ import com.exceptions.DaoException;
 import com.exceptions.ServiceException;
 import com.models.Book;
 import com.facade.Facade;
+import com.propertyInjector.ApplicationContext;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
 public class AddBookToStock implements IAction {
 
     private static final Logger LOGGER = Logger.getLogger(AddBookToStock.class.getName());
-    final Facade facade = Facade.getInstance();
+    final Facade facade = ApplicationContext.getInstance().getObject(Facade.class);
 
     @Override
     public void execute() {

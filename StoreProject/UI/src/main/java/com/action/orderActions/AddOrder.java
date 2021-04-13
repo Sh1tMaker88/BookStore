@@ -5,6 +5,7 @@ import com.exceptions.DaoException;
 import com.exceptions.ServiceException;
 import com.facade.Facade;
 import com.models.Book;
+import com.propertyInjector.ApplicationContext;
 
 //todo delete all com.models import from actions
 
@@ -23,7 +24,7 @@ public class AddOrder implements IAction {
     @Override
     public void execute() {
 
-        final Facade facade = Facade.getInstance();
+        final Facade facade = ApplicationContext.getInstance().getObject(Facade.class);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             LOGGER.log(Level.INFO, "Enter customer name");

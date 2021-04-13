@@ -1,22 +1,24 @@
 package com.dao;
 
+import com.annotations.Singleton;
 import com.api.dao.IOrderDao;
 import com.models.Order;
 
-
+@Singleton
 public class OrderDao extends AbstractDao<Order> implements IOrderDao {
 
-    private static OrderDao instance;
+    //todo delete instance
+//    private static OrderDao instance;
 
-    private OrderDao() {
+    public OrderDao() {
     }
 
-    public static OrderDao getInstance(){
-        if (instance == null) {
-            instance = new OrderDao();
-        }
-        return instance;
-    }
+//    public static OrderDao getInstance(){
+//        if (instance == null) {
+//            instance = new OrderDao();
+//        }
+//        return instance;
+//    }
 
     @Override
     public Order update(Order entity) {

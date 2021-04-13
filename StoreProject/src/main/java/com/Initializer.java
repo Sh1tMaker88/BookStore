@@ -1,20 +1,41 @@
 package com;
 
+import com.annotations.Singleton;
+import com.api.dao.IBookDao;
+import com.api.dao.IOrderDao;
+import com.api.dao.IRequestDao;
+import com.api.service.IBookService;
+import com.api.service.IOrderService;
+import com.api.service.IRequestService;
+import com.dao.BookDao;
+import com.dao.OrderDao;
+import com.dao.RequestDao;
 import com.facade.Facade;
 import com.models.Book;
 import com.models.Order;
+import com.propertyInjector.ApplicationContext;
+import com.propertyInjector.Runner;
+import com.serialization.Deserializator;
+import com.service.BookService;
+import com.service.OrderService;
+import com.service.RequestService;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.LogManager;
 
 //todo config path naming
 
+
 public class Initializer {
+
+    Facade facade;
 
     static {
         try (InputStream configuration = new FileInputStream("UI/src/main/resources/logger.properties")) {
@@ -22,6 +43,7 @@ public class Initializer {
 //                    com.Starter.class.getResourceAsStream("/logging.properties"));
 //            System.setProperty("java.util.logging.SimpleFormatter.format",
 //                    "[%1$tF %1$tT] -%4$s- (%2$s) \"%5$s%6$s\"%n");
+
             LogManager.getLogManager().readConfiguration(configuration);
         } catch (IOException e) {
             System.err.println("There is no file configuration" + e.toString());
@@ -29,8 +51,8 @@ public class Initializer {
     }
 
     public Initializer() {
-//
-//        Facade facade = Facade.getInstance();
+
+//        facade = ApplicationContext.getInstance().getObject(Facade.class);
 //
 //        Book book1 = facade.getBookService().addBookToStock
 //                ("King", "Arthur", 2001, 43.2, "2342345", 522);
@@ -58,7 +80,7 @@ public class Initializer {
 //
 //        facade.getRequestService().addRequest(
 //                new Book("Some book", "Crazy Author", 2021, 20.2, "adsfjnh32df", 333));
-//        System.out.println(com.facade.getRequestService().getRequestDao().getAll());
 
+//        System.out.println(facade.getBookService().getBookDao().getAll());
     }
 }

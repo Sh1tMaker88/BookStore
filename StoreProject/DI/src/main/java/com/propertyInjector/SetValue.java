@@ -7,8 +7,6 @@ public class SetValue {
     public static void castFieldAndSetValue(Object obj, Field field, String toType, String value){
         field.setAccessible(true);
         try {
-
-//            obj.getDeclaredConstructor().newInstance()
             if (field.getType().isPrimitive()) {
                 switch (toType.toLowerCase()) {
                     case "byte":

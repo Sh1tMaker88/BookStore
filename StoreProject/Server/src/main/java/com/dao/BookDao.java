@@ -1,22 +1,25 @@
 package com.dao;
 
+import com.annotations.Singleton;
 import com.api.dao.IBookDao;
 import com.models.Book;
 
+@Singleton
 public class BookDao extends AbstractDao<Book> implements IBookDao {
 
-    private static BookDao instance;
+    //todo delete instance
+//    private static BookDao instance;
 
-    private BookDao() {
+    public BookDao() {
 
     }
 
-    public static BookDao getInstance(){
-        if (instance == null) {
-            instance = new BookDao();
-        }
-        return instance;
-    }
+//    public static BookDao getInstance(){
+//        if (instance == null) {
+//            instance = new BookDao();
+//        }
+//        return instance;
+//    }
 
     @Override
     public Book update(Book entity) {

@@ -4,6 +4,7 @@ import com.exceptions.ActionException;
 import com.exceptions.DaoException;
 import com.models.Book;
 import com.facade.Facade;
+import com.propertyInjector.ApplicationContext;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
 public class GetAllBooks {
 
     private static final Logger LOGGER = Logger.getLogger(GetAllBooks.class.getName());
-    final Facade facade = Facade.getInstance();
+    final Facade facade = ApplicationContext.getInstance().getObject(Facade.class);
 
     public List<Book> doIt() {
         try {

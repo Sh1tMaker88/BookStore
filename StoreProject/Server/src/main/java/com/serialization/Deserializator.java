@@ -1,11 +1,16 @@
 package com.serialization;
 
+import com.annotations.InjectByType;
 import com.api.dao.IBookDao;
 import com.api.dao.IOrderDao;
 import com.api.dao.IRequestDao;
+import com.dao.BookDao;
+import com.dao.OrderDao;
+import com.dao.RequestDao;
 import com.models.Book;
 import com.models.Order;
 import com.models.Request;
+import com.propertyInjector.ApplicationContext;
 import com.service.BookService;
 import com.service.OrderService;
 import com.service.RequestService;
@@ -19,26 +24,30 @@ import java.util.logging.Logger;
 public class Deserializator {
 
     private static final Logger LOGGER = Logger.getLogger(Deserializator.class.getName());
-    private final IBookDao bookDao = BookService.getInstance().getBookDao();
-    private final IOrderDao orderDao = OrderService.getInstance().getOrderDao();
-    private final IRequestDao requestDao = RequestService.getInstance().getRequestDao();
+//    @InjectByType
+    private final IBookDao bookDao;
+//    @InjectByType
+    private final IOrderDao orderDao;
+//    @InjectByType
+    private final IRequestDao requestDao;
 
     public Deserializator() {
+        this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
+        this.orderDao = ApplicationContext.getInstance().getObject(OrderDao.class);
+        this.requestDao = ApplicationContext.getInstance().getObject(RequestDao.class);
         deserializeBooks();
-        LOGGER.log(Level.INFO, "Book deserialization completed");
 
         deserializeRequests();
-        LOGGER.log(Level.INFO, "Request deserialization completed");
 
         deserializeOrders();
-        LOGGER.log(Level.INFO, "Order deserialization completed");
+        LOGGER.log(Level.INFO, "Deserialization completed");
     }
 
     public void deserializeBooks() {
         try (ObjectInputStream inputStreamBooks = new ObjectInputStream(
-                new FileInputStream("Server/src/main/resources/serializationFiles/books.bin"));
+                new FileInputStream("serializationFiles/books.bin"));
              ObjectInputStream inputStreamBooksId = new ObjectInputStream
-                     (new FileInputStream("Server/src/main/resources/serializationFiles/booksId.bin"))) {
+                     (new FileInputStream("serializationFiles/booksId.bin"))) {
             Map<Book, Long> idMap = (Map<Book, Long>) inputStreamBooksId.readObject();
             while (true) {
                 Object bookObj = inputStreamBooks.readObject();
@@ -61,9 +70,9 @@ public class Deserializator {
 
     public void deserializeRequests() {
         try (ObjectInputStream inputStreamRequests = new ObjectInputStream
-                (new FileInputStream("Server/src/main/resources/serializationFiles/requests.bin"));
+                (new FileInputStream("serializationFiles/requests.bin"));
              ObjectInputStream inputStreamRequestsId = new ObjectInputStream
-                     (new FileInputStream("Server/src/main/resources/serializationFiles/requestsId.bin"))) {
+                     (new FileInputStream("serializationFiles/requestsId.bin"))) {
             Map<Request, Long> idMap = (Map<Request, Long>) inputStreamRequestsId.readObject();
             while (true) {
                 Object requestObj = inputStreamRequests.readObject();
@@ -86,11 +95,11 @@ public class Deserializator {
 
     public void deserializeOrders() {
         try (ObjectInputStream inputStreamOrders = new ObjectInputStream
-                (new FileInputStream("Server/src/main/resources/serializationFiles/orders.bin"));
+                (new FileInputStream("serializationFiles/orders.bin"));
              ObjectInputStream inputStreamOrdersId = new ObjectInputStream
-                     (new FileInputStream("Server/src/main/resources/serializationFiles/ordersId.bin"));
+                     (new FileInputStream("serializationFiles/ordersId.bin"));
              ObjectInputStream inputStreamOrderBooksId = new ObjectInputStream
-                     (new FileInputStream("Server/src/main/resources/serializationFiles/booksId.bin"))) {
+                     (new FileInputStream("serializationFiles/booksId.bin"))) {
             Map<Order, Long> idMapOrders = (Map<Order, Long>) inputStreamOrdersId.readObject();
             Map<Book, Long> idMapBooks = (Map<Book, Long>) inputStreamOrderBooksId.readObject();
             while (true) {

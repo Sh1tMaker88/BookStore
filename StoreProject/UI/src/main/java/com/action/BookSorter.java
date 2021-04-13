@@ -1,5 +1,6 @@
 package com.action;
 
+import com.action.bookActions.AddBookToStock;
 import com.action.bookActions.GetAllBooks;
 import com.exceptions.ActionException;
 import com.models.Book;
@@ -10,9 +11,12 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BookSorter implements IAction{
 
+    private static final Logger LOGGER = Logger.getLogger(BookSorter.class.getName());
     private Map<Integer, Comparator<Book>> sortBooksBy;
     private List<Book> books;
     private int sortId;
@@ -47,7 +51,7 @@ public class BookSorter implements IAction{
             books.sort(sortBooksBy.get(sortId));
             System.out.println(books);
         } catch (ActionException e){
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Method execute failed", e);
         }
     }
 

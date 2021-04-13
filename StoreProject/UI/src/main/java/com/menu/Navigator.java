@@ -1,12 +1,14 @@
 package com.menu;
 
-//singleton
+import com.annotations.Singleton;
+
 public class Navigator {
 
     private static Navigator instance;
     private Menu currentMenu;
 
-    private Navigator(){}
+    private Navigator() {
+    }
 
     public static Navigator getInstance() {
         if (instance == null) {
@@ -15,11 +17,11 @@ public class Navigator {
         return instance;
     }
 
-    public void printMenu(){
+    public void printMenu() {
         System.out.println(currentMenu);
     }
 
-    public void navigate(int index){
+    public void navigate(int index) {
         if (currentMenu != null) {
             MenuItem menuItem = currentMenu.getMenuItems().get(index);
             menuItem.doAction();

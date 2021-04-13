@@ -1,6 +1,7 @@
 package com.service;
 
 import com.annotations.ClassToInjectProperty;
+import com.annotations.InjectByType;
 import com.annotations.InjectValueFromProperties;
 import com.annotations.Singleton;
 import com.api.dao.IBookDao;
@@ -12,6 +13,7 @@ import com.exceptions.DaoException;
 import com.exceptions.ServiceException;
 import com.models.Book;
 import com.models.BookStatus;
+import com.propertyInjector.ApplicationContext;
 import com.propertyInjector.PropertyInjector;
 import com.util.IdGenerator;
 import com.util.comparators.*;
@@ -30,18 +32,20 @@ import java.util.stream.Collectors;
 public class BookService implements IBookService {
 
     private static final Logger LOGGER = Logger.getLogger(BookService.class.getName());
-    private static BookService instance;
+//    private static BookService instance;
+    @InjectByType
     private final IBookDao bookDao;
+    @InjectByType
     private final IRequestDao requestDao;
 
     @InjectValueFromProperties(configName = "server", propertyName = "closeRequestAfterAddingBook", type = "boolean")
-    public boolean closeRequestAfterAddingBook;
+    private boolean closeRequestAfterAddingBook;
     @InjectValueFromProperties
-    public int monthToSetBookAsUnsold;
+    private int monthToSetBookAsUnsold;
 
-    private BookService() {
-        this.bookDao = BookDao.getInstance();
-        this.requestDao = RequestDao.getInstance();
+    public BookService() {
+        this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
+        this.requestDao = ApplicationContext.getInstance().getObject(RequestDao.class);
 
 //        try {
 //            FileInputStream fis  = new FileInputStream("Server/src/main/resources/myProp.properties");
@@ -56,12 +60,12 @@ public class BookService implements IBookService {
 //        }
     }
 
-    public static BookService getInstance() {
-        if (instance == null) {
-            instance = new BookService();
-        }
-        return instance;
-    }
+//    public static BookService getInstance() {
+//        if (instance == null) {
+//            instance = new BookService();
+//        }
+//        return instance;
+//    }
 
     public IBookDao getBookDao() {
         return bookDao;
@@ -69,6 +73,14 @@ public class BookService implements IBookService {
 
     public IRequestDao getRequestDao() {
         return requestDao;
+    }
+
+    public boolean isCloseRequestAfterAddingBook() {
+        return closeRequestAfterAddingBook;
+    }
+
+    public int getMonthToSetBookAsUnsold() {
+        return monthToSetBookAsUnsold;
     }
 
     @Override
@@ -88,7 +100,7 @@ public class BookService implements IBookService {
             book.setId(IdGenerator.generateBookId());
             if (closeRequestAfterAddingBook) {
                 if (requestDao.getAll().stream().anyMatch(e -> e.getBook().equals(book))) {
-                    RequestService requestService = RequestService.getInstance();
+                    RequestService requestService = ApplicationContext.getInstance().getObject(RequestService.class);
                     requestService.closeRequest(book.getId());
                 }
             }
