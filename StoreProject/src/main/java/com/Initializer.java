@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.LogManager;
 
-//todo config path naming
-
 
 public class Initializer {
 
@@ -80,7 +78,6 @@ public class Initializer {
         this.bookService = context.getObject(BookService.class);
         this.orderService = context.getObject(OrderService.class);
         this.requestService = context.getObject(RequestService.class);
-
         this.facade = context.getObject(Facade.class);
 
         context.getObject(Deserializator.class);

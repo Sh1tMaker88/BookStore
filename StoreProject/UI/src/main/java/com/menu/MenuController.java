@@ -1,9 +1,12 @@
 package com.menu;
 
 
+import com.action.ConsoleScanner;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,7 +18,6 @@ public class MenuController {
     private static MenuController instance;
     private Builder builder;
     private Navigator navigator;
-    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     private MenuController() {
         builder = Builder.getInstance();
@@ -38,7 +40,7 @@ public class MenuController {
         boolean flag = true;
         while (flag) {
             try {
-                int index = Integer.parseInt(reader.readLine());
+                int index = ConsoleScanner.scanInt();
                 if (index == 0) {
                     flag = false;
                     System.out.printf("%7s\nClosing menu\n%7s\n", "***", "***");

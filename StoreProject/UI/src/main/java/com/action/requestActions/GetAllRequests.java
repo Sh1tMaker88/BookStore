@@ -18,7 +18,7 @@ public class GetAllRequests {
 
     public List<Request> doIt() {
         try {
-            return facade.getRequestService().getRequestDao().getAll();
+            return facade.getRequestService().getAllRequests();
         } catch (DaoException e){
             LOGGER.log(Level.WARNING, "Method doIt from class GetAllRequests failed");
             throw new ActionException("Method doIt failed", e);

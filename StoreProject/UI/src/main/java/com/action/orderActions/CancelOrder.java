@@ -1,5 +1,6 @@
 package com.action.orderActions;
 
+import com.action.ConsoleScanner;
 import com.action.IAction;
 import com.exceptions.DaoException;
 import com.exceptions.ServiceException;
@@ -19,22 +20,22 @@ public class CancelOrder implements IAction {
 
     @Override
     public void execute() {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+        try {
             LOGGER.log(Level.INFO, "If you want to see the list of all orders enter '-1', " +
                     "if back to root menu enter '0'");
             LOGGER.log(Level.INFO, "To discard order enter order ID");
-            Long id = Long.parseLong(reader.readLine());
+            Long id = ConsoleScanner.scanLong();
             if (id.equals(-1L)){
-                System.out.println(facade.getOrderService().getOrderDao().getAll());
+                System.out.println(facade.getOrderService().getAllOrders());
                 LOGGER.log(Level.INFO, "Enter order ID");
-                id = Long.parseLong(reader.readLine());
+                id = ConsoleScanner.scanLong();
                 facade.getOrderService().cancelOrder(id);
-                LOGGER.log(Level.INFO, "You discarded order " + facade.getOrderService().getOrderDao().getById(id));
+                LOGGER.log(Level.INFO, "You discarded order " + facade.getOrderService().getById(id));
             } else if (id.equals(0L)){
 
             } else {
                 facade.getOrderService().cancelOrder(id);
-                LOGGER.log(Level.INFO, "You discarded order " + facade.getOrderService().getOrderDao().getById(id));
+                LOGGER.log(Level.INFO, "You discarded order " + facade.getOrderService().getById(id));
             }
         } catch (DaoException | ServiceException e) {
             LOGGER.log(Level.WARNING, "Method execute failed", e);

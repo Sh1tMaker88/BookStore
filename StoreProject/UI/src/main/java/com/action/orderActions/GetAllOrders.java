@@ -17,7 +17,7 @@ public class GetAllOrders {
 
     public List<Order> doIt() {
         try {
-            return facade.getOrderService().getOrderDao().getAll();
+            return facade.getOrderService().getAllOrders();
         } catch (DaoException e){
             LOGGER.log(Level.WARNING, "Method doIt from class GetAllOrders failed");
             throw new ActionException("Method doIt failed", e);

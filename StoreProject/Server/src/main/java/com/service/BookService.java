@@ -23,8 +23,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-//todo delete getters for com.dao
-
 @Singleton
 @ClassToInjectProperty
 public class BookService implements IBookService {
@@ -57,20 +55,22 @@ public class BookService implements IBookService {
 //        }
     }
 
-    public IBookDao getBookDao() {
-        return bookDao;
-    }
-
-    public IRequestDao getRequestDao() {
-        return requestDao;
-    }
-
     public boolean isCloseRequestAfterAddingBook() {
         return closeRequestAfterAddingBook;
     }
 
     public int getMonthToSetBookAsUnsold() {
         return monthToSetBookAsUnsold;
+    }
+
+    @Override
+    public List<Book> getAllBooks() {
+        return bookDao.getAll();
+    }
+
+    @Override
+    public Book getById(Long id) {
+        return bookDao.getById(id);
     }
 
     @Override

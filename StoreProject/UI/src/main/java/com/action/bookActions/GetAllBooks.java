@@ -17,7 +17,7 @@ public class GetAllBooks {
 
     public List<Book> doIt() {
         try {
-            return facade.getBookService().getBookDao().getAll();
+            return facade.getBookService().getAllBooks();
         } catch (DaoException e){
             LOGGER.log(Level.WARNING, "Method doIt from class GetAllBooks failed");
             throw new ActionException("Method doIt failed", e);

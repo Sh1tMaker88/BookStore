@@ -42,16 +42,14 @@ public class OrderService implements IOrderService {
         this.requestDao = ApplicationContext.getInstance().getObject(RequestDao.class);
     }
 
-    public IBookDao getBookDao() {
-        return bookDao;
+    @Override
+    public List<Order> getAllOrders() {
+        return orderDao.getAll();
     }
 
-    public IOrderDao getOrderDao() {
-        return orderDao;
-    }
-
-    public IRequestDao getRequestDao() {
-        return requestDao;
+    @Override
+    public Order getById(Long id) {
+        return orderDao.getById(id);
     }
 
     @Override

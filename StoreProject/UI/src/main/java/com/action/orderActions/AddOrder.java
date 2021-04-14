@@ -1,5 +1,6 @@
 package com.action.orderActions;
 
+import com.action.ConsoleScanner;
 import com.action.IAction;
 import com.exceptions.DaoException;
 import com.exceptions.ServiceException;
@@ -26,27 +27,27 @@ public class AddOrder implements IAction {
 
         final Facade facade = ApplicationContext.getInstance().getObject(Facade.class);
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+        try  {
             LOGGER.log(Level.INFO, "Enter customer name");
-            String customerName = reader.readLine();
+            String customerName = ConsoleScanner.scanString();
             boolean flag = true;
             List<Book> list = new ArrayList<>();
-            System.out.println(facade.getBookService().getBookDao().getAll());
+            System.out.println(facade.getBookService().getAllBooks());
             //add some books to list
             while (flag) {
                 LOGGER.log(Level.INFO, "Enter book ID");
-                Long id = Long.parseLong(reader.readLine());
+                Long id = ConsoleScanner.scanLong();
                 //if there is this ID add book to list
-                boolean isAnyID = facade.getBookService().getBookDao().getAll().stream().
+                boolean isAnyID = facade.getBookService().getAllBooks().stream().
                         anyMatch(e -> e.getId().equals(id));
                 if (isAnyID) {
-                    Book book = facade.getBookService().getBookDao().getById(id);
+                    Book book = facade.getBookService().getById(id);
                     list.add(book);
                 } else {
                     LOGGER.log(Level.INFO, "There is no such ID");
                 }
                 LOGGER.log(Level.INFO, "If you want add more books enter 1, if no - 0");
-                int continueToAdd = Integer.parseInt(reader.readLine());
+                int continueToAdd = ConsoleScanner.scanInt();
                 if (continueToAdd == 0) {
                     flag = false;
                 }

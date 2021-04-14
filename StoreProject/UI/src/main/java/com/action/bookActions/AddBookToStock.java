@@ -1,5 +1,6 @@
 package com.action.bookActions;
 
+import com.action.ConsoleScanner;
 import com.action.IAction;
 import com.exceptions.ActionException;
 import com.exceptions.DaoException;
@@ -8,9 +9,7 @@ import com.models.Book;
 import com.facade.Facade;
 import com.propertyInjector.ApplicationContext;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,11 +21,12 @@ public class AddBookToStock implements IAction {
     @Override
     public void execute() {
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+        try {
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             LOGGER.log(Level.INFO, "You can add book by 2 ways:\n- printing parameter 1 by 1\n" +
                     "- give all parameters(book name, book author, 'int' yearOfPublish, " +
                     "'double' price, 'String' isbn, pageNumber) separated by ','");
-            String line = reader.readLine();
+            String line = ConsoleScanner.scanString();
             String[] params = line.split(",");
             Book bookToAdd;
             if (params.length == 6) {
@@ -35,18 +35,19 @@ public class AddBookToStock implements IAction {
                         params[4].trim(), Integer.parseInt(params[5].trim()));
             } else {
                 LOGGER.log(Level.INFO, "Enter book author");
-                String author = reader.readLine();
+                String author = ConsoleScanner.scanString();
                 LOGGER.log(Level.INFO, "Enter year of publish");
-                int yearOfPublish = Integer.parseInt(reader.readLine());
+                int yearOfPublish = ConsoleScanner.scanInt();
                 LOGGER.log(Level.INFO, "Enter price");
-                double price = Double.parseDouble(reader.readLine());
+                double price = ConsoleScanner.scanDouble();
                 LOGGER.log(Level.INFO, "Enter isbn");
-                String isbn = reader.readLine();
+                String isbn = ConsoleScanner.scanString();
                 LOGGER.log(Level.INFO, "Enter number of pages");
-                int pages = Integer.parseInt(reader.readLine());
+                int pages = ConsoleScanner.scanInt();
                 bookToAdd = facade.getBookService().addBookToStock(line, author, yearOfPublish, price, isbn, pages);
             }
             LOGGER.log(Level.INFO, "You have added book:\n" + bookToAdd);
+//            reader.close();
         } catch (DaoException | ServiceException e) {
             LOGGER.log(Level.WARNING, "Method execute failed", e);
             e.printStackTrace();

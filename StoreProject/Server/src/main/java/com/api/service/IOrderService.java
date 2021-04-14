@@ -13,11 +13,9 @@ import java.util.List;
 
 public interface IOrderService {
 
-    IBookDao getBookDao();
+    List<Order> getAllOrders();
 
-    IOrderDao getOrderDao();
-
-    IRequestDao getRequestDao();
+    Order getById(Long id);
 
     Order addOrder(String customerName, List<Book> books);
 

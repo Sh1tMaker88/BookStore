@@ -34,12 +34,14 @@ public class RequestService implements IRequestService {
         this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
     }
 
-    public IRequestDao getRequestDao() {
-        return requestDao;
+    @Override
+    public List<Request> getAllRequests() {
+        return requestDao.getAll();
     }
 
-    public IBookDao getBookDao() {
-        return bookDao;
+    @Override
+    public Request getById(Long id) {
+        return requestDao.getById(id);
     }
 
     @Override
