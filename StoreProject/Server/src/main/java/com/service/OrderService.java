@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 public class OrderService implements IOrderService {
 
     private static final Logger LOGGER = Logger.getLogger(OrderService.class.getName());
-//    private static OrderService instance;
     @InjectByType
     private final IBookDao bookDao;
     @InjectByType
@@ -42,13 +41,6 @@ public class OrderService implements IOrderService {
         this.orderDao = ApplicationContext.getInstance().getObject(OrderDao.class);
         this.requestDao = ApplicationContext.getInstance().getObject(RequestDao.class);
     }
-
-//    public static OrderService getInstance() {
-//        if (instance == null) {
-//            instance = new OrderService();
-//        }
-//        return instance;
-//    }
 
     public IBookDao getBookDao() {
         return bookDao;

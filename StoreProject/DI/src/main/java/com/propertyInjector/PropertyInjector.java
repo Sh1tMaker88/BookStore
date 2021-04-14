@@ -19,8 +19,6 @@ import java.util.logging.Logger;
 
 public class PropertyInjector implements IObjectConfigurator {
 
-    //todo delete instance
-    private static PropertyInjector instance;
     private static final Logger LOGGER = Logger.getLogger(PropertyInjector.class.getName());
     private Set<Class<?>> classes = new HashSet<>();
     private String pathToProperties = "";
@@ -28,13 +26,6 @@ public class PropertyInjector implements IObjectConfigurator {
     private ApplicationContext context;
 
     public PropertyInjector() {
-    }
-
-    public static PropertyInjector getInstance() {
-        if (instance == null) {
-            instance = new PropertyInjector();
-        }
-        return instance;
     }
 
     public void configure(Object t, ApplicationContext context) {
@@ -65,40 +56,40 @@ public class PropertyInjector implements IObjectConfigurator {
         }
     }
 
-    public void injectProperty() {
-        //get fields with annotations
-//        Class objClass = obj.getClass();
-        classes = ClassScanner.getInstance().scanForClasses();
-        if (!classes.isEmpty()) {
-            for (Class<?> cls : classes) {
-                Object object = createObject(cls);
-                for (Field field : object.getClass().getDeclaredFields()) {
-                    if (field.isAnnotationPresent(InjectValueFromProperties.class)) {
-                        InjectValueFromProperties annotation = field.getAnnotation(InjectValueFromProperties.class);
-                        //get properties as map if it needed
-                        String path = PropertiesPath.valueOf(annotation.configName().toUpperCase()).getPath();
-                        try {
-                            getProperties(path);
-                        } catch (IOException e) {
-                            LOGGER.log(Level.WARNING, "No properties file to inject property", e);
-                        }
-                        String propValue = annotation.propertyName().isBlank() ? propertiesMap.get(field.getName().toLowerCase()) :
-                                propertiesMap.get(annotation.propertyName().toLowerCase());
-                        //if TYPE value of annotation is present
-                        if (!annotation.type().isEmpty()) {
-                            SetValue.castFieldAndSetValue(object, field, annotation.type(), propValue);
-                        } else /*if TYPE value of annotation isn't set*/ {
-                            if (field.getType().isPrimitive()) {
-                                SetValue.castFieldAndSetValue(object, field, field.getType().toString(), propValue);
-                            } else {
-                                SetValue.castFieldAndSetValue(object, field, "String", propValue);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+//    public void injectProperty() {
+//        //get fields with annotations
+////        Class objClass = obj.getClass();
+//        classes = ClassScanner.getInstance().scanForClasses();
+//        if (!classes.isEmpty()) {
+//            for (Class<?> cls : classes) {
+//                Object object = createObject(cls);
+//                for (Field field : object.getClass().getDeclaredFields()) {
+//                    if (field.isAnnotationPresent(InjectValueFromProperties.class)) {
+//                        InjectValueFromProperties annotation = field.getAnnotation(InjectValueFromProperties.class);
+//                        //get properties as map if it needed
+//                        String path = PropertiesPath.valueOf(annotation.configName().toUpperCase()).getPath();
+//                        try {
+//                            getProperties(path);
+//                        } catch (IOException e) {
+//                            LOGGER.log(Level.WARNING, "No properties file to inject property", e);
+//                        }
+//                        String propValue = annotation.propertyName().isBlank() ? propertiesMap.get(field.getName().toLowerCase()) :
+//                                propertiesMap.get(annotation.propertyName().toLowerCase());
+//                        //if TYPE value of annotation is present
+//                        if (!annotation.type().isEmpty()) {
+//                            SetValue.castFieldAndSetValue(object, field, annotation.type(), propValue);
+//                        } else /*if TYPE value of annotation isn't set*/ {
+//                            if (field.getType().isPrimitive()) {
+//                                SetValue.castFieldAndSetValue(object, field, field.getType().toString(), propValue);
+//                            } else {
+//                                SetValue.castFieldAndSetValue(object, field, "String", propValue);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     private void getProperties(String path) throws IOException {
 //        pathToProperties = ClassLoader.getSystemClassLoader().
@@ -113,24 +104,24 @@ public class PropertyInjector implements IObjectConfigurator {
         }
     }
 
-    private <T> T createObject(Class<T> cls) {
-        T t = null;
-        try {
-            if (cls.getDeclaredConstructor().getModifiers() == Modifier.PRIVATE) {
-                Method method = cls.getMethod("getInstance");
-                t = (T) method.invoke(cls);
-
-            } else {
-                t = cls.getDeclaredConstructor().newInstance();
-            }
-            Field field = t.getClass().getDeclaredField("instance");
-            field.setAccessible(true);
-            field.set(t, t);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException
-                | NoSuchMethodException | NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-        return t;
-    }
+//    private <T> T createObject(Class<T> cls) {
+//        T t = null;
+//        try {
+//            if (cls.getDeclaredConstructor().getModifiers() == Modifier.PRIVATE) {
+//                Method method = cls.getMethod("getInstance");
+//                t = (T) method.invoke(cls);
+//
+//            } else {
+//                t = cls.getDeclaredConstructor().newInstance();
+//            }
+//            Field field = t.getClass().getDeclaredField("instance");
+//            field.setAccessible(true);
+//            field.set(t, t);
+//        } catch (InstantiationException | IllegalAccessException | InvocationTargetException
+//                | NoSuchMethodException | NoSuchFieldException e) {
+//            e.printStackTrace();
+//        }
+//        return t;
+//    }
 
 }

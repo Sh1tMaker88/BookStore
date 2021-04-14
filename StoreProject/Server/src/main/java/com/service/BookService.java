@@ -14,11 +14,9 @@ import com.exceptions.ServiceException;
 import com.models.Book;
 import com.models.BookStatus;
 import com.propertyInjector.ApplicationContext;
-import com.propertyInjector.PropertyInjector;
 import com.util.IdGenerator;
 import com.util.comparators.*;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,7 +30,6 @@ import java.util.stream.Collectors;
 public class BookService implements IBookService {
 
     private static final Logger LOGGER = Logger.getLogger(BookService.class.getName());
-//    private static BookService instance;
     @InjectByType
     private final IBookDao bookDao;
     @InjectByType
@@ -59,13 +56,6 @@ public class BookService implements IBookService {
 //            LOGGER.log(Level.WARNING, "Properties file not found");
 //        }
     }
-
-//    public static BookService getInstance() {
-//        if (instance == null) {
-//            instance = new BookService();
-//        }
-//        return instance;
-//    }
 
     public IBookDao getBookDao() {
         return bookDao;

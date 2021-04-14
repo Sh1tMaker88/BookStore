@@ -1,5 +1,6 @@
 package com;
 
+import com.annotations.InjectByType;
 import com.annotations.Singleton;
 import com.api.dao.IBookDao;
 import com.api.dao.IOrderDao;
@@ -35,7 +36,20 @@ import java.util.logging.LogManager;
 
 public class Initializer {
 
-    Facade facade;
+    @InjectByType
+    private final IBookDao bookDao;
+    @InjectByType
+    private final IOrderDao orderDao;
+    @InjectByType
+    private final IRequestDao requestDao;
+    @InjectByType
+    private final IOrderService orderService;
+    @InjectByType
+    private final IBookService bookService;
+    @InjectByType
+    private final IRequestService requestService;
+    @InjectByType
+    private final Facade facade;
 
     static {
         try (InputStream configuration = new FileInputStream("UI/src/main/resources/logger.properties")) {
@@ -51,9 +65,26 @@ public class Initializer {
     }
 
     public Initializer() {
+        ApplicationContext context = Runner.run("com",
+                new HashMap<>(Map.of(
+//                        IBookDao.class, BookDao.class,
+//                        IOrderDao.class, OrderDao.class,
+//                        IRequestDao.class, RequestDao.class,
+//                        IOrderService.class, OrderService.class,
+//                        IBookService.class, BookService.class,
+//                        IRequestService.class, RequestService.class
+                )));
+        this.bookDao = context.getObject(BookDao.class);
+        this.orderDao = context.getObject(OrderDao.class);
+        this.requestDao = context.getObject(RequestDao.class);
+        this.bookService = context.getObject(BookService.class);
+        this.orderService = context.getObject(OrderService.class);
+        this.requestService = context.getObject(RequestService.class);
 
-//        facade = ApplicationContext.getInstance().getObject(Facade.class);
-//
+        this.facade = context.getObject(Facade.class);
+
+        context.getObject(Deserializator.class);
+
 //        Book book1 = facade.getBookService().addBookToStock
 //                ("King", "Arthur", 2001, 43.2, "2342345", 522);
 //        Book book2 = facade.getBookService().addBookToStock

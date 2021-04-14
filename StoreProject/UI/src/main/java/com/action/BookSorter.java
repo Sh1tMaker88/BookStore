@@ -1,6 +1,5 @@
 package com.action;
 
-import com.action.bookActions.AddBookToStock;
 import com.action.bookActions.GetAllBooks;
 import com.exceptions.ActionException;
 import com.models.Book;
@@ -54,5 +53,4 @@ public class BookSorter implements IAction{
             LOGGER.log(Level.WARNING, "Method execute failed", e);
         }
     }
-
 }

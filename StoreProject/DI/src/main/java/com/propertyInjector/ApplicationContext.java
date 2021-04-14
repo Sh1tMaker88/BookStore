@@ -49,6 +49,9 @@ public class ApplicationContext {
         if (type.isInterface()) {
             implClass = config.getClassToImplement(type);
         }
+        if (cache.containsKey(implClass)) {
+            return (T) cache.get(implClass);
+        }
         T t = creator.createAndConfigure(implClass);
 
         if (implClass.isAnnotationPresent(Singleton.class)) {

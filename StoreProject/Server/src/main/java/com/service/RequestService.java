@@ -24,7 +24,6 @@ import java.util.logging.Logger;
 public class RequestService implements IRequestService {
 
     private static final Logger LOGGER = Logger.getLogger(RequestService.class.getName());
-//    private static RequestService instance;
     @InjectByType
     private final IRequestDao requestDao;
     @InjectByType
@@ -34,13 +33,6 @@ public class RequestService implements IRequestService {
         this.requestDao = ApplicationContext.getInstance().getObject(RequestDao.class);
         this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
     }
-
-//    public static RequestService getInstance() {
-//        if (instance == null) {
-//            instance = new RequestService();
-//        }
-//        return instance;
-//    }
 
     public IRequestDao getRequestDao() {
         return requestDao;

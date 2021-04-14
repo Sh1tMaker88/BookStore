@@ -8,7 +8,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-
 public class MenuController {
 
     private static final Logger LOGGER = Logger.getLogger(MenuController.class.getName());
@@ -22,11 +21,6 @@ public class MenuController {
         builder = Builder.getInstance();
         builder.buildMenu();
         navigator = Navigator.getInstance();
-
-//        PropertyInjector propertyInjector = PropertyInjector.getInstance();
-//        propertyInjector.injectProperty();
-//        System.out.println("___---" + BookService.getInstance().monthToSetBookAsUnsold);
-//        System.out.println("___---" + BookService.getInstance().closeRequestAfterAddingBook);
     }
 
     public static MenuController getInstance() {

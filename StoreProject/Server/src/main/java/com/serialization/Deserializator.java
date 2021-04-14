@@ -11,9 +11,6 @@ import com.models.Book;
 import com.models.Order;
 import com.models.Request;
 import com.propertyInjector.ApplicationContext;
-import com.service.BookService;
-import com.service.OrderService;
-import com.service.RequestService;
 import com.util.IdGenerator;
 
 import java.io.*;
@@ -23,12 +20,14 @@ import java.util.logging.Logger;
 
 public class Deserializator {
 
+    //todo path to files set in properties
+
     private static final Logger LOGGER = Logger.getLogger(Deserializator.class.getName());
-//    @InjectByType
+    @InjectByType
     private final IBookDao bookDao;
-//    @InjectByType
+    @InjectByType
     private final IOrderDao orderDao;
-//    @InjectByType
+    @InjectByType
     private final IRequestDao requestDao;
 
     public Deserializator() {

@@ -1,6 +1,5 @@
 package com.menu;
 
-import com.annotations.Singleton;
 
 public class Navigator {
 

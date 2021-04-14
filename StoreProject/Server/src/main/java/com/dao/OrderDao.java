@@ -7,18 +7,8 @@ import com.models.Order;
 @Singleton
 public class OrderDao extends AbstractDao<Order> implements IOrderDao {
 
-    //todo delete instance
-//    private static OrderDao instance;
-
     public OrderDao() {
     }
-
-//    public static OrderDao getInstance(){
-//        if (instance == null) {
-//            instance = new OrderDao();
-//        }
-//        return instance;
-//    }
 
     @Override
     public Order update(Order entity) {

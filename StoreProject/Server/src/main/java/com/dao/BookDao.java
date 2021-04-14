@@ -3,23 +3,13 @@ package com.dao;
 import com.annotations.Singleton;
 import com.api.dao.IBookDao;
 import com.models.Book;
+import com.propertyInjector.ApplicationContext;
 
 @Singleton
 public class BookDao extends AbstractDao<Book> implements IBookDao {
 
-    //todo delete instance
-//    private static BookDao instance;
-
     public BookDao() {
-
     }
-
-//    public static BookDao getInstance(){
-//        if (instance == null) {
-//            instance = new BookDao();
-//        }
-//        return instance;
-//    }
 
     @Override
     public Book update(Book entity) {
