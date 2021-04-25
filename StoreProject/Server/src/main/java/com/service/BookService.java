@@ -9,6 +9,7 @@ import com.api.dao.IRequestDao;
 import com.api.service.IBookService;
 import com.dao.BookDao;
 import com.dao.RequestDao;
+import com.dao.util.Connector;
 import com.exceptions.DaoException;
 import com.exceptions.ServiceException;
 import com.models.Book;
@@ -17,6 +18,10 @@ import com.propertyInjector.ApplicationContext;
 import com.util.IdGenerator;
 import com.util.comparators.*;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,35 +37,19 @@ public class BookService implements IBookService {
     private final IBookDao bookDao;
     @InjectByType
     private final IRequestDao requestDao;
+    private final Connector connector;
 
     @InjectValueFromProperties(configName = "server", propertyName = "closeRequestAfterAddingBook", type = "boolean")
     private boolean closeRequestAfterAddingBook;
     @InjectValueFromProperties
     private int monthToSetBookAsUnsold;
 
+    private final String SHOW_DESCRIPTION_QUERY = "SELECT description FROM book WHERE id=?";
+
     public BookService() {
         this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
         this.requestDao = ApplicationContext.getInstance().getObject(RequestDao.class);
-
-//        try {
-//            FileInputStream fis  = new FileInputStream("Server/src/main/resources/myProp.properties");
-//            Properties prop = new Properties();
-//            prop.load(fis);
-//            this.closeRequestAfterAddingBook =
-//                    Boolean.parseBoolean
-//                            (prop.getProperty("CLOSE_REQUEST_AFTER_ADDING_BOOK", "false"));
-//            this.monthToSetBookAsUnsold = Integer.parseInt(prop.getProperty("UNSOLD_BOOK_MONTH", "-1"));
-//        } catch (IOException e) {
-//            LOGGER.log(Level.WARNING, "Properties file not found");
-//        }
-    }
-
-    public boolean isCloseRequestAfterAddingBook() {
-        return closeRequestAfterAddingBook;
-    }
-
-    public int getMonthToSetBookAsUnsold() {
-        return monthToSetBookAsUnsold;
+        this.connector = ApplicationContext.getInstance().getObject(Connector.class);
     }
 
     @Override
@@ -74,10 +63,16 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public Book addBookToStock(String name, String author, int yearOfPublish, double price, String isbn, int pageNumber) {
+    public Book addBookToStock(String name, String author, String isbn, int pageNumber
+            , double price, int yearOfPublish, String description, BookStatus bookStatus, LocalDate arrivalDate) {
         try {
-            Book book = new Book(name, author, yearOfPublish, price, isbn, pageNumber);
-            return addBookToStock(book);
+            if (closeRequestAfterAddingBook) {
+                //todo this
+            }
+            Book book = new Book(name, author, isbn, pageNumber, price, yearOfPublish, description, bookStatus, arrivalDate);
+            LOGGER.log(Level.INFO, "Adding book to data base: " + book);
+            bookDao.create(book);
+            return book;
         } catch (DaoException e) {
             LOGGER.log(Level.WARNING, "Method addBookToStock failed", e);
             throw new ServiceException("Method addBookToStock failed", e);
@@ -85,22 +80,49 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public Book addBookToStock(Book book) {
+    public Book addBookToStock(String name, String author, String isbn, int pageNumber
+            , double price, int yearOfPublish, String description) {
         try {
-            book.setId(IdGenerator.generateBookId());
             if (closeRequestAfterAddingBook) {
-                if (requestDao.getAll().stream().anyMatch(e -> e.getBook().equals(book))) {
-                    RequestService requestService = ApplicationContext.getInstance().getObject(RequestService.class);
-                    requestService.closeRequest(book.getId());
-                }
+                //todo this
             }
-            LOGGER.log(Level.INFO, "Creating book" + book);
+            Book book = new Book(name, author, isbn, pageNumber, price, yearOfPublish, description);
+            LOGGER.log(Level.INFO, "Adding book to data base: " + book);
             bookDao.create(book);
             return book;
         } catch (DaoException e) {
             LOGGER.log(Level.WARNING, "Method addBookToStock failed", e);
             throw new ServiceException("Method addBookToStock failed", e);
         }
+    }
+
+//    @Override
+//    public Book addBookToStock(Book book) {
+//        try {
+//            book.setId(IdGenerator.generateBookId());
+//            if (closeRequestAfterAddingBook) {
+//                if (requestDao.getAll().stream().anyMatch(e -> e.getBook().equals(book))) {
+//                    RequestService requestService = ApplicationContext.getInstance().getObject(RequestService.class);
+//                    requestService.closeRequest(book.getId());
+//                }
+//            }
+//            LOGGER.log(Level.INFO, "Creating book" + book);
+//            bookDao.create(book);
+//            return book;
+//        } catch (DaoException e) {
+//            LOGGER.log(Level.WARNING, "Method addBookToStock failed", e);
+//            throw new ServiceException("Method addBookToStock failed", e);
+//        }
+//    }
+
+    @Override
+    public Book addBookToStock(Book book) {
+        if (closeRequestAfterAddingBook) {
+            //todo this
+        }
+        LOGGER.log(Level.INFO, "Create book" + book);
+        bookDao.create(book);
+        return book;
     }
 
     @Override
@@ -119,8 +141,18 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public void showDescription(Book book) {
-        System.out.println("Description of " + book.getName() + ":\n" + book.getDescription());
+    public void showDescription(Long id) {
+        Connection connection = connector.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(SHOW_DESCRIPTION_QUERY)) {
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            LOGGER.log(Level.INFO, "Description for book with id=" + id + " is:\n"
+                    + resultSet.getString("description"));
+        } catch (SQLException e) {
+            LOGGER.log(Level.WARNING, "Method showDescription failed", e);
+            throw new ServiceException("Method showDescription failed", e);
+        }
     }
 
     @Override
@@ -133,7 +165,7 @@ public class BookService implements IBookService {
             return list;
         } catch (ServiceException e) {
             LOGGER.log(Level.WARNING, "Method booksNotBoughtMoreThanSixMonth failed", e);
-            throw e;
+            throw new ServiceException("Method booksNotBoughtMoreThanSixMonth failed", e);
         }
     }
 

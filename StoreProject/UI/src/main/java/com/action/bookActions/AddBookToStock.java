@@ -5,11 +5,12 @@ import com.action.IAction;
 import com.exceptions.ActionException;
 import com.exceptions.DaoException;
 import com.exceptions.ServiceException;
-import com.models.Book;
 import com.facade.Facade;
+import com.models.BookStatus;
 import com.propertyInjector.ApplicationContext;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,32 +23,24 @@ public class AddBookToStock implements IAction {
     public void execute() {
 
         try {
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            LOGGER.log(Level.INFO, "You can add book by 2 ways:\n- printing parameter 1 by 1\n" +
-                    "- give all parameters(book name, book author, 'int' yearOfPublish, " +
-                    "'double' price, 'String' isbn, pageNumber) separated by ','");
+            LOGGER.log(Level.INFO, "You can add book by 2 ways:\n" +
+                    "- give all parameters(book name, book author, 'String' isbn, " +
+                    "number of pages, 'double' price, 'int' yearOfPublish\n, 'String' description, " +
+                    "status('in_stock' or 'out_of_stock'), arrival date format 'yyyy-MM-dd') separated by ','\n" +
+                    "- give parameters without arrival date and status(status become 'in_stock' and date set for today\n");
             String line = ConsoleScanner.scanString();
             String[] params = line.split(",");
-            Book bookToAdd;
-            if (params.length == 6) {
-                bookToAdd = facade.getBookService().addBookToStock(params[0].trim(), params[1].trim(),
-                        Integer.parseInt(params[2].trim()), Double.parseDouble(params[3].trim()),
-                        params[4].trim(), Integer.parseInt(params[5].trim()));
+            if (params.length == 9) {
+                facade.getBookService().addBookToStock(params[0].trim(), params[1].trim(), params[2].trim()
+                        , Integer.parseInt(params[3].trim()), Double.parseDouble(params[4].trim())
+                        , Integer.parseInt(params[5].trim()), params[6].trim()
+                        , BookStatus.valueOf(params[7].trim().toUpperCase()), LocalDate.parse(params[8]));
             } else {
-                LOGGER.log(Level.INFO, "Enter book author");
-                String author = ConsoleScanner.scanString();
-                LOGGER.log(Level.INFO, "Enter year of publish");
-                int yearOfPublish = ConsoleScanner.scanInt();
-                LOGGER.log(Level.INFO, "Enter price");
-                double price = ConsoleScanner.scanDouble();
-                LOGGER.log(Level.INFO, "Enter isbn");
-                String isbn = ConsoleScanner.scanString();
-                LOGGER.log(Level.INFO, "Enter number of pages");
-                int pages = ConsoleScanner.scanInt();
-                bookToAdd = facade.getBookService().addBookToStock(line, author, yearOfPublish, price, isbn, pages);
+                facade.getBookService().addBookToStock(params[0].trim(), params[1].trim(), params[2].trim()
+                        , Integer.parseInt(params[3].trim()), Double.parseDouble(params[4].trim())
+                        , Integer.parseInt(params[5].trim()), params[6].trim());
             }
-            LOGGER.log(Level.INFO, "You have added book:\n" + bookToAdd);
-//            reader.close();
+            LOGGER.log(Level.INFO, "You have added book\n");
         } catch (DaoException | ServiceException e) {
             LOGGER.log(Level.WARNING, "Method execute failed", e);
             e.printStackTrace();

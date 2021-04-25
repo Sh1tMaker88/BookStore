@@ -18,16 +18,36 @@ public class Book extends AIdentity implements Serializable {
     private String description = "";
     private LocalDate arrivalDate;
 
-    public Book(String name, String author, int yearOfPublish, double price, String isbn, int pageNumber) {
+    public Book() {
+    }
+
+    public Book(String name, String author, String isbn, int pageNumber
+            , double price, int yearOfPublish, String description) {
         this.name = name;
         this.author = author;
-        this.yearOfPublish = yearOfPublish;
-        this.price = price;
         this.isbn = isbn;
         this.pageNumber = pageNumber;
+        this.price = price;
+        this.yearOfPublish = yearOfPublish;
+        this.description = description;
         this.bookStatus = BookStatus.IN_STOCK;
         this.arrivalDate = LocalDate.now();
     }
+
+    public Book(String name, String author, String isbn, int pageNumber, double price
+            , int yearOfPublish, String description, BookStatus bookStatus, LocalDate arrivalDate) {
+        this.name = name;
+        this.author = author;
+        this.isbn = isbn;
+        this.pageNumber = pageNumber;
+        this.bookStatus = bookStatus;
+        this.price = price;
+        this.yearOfPublish = yearOfPublish;
+        this.description = description;
+        this.arrivalDate = arrivalDate;
+    }
+
+
 
     public LocalDate getArrivalDate() {
         return arrivalDate;
@@ -110,6 +130,7 @@ public class Book extends AIdentity implements Serializable {
     }
 
 
+    //todo refactor comparing
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -129,7 +150,8 @@ public class Book extends AIdentity implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, author, isbn, pageNumber, bookStatus, price, orderCount, yearOfPublish, description, arrivalDate);
+        return Objects.hash(name, author, isbn, pageNumber, bookStatus, price, orderCount
+                , yearOfPublish, description, arrivalDate);
     }
 
     @Override

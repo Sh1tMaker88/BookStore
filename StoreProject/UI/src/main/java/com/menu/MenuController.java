@@ -2,6 +2,7 @@ package com.menu;
 
 
 import com.action.ConsoleScanner;
+import com.serialization.Serializator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class MenuController {
             try {
                 int index = ConsoleScanner.scanInt();
                 if (index == 0) {
+//                    new Serializator();
                     flag = false;
                     System.out.printf("%7s\nClosing menu\n%7s\n", "***", "***");
                 } else if (index > 0 && index <= navigator.getCurrentMenu().getMenuItems().size()) {

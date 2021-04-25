@@ -11,8 +11,10 @@ import com.api.service.IRequestService;
 import com.dao.BookDao;
 import com.dao.OrderDao;
 import com.dao.RequestDao;
+import com.dao.util.Connector;
 import com.facade.Facade;
 import com.models.Book;
+import com.models.BookStatus;
 import com.models.Order;
 import com.propertyInjector.ApplicationContext;
 import com.propertyInjector.Runner;
@@ -48,6 +50,8 @@ public class Initializer {
     private final IRequestService requestService;
     @InjectByType
     private final Facade facade;
+    @InjectByType
+    private final Connector connector;
 
     static {
         try (InputStream configuration = new FileInputStream("UI/src/main/resources/logger.properties")) {
@@ -72,6 +76,7 @@ public class Initializer {
 //                        IBookService.class, BookService.class,
 //                        IRequestService.class, RequestService.class
                 )));
+        this.connector = context.getObject(Connector.class);
         this.bookDao = context.getObject(BookDao.class);
         this.orderDao = context.getObject(OrderDao.class);
         this.requestDao = context.getObject(RequestDao.class);
@@ -80,35 +85,26 @@ public class Initializer {
         this.requestService = context.getObject(RequestService.class);
         this.facade = context.getObject(Facade.class);
 
-        context.getObject(Deserializator.class);
 
-//        Book book1 = facade.getBookService().addBookToStock
-//                ("King", "Arthur", 2001, 43.2, "2342345", 522);
-//        Book book2 = facade.getBookService().addBookToStock
-//                ("Gilead", "Stiven", 1963, 35.5, "423asdf45", 443);
-//        Book book3 = facade.getBookService().addBookToStock
-//                ("Harry Potter", "Joanne Rowling", 1996, 48.0, "42s3dsaf45", 840);
-//        Book book4 = facade.getBookService().addBookToStock
-//                ("Code Complete", "McConnell", 2004, 52.5, " 0-7356-1967-0", 869);
-//        List<Book> orderedBooks1 = new ArrayList<>();
-//        orderedBooks1.add(book2);
-//        orderedBooks1.add(book3);
-//        List<Book> orderedBooks2 = new ArrayList<>();
-//        orderedBooks2.add(book1);
-//        orderedBooks2.add(book3);
-//        Order order1 = facade.getOrderService().addOrder("Vadim", orderedBooks1);
-//        Order order2 = facade.getOrderService().addOrder("Helen", orderedBooks2);
-//
-//        LocalDate lc = LocalDate.parse("2018-08-30");
-//        LocalDate lc2 = LocalDate.now();
-//        book1.setArrivalDate(lc);
-//        book2.setArrivalDate(lc);
-//        book3.setArrivalDate(lc2);
-//        book4.setArrivalDate(lc2);
-//
-//        facade.getRequestService().addRequest(
-//                new Book("Some book", "Crazy Author", 2021, 20.2, "adsfjnh32df", 333));
+//        Book b1 = new Book("book_name", "author", "isbn", 444
+//                , BookStatus.IN_STOCK, 10.5, 2021, "about life", LocalDate.now());
+//        bookDao.create(b1);
+//        Book b2 = bookDao.getById(15L);
+//        b2.setName("changed");
+//        b2.setAuthor("changed");
+//        b2.setBookStatus(BookStatus.OUT_OF_STOCK);
+//        b2.setPrice(55.1);
+//        b2.setIsbn("changed");
+//        b2.setPageNumber(1111);
+//        b2.setYearOfPublish(2000);
+//        b2.setOrderCount(5);
+//        b2.setDescription("and death");
+//        b2.setArrivalDate(LocalDate.parse("2020-02-20"));
+//        bookDao.update(b2);
+//        bookDao.delete(b2);
 
-//        System.out.println(facade.getBookService().getBookDao().getAll());
+//        Book b1 = new Book();
+//        Facade facade = ApplicationContext.getInstance().getObject(Facade.class);
+//        facade.getBookService().addBookToStock(b1);
     }
 }
