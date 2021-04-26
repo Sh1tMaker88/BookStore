@@ -43,7 +43,11 @@ public class ResultSetToObject {
 
     private static Request createRequest(ResultSet resultSet) throws SQLException {
         Request request = new Request();
-        request.setBook_id(resultSet.getLong("id"));
+        request.setId(resultSet.getLong("id"));
+        request.setBook_id(resultSet.getLong("book_id"));
+        request.setRequestDate(DateConverter.asLocalDateTime(resultSet.getTimestamp("date")));
+        request.setRequestStatus(RequestStatus.valueOf(resultSet.getString("status")));
+        request.setRequestCount(resultSet.getInt("request_count"));
         return request;
     }
 

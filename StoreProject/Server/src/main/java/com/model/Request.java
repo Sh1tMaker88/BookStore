@@ -78,10 +78,10 @@ public class Request extends AIdentity implements Serializable {
     public String toString() {
         return "Request{" +
                 "requestID=" + getId() +
+                ", book_id=" + book_id +
                 ", requestDate=" + requestDate.format(DateTimeFormatter.ofPattern("yyyy-MMM-dd", Locale.ENGLISH)) +
                 ", requestStatus=" + requestStatus +
-                ", book_id=" + book_id +
-                "} ";
+                "}\n";
     }
 }
 //requestDate=2021-3-02

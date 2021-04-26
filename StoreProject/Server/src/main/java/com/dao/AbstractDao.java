@@ -75,6 +75,7 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
             if (dataFromDB.size() != resultSet.getInt(1)) {
                 try (PreparedStatement statement2 = connection.prepareStatement(sql)) {
                     ResultSet resGetAll = statement2.executeQuery(sql);
+                    dataFromDB.clear();
                     while (resGetAll.next()) {
                         dataFromDB.add((T)ResultSetToObject.parseResultSet(resGetAll, getTableName()));
                     }
