@@ -1,9 +1,7 @@
 package com.api.service;
 
-import com.api.dao.IBookDao;
-import com.api.dao.IRequestDao;
-import com.models.Book;
-import com.models.BookStatus;
+import com.model.Book;
+import com.model.BookStatus;
 import com.service.BookSort;
 
 import java.time.LocalDate;

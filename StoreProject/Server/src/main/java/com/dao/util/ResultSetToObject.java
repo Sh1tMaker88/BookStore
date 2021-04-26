@@ -1,8 +1,6 @@
 package com.dao.util;
 
-import com.models.AIdentity;
-import com.models.Book;
-import com.models.BookStatus;
+import com.model.*;
 import com.util.DateConverter;
 
 import java.sql.ResultSet;
@@ -15,13 +13,10 @@ public class ResultSetToObject {
             switch (tableName.toUpperCase()) {
                 case "BOOK":
                     return createBook(resultSet);
-//                    break;
-//                case "ORDER":
-//                    return createOrder(resultSet);
-//                    break;
-//                case "REQUEST":
-//                    return createRequest(resultSet);
-//                    break;
+                case "REQUEST":
+                    return createRequest(resultSet);
+                case "ORDER":
+                    return createOrder(resultSet);
                 default:
                     throw new RuntimeException("Unknown table name: " + tableName);
             }
@@ -44,5 +39,18 @@ public class ResultSetToObject {
         book.setArrivalDate(DateConverter.asLocalDate(resultSet.getDate("arrival_date")));
         book.setOrderCount(resultSet.getInt("order_count"));
         return book;
+    }
+
+    private static Request createRequest(ResultSet resultSet) throws SQLException {
+        Request request = new Request();
+        request.setBook_id(resultSet.getLong("id"));
+        return request;
+    }
+
+    //todo make it
+    private static Order createOrder(ResultSet resultSet) throws SQLException {
+        Order order = new Order();
+
+        return order;
     }
 }

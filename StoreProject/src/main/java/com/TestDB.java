@@ -37,10 +37,12 @@ public class TestDB {
 
 
             Statement statement2 = connection.createStatement();
-            String sql = "SELECT model FROM pc WHERE code=1";
+            String sql = "SELECT model FROM pc WHERE code=55";
             ResultSet resultSet1 = statement2.executeQuery(sql);
-            resultSet1.next();
-            System.out.println(resultSet1.getString("model"));
+            System.out.println();
+            System.out.println(resultSet1.next());
+//            String i = resultSet1.getString("model");
+//            System.out.println(i);
         } catch (SQLException e) {
             e.printStackTrace();
         }

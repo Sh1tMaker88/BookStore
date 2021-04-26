@@ -2,7 +2,7 @@ package com.dao;
 
 import com.annotations.Singleton;
 import com.api.dao.IOrderDao;
-import com.models.Order;
+import com.model.Order;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

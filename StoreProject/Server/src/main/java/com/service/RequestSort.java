@@ -1,5 +1,5 @@
 package com.service;
 
 public enum RequestSort {
-    ALPHABETICAL, NUMBERS, ID
+    COUNTER, NUMBERS, ID
 }

@@ -1,7 +1,6 @@
 package com;
 
 import com.annotations.InjectByType;
-import com.annotations.Singleton;
 import com.api.dao.IBookDao;
 import com.api.dao.IOrderDao;
 import com.api.dao.IRequestDao;
@@ -13,12 +12,8 @@ import com.dao.OrderDao;
 import com.dao.RequestDao;
 import com.dao.util.Connector;
 import com.facade.Facade;
-import com.models.Book;
-import com.models.BookStatus;
-import com.models.Order;
 import com.propertyInjector.ApplicationContext;
 import com.propertyInjector.Runner;
-import com.serialization.Deserializator;
 import com.service.BookService;
 import com.service.OrderService;
 import com.service.RequestService;
@@ -26,10 +21,7 @@ import com.service.RequestService;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.LogManager;
 

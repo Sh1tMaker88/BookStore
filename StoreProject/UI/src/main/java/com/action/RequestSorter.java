@@ -1,10 +1,10 @@
 package com.action;
 
-import com.action.requestActions.GetAllRequests;
-import com.exceptions.ActionException;
-import com.models.Request;
-import com.util.comparators.RequestAlphabeticalComparator;
-import com.util.comparators.RequestIdComparator;
+import com.action.requestAction.GetAllRequests;
+import com.exception.ActionException;
+import com.model.Request;
+import com.util.comparator.RequestCounterComparator;
+import com.util.comparator.RequestIdComparator;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public class RequestSorter implements IAction{
         this.method = method;
         sortRequestsBy = new HashMap<>();
         sortRequestsBy.put(1, new RequestIdComparator());
-        sortRequestsBy.put(2, new RequestAlphabeticalComparator());
+        sortRequestsBy.put(2, new RequestCounterComparator());
     }
 
     public void setRequests(List<Request> requests) {

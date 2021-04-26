@@ -1,10 +1,10 @@
 package com.action;
 
-import com.action.bookActions.GetAllBooks;
-import com.exceptions.ActionException;
-import com.models.Book;
-import com.action.bookActions.GetBooksNotBoughtMoreThanSixMonth;
-import com.util.comparators.*;
+import com.action.bookAction.GetAllBooks;
+import com.exception.ActionException;
+import com.model.Book;
+import com.action.bookAction.GetBooksNotBoughtMoreThanSixMonth;
+import com.util.comparator.*;
 
 import java.util.Comparator;
 import java.util.HashMap;

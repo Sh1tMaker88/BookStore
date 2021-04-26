@@ -1,12 +1,12 @@
 package com.action;
 
-import com.action.orderActions.GetAllOrders;
-import com.exceptions.ActionException;
-import com.models.Order;
-import com.util.comparators.OrderDateOfDoneComparator;
-import com.util.comparators.OrderIdComparator;
-import com.util.comparators.OrderPriceComparator;
-import com.util.comparators.OrderStatusComparator;
+import com.action.orderAction.GetAllOrders;
+import com.exception.ActionException;
+import com.model.Order;
+import com.util.comparator.OrderDateOfDoneComparator;
+import com.util.comparator.OrderIdComparator;
+import com.util.comparator.OrderPriceComparator;
+import com.util.comparator.OrderStatusComparator;
 
 import java.util.Comparator;
 import java.util.HashMap;

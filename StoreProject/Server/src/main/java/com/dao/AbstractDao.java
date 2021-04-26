@@ -1,11 +1,10 @@
 package com.dao;
 
-import com.annotations.InjectByType;
 import com.api.dao.GenericDao;
 import com.dao.util.Connector;
 import com.dao.util.ResultSetToObject;
-import com.exceptions.DaoException;
-import com.models.AIdentity;
+import com.exception.DaoException;
+import com.model.AIdentity;
 import com.propertyInjector.ApplicationContext;
 
 import java.sql.*;

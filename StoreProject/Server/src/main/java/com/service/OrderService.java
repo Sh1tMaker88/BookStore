@@ -9,15 +9,15 @@ import com.api.service.IOrderService;
 import com.dao.BookDao;
 import com.dao.OrderDao;
 import com.dao.RequestDao;
-import com.exceptions.DaoException;
-import com.exceptions.ServiceException;
-import com.models.*;
+import com.exception.DaoException;
+import com.exception.ServiceException;
+import com.model.*;
 import com.propertyInjector.ApplicationContext;
 import com.util.IdGenerator;
-import com.util.comparators.OrderDateOfDoneComparator;
-import com.util.comparators.OrderIdComparator;
-import com.util.comparators.OrderPriceComparator;
-import com.util.comparators.OrderStatusComparator;
+import com.util.comparator.OrderDateOfDoneComparator;
+import com.util.comparator.OrderIdComparator;
+import com.util.comparator.OrderPriceComparator;
+import com.util.comparator.OrderStatusComparator;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -63,7 +63,7 @@ public class OrderService implements IOrderService {
                 b.setOrderCount(b.getOrderCount() + 1);
                 if (b.getBookStatus().equals(BookStatus.OUT_OF_STOCK)) {
                     LOGGER.log(Level.INFO, "Book with id=" + b.getId() + " is out of stock, adding request for it");
-                    Request request = new Request(b);
+                    Request request = new Request(b.getId());
                     request.setId(IdGenerator.generateRequestId());
                     requestDao.create(request);
                 }

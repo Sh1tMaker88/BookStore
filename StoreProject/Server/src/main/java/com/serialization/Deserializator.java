@@ -7,9 +7,9 @@ import com.api.dao.IRequestDao;
 import com.dao.BookDao;
 import com.dao.OrderDao;
 import com.dao.RequestDao;
-import com.models.Book;
-import com.models.Order;
-import com.models.Request;
+import com.model.Book;
+import com.model.Order;
+import com.model.Request;
 import com.propertyInjector.ApplicationContext;
 import com.util.IdGenerator;
 

@@ -10,13 +10,12 @@ import com.api.service.IBookService;
 import com.dao.BookDao;
 import com.dao.RequestDao;
 import com.dao.util.Connector;
-import com.exceptions.DaoException;
-import com.exceptions.ServiceException;
-import com.models.Book;
-import com.models.BookStatus;
+import com.exception.DaoException;
+import com.exception.ServiceException;
+import com.model.Book;
+import com.model.BookStatus;
 import com.propertyInjector.ApplicationContext;
-import com.util.IdGenerator;
-import com.util.comparators.*;
+import com.util.comparator.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
