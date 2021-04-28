@@ -129,23 +129,18 @@ public class Book extends AIdentity implements Serializable {
         this.price = price;
     }
 
-
-    //todo refactor comparing
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return pageNumber == book.pageNumber &&
-                Double.compare(book.price, price) == 0 &&
+        return Double.compare(book.price, price) == 0 &&
                 orderCount == book.orderCount &&
-                yearOfPublish == book.yearOfPublish &&
                 name.equals(book.name) &&
                 author.equals(book.author) &&
                 isbn.equals(book.isbn) &&
                 bookStatus == book.bookStatus &&
-                Objects.equals(description, book.description) &&
-                Objects.equals(arrivalDate, book.arrivalDate);
+                Objects.equals(description, book.description);
     }
 
     @Override

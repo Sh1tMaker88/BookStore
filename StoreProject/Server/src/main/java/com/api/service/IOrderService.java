@@ -14,7 +14,7 @@ public interface IOrderService {
 
     Order getById(Long id);
 
-    Order addOrder(String customerName, List<Book> books);
+    Order addOrder(String customerName, List<Long> booksId);
 
     void cancelOrder(Long orderId);
 

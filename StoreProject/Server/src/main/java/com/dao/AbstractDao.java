@@ -5,6 +5,7 @@ import com.dao.util.Connector;
 import com.dao.util.ResultSetToObject;
 import com.exception.DaoException;
 import com.model.AIdentity;
+import com.model.Order;
 import com.propertyInjector.ApplicationContext;
 
 import java.sql.*;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+//todo close statements in finally block
 public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractDao.class.getName());
@@ -27,33 +29,29 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     public T create(T entity) {
         Connection connection = connector.getConnection();
         String sql = getInsertQuery();
-        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-             preparedStatementForCreate(statement, entity);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            preparedStatementForCreate(statement, entity);
             int affected = statement.executeUpdate();
-            if (affected == 1) {
-//                ResultSet resultSet = statement.getResultSet();
-                ResultSet resultSet = statement.getGeneratedKeys();
-                resultSet.next();
-//                entity.setId(resultSet.getLong(1));
-                resultSet.close();
-            } else {
-                throw new DaoException("Creation failed");
-            }
-            statement.close();
+            LOGGER.log(Level.INFO, "Created " + getTableName() + ":" + affected);
             return entity;
         } catch (SQLException e) {
             LOGGER.log(Level.WARNING, e.getMessage());
-            throw new DaoException(e);
+            throw new DaoException("Creation failed");
         }
     }
 
     @Override
     public T getById(Long id) {
-//        String sql = "SELECT * FROM ? WHERE id=?";
-        String sql = String.format("SELECT * FROM %s WHERE id=?", getTableName());
+        String sql;
+        if (getTableName().equalsIgnoreCase("order")) {
+            String s = "bookstore." + getTableName();
+            sql = String.format("SELECT * FROM %s JOIN order_book ON %s.id=order_book.order_id WHERE id=?"
+            ,s, s);
+        } else {
+            sql = String.format("SELECT * FROM %s WHERE id=?", getTableName());
+        }
         Connection connection = connector.getConnection();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-//            statement.setString(1, getTableName());
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
@@ -77,21 +75,22 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
                     ResultSet resGetAll = statement2.executeQuery(sql);
                     dataFromDB.clear();
                     while (resGetAll.next()) {
-                        dataFromDB.add((T)ResultSetToObject.parseResultSet(resGetAll, getTableName()));
+                        Object obj = ResultSetToObject.parseResultSet(resGetAll, getTableName());
+                        if (!dataFromDB.contains((T) obj)) {
+                            dataFromDB.add((T)obj);
+                        }
                     }
-                    resultSet.close();
-                    statement.close();
+                    resGetAll.close();
+                    return new ArrayList<>(dataFromDB);
                 }
             } else {
                 resultSet.close();
-                statement.close();
                 return new ArrayList<>(dataFromDB);
             }
         } catch (SQLException e) {
             LOGGER.log(Level.WARNING, e.getMessage());
             throw new DaoException(e);
         }
-        return new ArrayList<>(dataFromDB);
     }
 
     @Override
@@ -104,6 +103,8 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
             if (resultSet == 1) {
                 LOGGER.log(Level.INFO, entity + " has been deleted");
                 dataFromDB.remove(entity);
+            } else {
+                throw new DaoException("Delete failed");
             }
         } catch (SQLException e) {
             LOGGER.log(Level.WARNING, e.getMessage());
@@ -120,12 +121,12 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
         String sql = getUpdateQuery();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             preparedStatementForUpdate(statement, entity);
-            statement.executeUpdate();
-//            if (resultSet.next()) {
-//                    LOGGER.log(Level.INFO, entity + " has been updated");
-//                }
-//            resultSet.close();
-            statement.close();
+            int resultSet = statement.executeUpdate();
+            if (resultSet == 1) {
+                LOGGER.log(Level.INFO, entity + " has been updated");
+            } else {
+                throw new DaoException("Update failed");
+            }
             return entity;
         } catch (SQLException e) {
             LOGGER.log(Level.WARNING, e.getMessage());

@@ -35,6 +35,11 @@ public class MenuController {
 
 
     public void run() {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.printf("%8s\nWelcome to menu\n%8s\n", "***", "***");
         navigator.setCurrentMenu(builder.getRootMenu());
         navigator.printMenu();

@@ -17,7 +17,7 @@ public class RequestDao extends AbstractDao<Request> implements IRequestDao {
             "(book_id, date, request_count, status) " +
             "VALUES(?, ?, ?, ?);";
     private static final String DELETE_QUERY = "DELETE FROM request WHERE id=?;";
-    private static final String UPDATE_QUERY = "UPDATE request SET book_id=?, date=?, request_count=?;" +
+    private static final String UPDATE_QUERY = "UPDATE request SET book_id=?, date=?, request_count=?" +
             ", status=? WHERE id=? ;";
     private static final String GET_ALL_QUERY = "SELECT * FROM request;";
     private static final String GET_COUNT_OF_OBJECTS_QUERY = "SELECT COUNT(*) FROM request;";

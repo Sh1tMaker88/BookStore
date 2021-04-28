@@ -9,6 +9,7 @@ import com.api.service.IOrderService;
 import com.dao.BookDao;
 import com.dao.OrderDao;
 import com.dao.RequestDao;
+import com.dao.util.Connector;
 import com.exception.DaoException;
 import com.exception.ServiceException;
 import com.model.*;
@@ -19,6 +20,9 @@ import com.util.comparator.OrderIdComparator;
 import com.util.comparator.OrderPriceComparator;
 import com.util.comparator.OrderStatusComparator;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
@@ -35,11 +39,17 @@ public class OrderService implements IOrderService {
     private final IOrderDao orderDao;
     @InjectByType
     private final IRequestDao requestDao;
+    private final Connector connector;
+
+    private final String DECREASE_COUNT_OF_ORDER_BOOK = "UPDATE book SET order_count = order_count - 1 " +
+            "WHERE book.id IN (SELECT order_book.book_id FROM order_book JOIN bookStore.order " +
+            "ON bookStore.order.id = order_book.order_id WHERE bookStore.order.id=?);";
 
     public OrderService() {
         this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
         this.orderDao = ApplicationContext.getInstance().getObject(OrderDao.class);
         this.requestDao = ApplicationContext.getInstance().getObject(RequestDao.class);
+        this.connector = ApplicationContext.getInstance().getObject(Connector.class);
     }
 
     @Override
@@ -53,22 +63,17 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public Order addOrder(String customerName, List<Book> books) {
+    public Order addOrder(String customerName, List<Long> booksId) {
         try {
             LOGGER.log(Level.INFO, "Generating order for customer '" + customerName + "'");
-            Order order = new Order(customerName, books);
-            order.setId(IdGenerator.generateOrderId());
+            Order order = new Order(customerName, booksId);
             //increase number that points how much this book has been ordered
-            for (Book b : books) {
-                b.setOrderCount(b.getOrderCount() + 1);
-                if (b.getBookStatus().equals(BookStatus.OUT_OF_STOCK)) {
-                    LOGGER.log(Level.INFO, "Book with id=" + b.getId() + " is out of stock, adding request for it");
-                    Request request = new Request(b.getId());
-                    request.setId(IdGenerator.generateRequestId());
-                    requestDao.create(request);
-                }
+            for (Long b : booksId) {
+                Book book = bookDao.getById(b);
+                book.setOrderCount(book.getOrderCount());
+                bookDao.updateOrderCount(book);
             }
-            orderDao.create(order);
+            orderDao.createOrder(order);
             return order;
         } catch (DaoException e) {
             LOGGER.log(Level.WARNING, "Method addOrder failed", e);
@@ -78,24 +83,30 @@ public class OrderService implements IOrderService {
 
     @Override
     public void cancelOrder(Long orderId) {
+        PreparedStatement statement = null;
         try {
+            Connection connection = connector.getConnection();
+            statement = connection.prepareStatement(DECREASE_COUNT_OF_ORDER_BOOK);
             LOGGER.log(Level.INFO, "Cancelling order with id=" + orderId);
-            if (orderDao.getAll().stream().anyMatch(el -> el.getId().equals(orderId))) {
+            if (orderDao.getById(orderId).getId().equals(orderId)) {
+                statement.setLong(1, orderId);
+                statement.executeUpdate();
                 Order order = orderDao.getById(orderId);
                 order.setStatus(OrderStatus.CANCEL);
-
-                //if order is cancelled decrease number that points how much this book has been ordered
-                for (Book b : order.getBooks()) {
-                    b.setOrderCount(b.getOrderCount() - 1);
-                }
                 orderDao.update(order);
-                LOGGER.log(Level.INFO, "Order with id " + orderId + "cancelled");
+                LOGGER.log(Level.INFO, "Order with id=" + orderId + " cancelled");
             } else {
-                LOGGER.log(Level.INFO, "There is no such order");
+                LOGGER.log(Level.INFO, "There is no order with such id=" + orderId);
             }
-        } catch (DaoException e) {
+        } catch (SQLException | DaoException e) {
             LOGGER.log(Level.WARNING, "Method cancelOrder failed", e);
             throw new ServiceException("Method cancelOrder failed", e);
+        } finally {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -106,18 +117,18 @@ public class OrderService implements IOrderService {
             if (orderDao.getAll().stream().anyMatch(el -> el.getId().equals(orderId))) {
                 Order order = orderDao.getById(orderId);
                 order.setStatus(status);
-                //if order is cancelled decrease number that points how much this book has been ordered
                 if (status.equals(OrderStatus.CANCEL)) {
-                    for (Book b : order.getBooks()) {
-                        b.setOrderCount(b.getOrderCount() - 1);
-                    }
+                    cancelOrder(orderId);
                 }
                 //if order is done we set date and time of the end of the order
-                if (status.equals(OrderStatus.DONE)) {
+                else if (status.equals(OrderStatus.DONE)) {
                     order.setDateOfDone(LocalDateTime.now());
+                    orderDao.update(order);
+                    LOGGER.log(Level.INFO, "Order with id=" + orderId + "has changed status to " + status);
+                } else if (status.equals(OrderStatus.NEW)) {
+                    order.setDateOfDone(null);
+                    orderDao.update(order);
                 }
-                orderDao.update(order);
-                LOGGER.log(Level.INFO, "Order with id=" + orderId + "has changed status to " + status);
             } else {
                 LOGGER.log(Level.INFO, "There is no such order with id=" + orderId);
             }
@@ -168,7 +179,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public void showDetails(Order order) {
-        System.out.println("Customer name: " + order.getCustomerName() + " and books he ordered: " + order.getBooks());
+        System.out.println("Customer name: " + order.getCustomerName() + " and books he ordered: " + order.getBooksId());
     }
 
     @Override
@@ -194,5 +205,11 @@ public class OrderService implements IOrderService {
         return listToSort;
     }
 
-
+    public static double totalPrice(List<Book> books) {
+        double total = 0;
+        for (Book book : books) {
+            total += book.getPrice();
+        }
+        return total;
+    }
 }

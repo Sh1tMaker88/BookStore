@@ -4,4 +4,5 @@ import com.model.Order;
 
 
 public interface IOrderDao extends GenericDao<Order> {
+    public Order createOrder(Order entity);
 }

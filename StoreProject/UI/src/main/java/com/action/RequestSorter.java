@@ -41,9 +41,8 @@ public class RequestSorter implements IAction{
                     setRequests(new GetAllRequests().doIt());
                     break;
             }
-
             requests.sort(sortRequestsBy.get(sortId));
-            System.out.println(requests);
+            LOGGER.log(Level.INFO, requests.toString());
         } catch(ActionException e){
             LOGGER.log(Level.WARNING, "Method execute failed", e);
         }

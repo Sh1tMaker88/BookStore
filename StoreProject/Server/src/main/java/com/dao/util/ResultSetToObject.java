@@ -1,12 +1,20 @@
 package com.dao.util;
 
+import com.dao.OrderDao;
 import com.model.*;
+import com.propertyInjector.ApplicationContext;
 import com.util.DateConverter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ResultSetToObject {
+
+    private static Map<Long, Order> orders = new HashMap<>();
 
     public static AIdentity parseResultSet(ResultSet resultSet, String tableName) {
         try {
@@ -53,8 +61,25 @@ public class ResultSetToObject {
 
     //todo make it
     private static Order createOrder(ResultSet resultSet) throws SQLException {
-        Order order = new Order();
-
-        return order;
+        if (!orders.containsKey(resultSet.getLong("id"))) {
+            Order order = new Order();
+            order.setId(resultSet.getLong("id"));
+            order.setCustomerName(resultSet.getString("customer_name"));
+            order.setStatus(OrderStatus.valueOf(resultSet.getString("status")));
+            order.setOrderDate(DateConverter.asLocalDateTime(resultSet.getTimestamp("order_date")));
+            if (resultSet.getTimestamp("date_of_done") != null) {
+                order.setDateOfDone(DateConverter.asLocalDateTime(resultSet.getTimestamp("date_of_done")));
+            }
+            order.setTotalPrice(resultSet.getDouble("price"));
+            order.addBookId(resultSet.getLong("order_book.book_id"));
+            orders.put(order.getId(), order);
+            return order;
+        } else {
+            Order order = orders.get(resultSet.getLong("id"));
+            if (!order.getBooksId().contains(resultSet.getLong("order_book.book_id"))) {
+                order.addBookId(resultSet.getLong("order_book.book_id"));
+            }
+            return order;
+        }
     }
 }

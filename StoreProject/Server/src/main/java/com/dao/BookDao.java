@@ -2,27 +2,47 @@ package com.dao;
 
 import com.annotations.Singleton;
 import com.api.dao.IBookDao;
+import com.dao.util.Connector;
+import com.exception.DaoException;
 import com.model.Book;
+import com.propertyInjector.ApplicationContext;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Singleton
 public class BookDao extends AbstractDao<Book> implements IBookDao {
 
-    private static final String INSERT_QUERY = "INSERT INTO book;" +
+    private static final Logger LOGGER = Logger.getLogger(BookDao.class.getName());
+    private Connector connector;
+    private static final String INSERT_QUERY = "INSERT INTO book" +
             "(name, author, publish_year, page_number, isbn, price, status, description, arrival_date) " +
             "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String DELETE_QUERY = "DELETE FROM book WHERE id=?;";
-    private static final String UPDATE_QUERY = "UPDATE book SET name=?, author=?, publish_year=?;" +
+    private static final String UPDATE_QUERY = "UPDATE book SET name=?, author=?, publish_year=?" +
             ", page_number=?, isbn=?, price=?, status=?, description=?, arrival_date=?, order_count=?" +
             " WHERE id=? ;";
+    private static final String UPDATE_ORDER_COUNT_QUERY = "UPDATE book set order_count = order_count + 1 WHERE id=?;";
     private static final String GET_ALL_QUERY = "SELECT * FROM book;";
     private static final String GET_COUNT_OF_OBJECTS_QUERY = "SELECT COUNT(*) FROM book;";
     private static final String TABLE_NAME = "BOOK";
 
     public BookDao() {
+        this.connector = ApplicationContext.getInstance().getObject(Connector.class);
+    }
+
+    @Override
+    public void updateOrderCount(Book book) {
+        Connection connection = connector.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement(UPDATE_ORDER_COUNT_QUERY)) {
+            statement.setLong(1, book.getId());
+            statement.executeUpdate();
+            LOGGER.log(Level.INFO, "Update order count for book with id=" + book.getId());
+        } catch (SQLException e) {
+            LOGGER.log(Level.WARNING, e.getMessage());
+            throw new DaoException(e);
+        }
     }
 
     @Override

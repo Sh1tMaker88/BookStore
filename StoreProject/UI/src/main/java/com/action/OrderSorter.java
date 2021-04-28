@@ -45,9 +45,8 @@ public class OrderSorter implements IAction{
                     setOrders(new GetAllOrders().doIt());
                     break;
             }
-            setOrders(new GetAllOrders().doIt());
             orders.sort(sortOrdersBy.get(sortId));
-            System.out.println(orders);
+            LOGGER.log(Level.INFO, orders.toString());
         }
         catch (ActionException e){
             LOGGER.log(Level.WARNING, "Method execute failed", e);

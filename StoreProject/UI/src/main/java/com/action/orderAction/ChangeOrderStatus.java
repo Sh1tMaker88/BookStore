@@ -20,17 +20,15 @@ public class ChangeOrderStatus implements IAction {
     @Override
     public void execute() {
         try {
-            LOGGER.log(Level.INFO, "If you want to see the list of all orders enter '-1', if back to root menu enter '0'");
+            LOGGER.log(Level.INFO, "To change order status enter order ID");
             Long id = ConsoleScanner.scanLong();
-            if (id.equals(-1L)) {
-                System.out.println(facade.getOrderService().getAllOrders());
-                LOGGER.log(Level.INFO, "To change order status enter order ID");
-                id = ConsoleScanner.scanLong();
+
+            OrderStatus statusTo = null;
+            while (statusTo == null) {
                 LOGGER.log(Level.INFO, "Enter order status:\n" +
                         "'1' - to set as new, '2' - to set as cancel, '3' - to set as done)");
                 String status = ConsoleScanner.scanString();
-                OrderStatus statusTo;
-                switch (status.trim().toLowerCase()) {
+                switch (status.trim()) {
                     case "1":
                         statusTo = OrderStatus.NEW;
                         break;
@@ -42,14 +40,11 @@ public class ChangeOrderStatus implements IAction {
                         break;
                     default:
                         LOGGER.log(Level.INFO, "There is no such status");
-                        statusTo = facade.getOrderService().getById(id).getStatus();
                         break;
                 }
-                facade.getOrderService().changeOrderStatus(id, statusTo);
-                LOGGER.log(Level.INFO, "You changed status order " + facade.getOrderService().getById(id));
-            } else if (id.equals(0L)) {
-
             }
+            facade.getOrderService().changeOrderStatus(id, statusTo);
+            LOGGER.log(Level.INFO, "You changed status order " + facade.getOrderService().getById(id));
         } catch (DaoException | ServiceException e) {
             LOGGER.log(Level.WARNING, "Method execute failed", e);
             e.printStackTrace();

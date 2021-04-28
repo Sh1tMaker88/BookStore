@@ -48,7 +48,7 @@ public class BookSorter implements IAction{
                     break;
             }
             books.sort(sortBooksBy.get(sortId));
-            System.out.println(books);
+            LOGGER.log(Level.INFO, books.toString());
         } catch (ActionException e){
             LOGGER.log(Level.WARNING, "Method execute failed", e);
         }

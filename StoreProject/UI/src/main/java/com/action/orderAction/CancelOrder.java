@@ -19,19 +19,9 @@ public class CancelOrder implements IAction {
     @Override
     public void execute() {
         try {
-            LOGGER.log(Level.INFO, "If you want to see the list of all orders enter '-1', " +
-                    "if back to root menu enter '0'");
-            LOGGER.log(Level.INFO, "To discard order enter order ID");
+            LOGGER.log(Level.INFO, "To discard order enter order ID, if you want back to root menu enter '0'");
             Long id = ConsoleScanner.scanLong();
-            if (id.equals(-1L)){
-                System.out.println(facade.getOrderService().getAllOrders());
-                LOGGER.log(Level.INFO, "Enter order ID");
-                id = ConsoleScanner.scanLong();
-                facade.getOrderService().cancelOrder(id);
-                LOGGER.log(Level.INFO, "You discarded order " + facade.getOrderService().getById(id));
-            } else if (id.equals(0L)){
-
-            } else {
+            if (!id.equals(0L)){
                 facade.getOrderService().cancelOrder(id);
                 LOGGER.log(Level.INFO, "You discarded order " + facade.getOrderService().getById(id));
             }
