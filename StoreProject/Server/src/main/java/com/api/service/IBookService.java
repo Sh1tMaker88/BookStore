@@ -13,13 +13,13 @@ public interface IBookService {
 
     Book getById(Long id);
 
-    Book addBookToStock(String name, String author, String isbn, int pageNumber
+    Book createBook(String name, String author, String isbn, int pageNumber
             , double price, int yearOfPublish, String description, BookStatus bookStatus, LocalDate arrivalDate);
 
-    Book addBookToStock(String name, String author, String isbn, int pageNumber
+    Book createBook(String name, String author, String isbn, int pageNumber
             , double price, int yearOfPublish, String description);
 
-    Book addBookToStock(Book book);
+    Book addBookToStock(Long bookId);
 
     Book discardBook(Long bookId);
 

@@ -5,7 +5,6 @@ import com.dao.util.Connector;
 import com.dao.util.ResultSetToObject;
 import com.exception.DaoException;
 import com.model.AIdentity;
-import com.model.Order;
 import com.propertyInjector.ApplicationContext;
 
 import java.sql.*;
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//todo close statements in finally block
 public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractDao.class.getName());
@@ -29,10 +27,14 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     public T create(T entity) {
         Connection connection = connector.getConnection();
         String sql = getInsertQuery();
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatementForCreate(statement, entity);
-            int affected = statement.executeUpdate();
-            LOGGER.log(Level.INFO, "Created " + getTableName() + ":" + affected);
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            resultSet.next();
+            Long entityId = resultSet.getLong(1);
+            LOGGER.log(Level.INFO, "Created " + getTableName() + " id:" + entityId);
+            entity.setId(entityId);
             return entity;
         } catch (SQLException e) {
             LOGGER.log(Level.WARNING, e.getMessage());

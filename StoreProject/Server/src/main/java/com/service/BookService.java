@@ -44,6 +44,7 @@ public class BookService implements IBookService {
     private int monthToSetBookAsUnsold;
 
     private final String SHOW_DESCRIPTION_QUERY = "SELECT description FROM book WHERE id=?";
+    private final String CLOSE_REQUEST_AFTER_ADDING_BOOK_QUERY = "UPDATE request SET status=? WHERE book_id=?";
 
     public BookService() {
         this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
@@ -62,16 +63,13 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public Book addBookToStock(String name, String author, String isbn, int pageNumber
+    public Book createBook(String name, String author, String isbn, int pageNumber
             , double price, int yearOfPublish, String description, BookStatus bookStatus, LocalDate arrivalDate) {
         try {
-            if (closeRequestAfterAddingBook) {
-                //todo this
-            }
-            Book book = new Book(name, author, isbn, pageNumber, price, yearOfPublish, description, bookStatus, arrivalDate);
-            LOGGER.log(Level.INFO, "Adding book to data base: " + book);
-            bookDao.create(book);
-            return book;
+            Book book = new Book(name, author, isbn, pageNumber, price, yearOfPublish
+                    , description, bookStatus, arrivalDate);
+            LOGGER.log(Level.INFO, "Creating book in data base: " + book);
+            return bookDao.create(book);
         } catch (DaoException e) {
             LOGGER.log(Level.WARNING, "Method addBookToStock failed", e);
             throw new ServiceException("Method addBookToStock failed", e);
@@ -79,48 +77,35 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public Book addBookToStock(String name, String author, String isbn, int pageNumber
+    public Book createBook(String name, String author, String isbn, int pageNumber
             , double price, int yearOfPublish, String description) {
         try {
-            if (closeRequestAfterAddingBook) {
-                //todo this
-            }
             Book book = new Book(name, author, isbn, pageNumber, price, yearOfPublish, description);
-            LOGGER.log(Level.INFO, "Adding book to data base: " + book);
-            bookDao.create(book);
-            return book;
+            LOGGER.log(Level.INFO, "Creating book in data base: " + book);
+            return bookDao.create(book);
         } catch (DaoException e) {
             LOGGER.log(Level.WARNING, "Method addBookToStock failed", e);
             throw new ServiceException("Method addBookToStock failed", e);
         }
     }
 
-//    @Override
-//    public Book addBookToStock(Book book) {
-//        try {
-//            book.setId(IdGenerator.generateBookId());
-//            if (closeRequestAfterAddingBook) {
-//                if (requestDao.getAll().stream().anyMatch(e -> e.getBook().equals(book))) {
-//                    RequestService requestService = ApplicationContext.getInstance().getObject(RequestService.class);
-//                    requestService.closeRequest(book.getId());
-//                }
-//            }
-//            LOGGER.log(Level.INFO, "Creating book" + book);
-//            bookDao.create(book);
-//            return book;
-//        } catch (DaoException e) {
-//            LOGGER.log(Level.WARNING, "Method addBookToStock failed", e);
-//            throw new ServiceException("Method addBookToStock failed", e);
-//        }
-//    }
-
     @Override
-    public Book addBookToStock(Book book) {
+    public Book addBookToStock(Long bookId) {
+        Book book = bookDao.getById(bookId);
+        book.setBookStatus(BookStatus.IN_STOCK);
         if (closeRequestAfterAddingBook) {
-            //todo this
+            try (Connection connection = connector.getConnection()) {
+                PreparedStatement statement = connection.prepareStatement(CLOSE_REQUEST_AFTER_ADDING_BOOK_QUERY);
+                statement.setString(1, "CLOSED");
+                statement.setLong(2, bookId);
+                statement.executeUpdate();
+                statement.close();
+            } catch (SQLException e) {
+                throw new ServiceException("Closing request for book id=" + book.getId() + " failed", e);
+            }
         }
-        LOGGER.log(Level.INFO, "Create book" + book);
-        bookDao.create(book);
+        LOGGER.log(Level.INFO, "Adding book to stock " + book);
+        bookDao.update(book);
         return book;
     }
 

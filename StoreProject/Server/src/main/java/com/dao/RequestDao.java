@@ -12,7 +12,6 @@ import java.sql.Timestamp;
 @Singleton
 public class RequestDao extends AbstractDao<Request> implements IRequestDao {
 
-    //todo check methods
     private static final String INSERT_QUERY = "INSERT INTO request" +
             "(book_id, date, request_count, status) " +
             "VALUES(?, ?, ?, ?);";
@@ -27,7 +26,6 @@ public class RequestDao extends AbstractDao<Request> implements IRequestDao {
     }
 
 
-    //todo imp methods
     @Override
     protected String getInsertQuery() {
         return INSERT_QUERY;

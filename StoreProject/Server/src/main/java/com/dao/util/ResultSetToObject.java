@@ -59,7 +59,6 @@ public class ResultSetToObject {
         return request;
     }
 
-    //todo make it
     private static Order createOrder(ResultSet resultSet) throws SQLException {
         if (!orders.containsKey(resultSet.getLong("id"))) {
             Order order = new Order();

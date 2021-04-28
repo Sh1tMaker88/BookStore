@@ -3,6 +3,7 @@ package com.menu;
 import com.action.BookSorter;
 import com.action.RequestSorter;
 import com.action.bookAction.AddBookToStock;
+import com.action.bookAction.CreateBook;
 import com.action.bookAction.DiscardBook;
 import com.action.orderAction.AddOrder;
 import com.action.orderAction.CancelOrder;
@@ -77,13 +78,15 @@ public class Builder {
         rootMenu.setName("<Book menu>");
         rootMenu.addMenuItem(new MenuItem("1 - See all books", ()-> System.out.println("-Choose sort for output-"),
                 BookSortMenuGetAll()));
-        rootMenu.addMenuItem(new MenuItem("2 - Add book to stock", new AddBookToStock(),
+        rootMenu.addMenuItem(new MenuItem("2 - Create book", new CreateBook(),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("3 - Discard book", new DiscardBook(),
+        rootMenu.addMenuItem(new MenuItem("3 - Add book to stock", new AddBookToStock(),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("4 - See books that not bought more that 6 month",
+        rootMenu.addMenuItem(new MenuItem("4 - Discard book", new DiscardBook(),
+                getRootMenu()));
+        rootMenu.addMenuItem(new MenuItem("5 - See books that not bought more that 6 month",
                 ()-> System.out.println("-Choose sort for output-"), BookSortMenuSixMonthOld()));
-        rootMenu.addMenuItem(new MenuItem("5 - Back to root menu", ()-> System.out.println("-Back-"),
+        rootMenu.addMenuItem(new MenuItem("6 - Back to root menu", ()-> System.out.println("-Back-"),
                 getRootMenu()));
         return rootMenu;
     }
