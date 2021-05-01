@@ -6,16 +6,16 @@ import com.dao.util.ResultSetToObject;
 import com.exception.DaoException;
 import com.model.AIdentity;
 import com.propertyInjector.ApplicationContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> {
 
-    private static final Logger LOGGER = Logger.getLogger(AbstractDao.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(AbstractDao.class.getName());
     private final Connector connector;
     private List<T> dataFromDB = new ArrayList<>();
 
@@ -33,11 +33,11 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
             ResultSet resultSet = statement.getGeneratedKeys();
             resultSet.next();
             Long entityId = resultSet.getLong(1);
-            LOGGER.log(Level.INFO, "Created " + getTableName() + " id:" + entityId);
+            LOGGER.info("Created " + getTableName() + " id:" + entityId);
             entity.setId(entityId);
             return entity;
         } catch (SQLException e) {
-            LOGGER.log(Level.WARNING, e.getMessage());
+            LOGGER.warn("Create method failed", e);
             throw new DaoException("Creation failed");
         }
     }
@@ -56,11 +56,14 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
+            if (!resultSet.next()){
+                LOGGER.warn("No such ID=" + id);
+                throw new DaoException("No such id=" + id);
+            }
             return (T) ResultSetToObject.parseResultSet(resultSet, getTableName());
         } catch (SQLException e) {
-            LOGGER.log(Level.WARNING, e.getMessage());
-            throw new DaoException("No such id=" + id);
+            LOGGER.warn(e.getMessage());
+            throw new DaoException(e);
         }
     }
 
@@ -90,7 +93,7 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
                 return new ArrayList<>(dataFromDB);
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.WARNING, e.getMessage());
+            LOGGER.warn("GetAll method failed", e);
             throw new DaoException(e);
         }
     }
@@ -103,13 +106,13 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
             statement.setLong(1, entity.getId());
             int resultSet = statement.executeUpdate();
             if (resultSet == 1) {
-                LOGGER.log(Level.INFO, entity + " has been deleted");
+                LOGGER.info(entity + " has been deleted");
                 dataFromDB.remove(entity);
             } else {
                 throw new DaoException("Delete failed");
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.WARNING, e.getMessage());
+            LOGGER.warn("Delete method failed", e);
             throw new DaoException(e);
         }
     }
@@ -125,13 +128,13 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
             preparedStatementForUpdate(statement, entity);
             int resultSet = statement.executeUpdate();
             if (resultSet == 1) {
-                LOGGER.log(Level.INFO, entity + " has been updated");
+                LOGGER.info(entity + " has been updated");
             } else {
                 throw new DaoException("Update failed");
             }
             return entity;
         } catch (SQLException e) {
-            LOGGER.log(Level.WARNING, e.getMessage());
+            LOGGER.warn(e.getMessage());
             throw new DaoException(e);
         }
     }

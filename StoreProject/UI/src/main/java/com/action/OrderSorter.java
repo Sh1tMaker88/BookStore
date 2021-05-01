@@ -7,17 +7,17 @@ import com.util.comparator.OrderDateOfDoneComparator;
 import com.util.comparator.OrderIdComparator;
 import com.util.comparator.OrderPriceComparator;
 import com.util.comparator.OrderStatusComparator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class OrderSorter implements IAction{
 
-    private static final Logger LOGGER = Logger.getLogger(OrderSorter.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(OrderSorter.class.getName());
     private Map<Integer, Comparator<Order>> sortOrdersBy;
     private List<Order> orders;
     private int sortId;
@@ -46,10 +46,10 @@ public class OrderSorter implements IAction{
                     break;
             }
             orders.sort(sortOrdersBy.get(sortId));
-            LOGGER.log(Level.INFO, orders.toString());
+            LOGGER.info(orders.toString());
         }
         catch (ActionException e){
-            LOGGER.log(Level.WARNING, "Method execute failed", e);
+            LOGGER.warn("Method execute failed", e);
         }
     }
 }

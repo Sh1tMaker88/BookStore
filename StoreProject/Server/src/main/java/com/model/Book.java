@@ -1,9 +1,16 @@
 package com.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 public class Book extends AIdentity implements Serializable {
 
     static final long serialVersionUID = 3L;
@@ -45,108 +52,6 @@ public class Book extends AIdentity implements Serializable {
         this.yearOfPublish = yearOfPublish;
         this.description = description;
         this.arrivalDate = arrivalDate;
-    }
-
-
-
-    public LocalDate getArrivalDate() {
-        return arrivalDate;
-    }
-
-    public void setArrivalDate(LocalDate arrivalDate) {
-        this.arrivalDate = arrivalDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getYearOfPublish() {
-        return yearOfPublish;
-    }
-
-    public void setYearOfPublish(int yearOfPublish) {
-        this.yearOfPublish = yearOfPublish;
-    }
-
-    public int getOrderCount() {
-        return orderCount;
-    }
-
-    public void setOrderCount(int orderCount) {
-        this.orderCount = orderCount;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
-    public int getPageNumber() {
-        return pageNumber;
-    }
-
-    public void setPageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
-    }
-
-    public BookStatus getBookStatus() {
-        return bookStatus;
-    }
-
-    public void setBookStatus(BookStatus bookStatus) {
-        this.bookStatus = bookStatus;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Book book = (Book) o;
-        return Double.compare(book.price, price) == 0 &&
-                orderCount == book.orderCount &&
-                name.equals(book.name) &&
-                author.equals(book.author) &&
-                isbn.equals(book.isbn) &&
-                bookStatus == book.bookStatus &&
-                Objects.equals(description, book.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, author, isbn, pageNumber, bookStatus, price, orderCount
-                , yearOfPublish, description, arrivalDate);
     }
 
     @Override

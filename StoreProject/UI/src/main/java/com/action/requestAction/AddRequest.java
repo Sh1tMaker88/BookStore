@@ -1,34 +1,32 @@
 package com.action.requestAction;
 
-import com.action.ConsoleScanner;
+import com.util.ConsoleScanner;
 import com.action.IAction;
 import com.exception.DaoException;
 import com.exception.ServiceException;
 import com.facade.Facade;
 import com.propertyInjector.ApplicationContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class AddRequest implements IAction {
 
-    private static final Logger LOGGER = Logger.getLogger(AddRequest.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(AddRequest.class.getName());
     final Facade facade = ApplicationContext.getInstance().getObject(Facade.class);
 
     @Override
     public void execute() {
 
         try {
-            LOGGER.log(Level.INFO, "To add request you must enter book ID ");
+            LOGGER.info("To add request you must enter book ID, or enter '0' to back to previous menu");
             Long id = ConsoleScanner.scanLong();
-            facade.getRequestService().addRequest(id);
+            if (id != 0) {
+                facade.getRequestService().addRequest(id);
+            }
         } catch (DaoException | ServiceException e) {
-            LOGGER.log(Level.WARNING, "Method execute failed", e);
-            e.printStackTrace();
-        } catch (IOException e) {
-            LOGGER.log(Level.WARNING, "Execute of execute failed", e);
-            e.printStackTrace();
+            LOGGER.warn("Method execute failed", e);
         }
     }
 }

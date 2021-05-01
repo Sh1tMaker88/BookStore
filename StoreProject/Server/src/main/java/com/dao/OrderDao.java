@@ -6,15 +6,15 @@ import com.dao.util.Connector;
 import com.exception.DaoException;
 import com.model.Order;
 import com.propertyInjector.ApplicationContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Singleton
 public class OrderDao extends AbstractDao<Order> implements IOrderDao {
 
-    private static final Logger LOGGER = Logger.getLogger(OrderDao.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(OrderDao.class.getName());
     private Connector connector;
 
     private static final String INSERT_ORDER_QUERY = "INSERT INTO bookstore.order (customer_name, status, order_date) " +
@@ -49,23 +49,23 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
             } else {
                 throw new DaoException("Creation failed");
             }
-            LOGGER.log(Level.INFO, "Created " + getTableName() + " id=" + generatedId);
+            LOGGER.info("Created " + getTableName() + " id=" + generatedId);
             statement.close();
             String sql = OrderDao.getInsertQuery(entity);
             PreparedStatement statement2 = connection.prepareStatement(sql);
             preparedStatementForCreateOrder_book(statement2, entity, generatedId);
             statement2.executeUpdate();
-            LOGGER.log(Level.INFO, "Added books for order");
+            LOGGER.info("Added books for order");
             statement2.close();
             PreparedStatement statement3 = connection.prepareStatement(SET_ORDER_COST_QUERY);
             statement3.setLong(1, generatedId);
             statement3.setLong(2, generatedId);
             statement3.executeUpdate();
-            LOGGER.log(Level.INFO, "Set price for order");
+            LOGGER.info("Set price for order");
             statement3.close();
             return entity;
         } catch (SQLException e) {
-            LOGGER.log(Level.WARNING, e.getMessage());
+            LOGGER.warn(e.getMessage());
             throw new DaoException("Creation failed");
         }
     }

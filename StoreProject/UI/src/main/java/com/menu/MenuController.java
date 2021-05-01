@@ -1,20 +1,14 @@
 package com.menu;
 
 
-import com.action.ConsoleScanner;
-import com.serialization.Serializator;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.util.ConsoleScanner;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class MenuController {
 
-    private static final Logger LOGGER = Logger.getLogger(MenuController.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(MenuController.class.getName());
 
     private static MenuController instance;
     private Builder builder;
@@ -48,7 +42,6 @@ public class MenuController {
             try {
                 int index = ConsoleScanner.scanInt();
                 if (index == 0) {
-//                    new Serializator();
                     flag = false;
                     System.out.printf("%7s\nClosing menu\n%7s\n", "***", "***");
                 } else if (index > 0 && index <= navigator.getCurrentMenu().getMenuItems().size()) {
@@ -57,9 +50,8 @@ public class MenuController {
                 } else {
                     System.out.println("Wrong key, use numbers in menu only");
                 }
-            } catch (IOException | NumberFormatException e) {
-                LOGGER.log(Level.WARNING, "Incorrect input");
-            }
+            } catch ( NumberFormatException e) {
+                LOGGER.warn("Incorrect input");            }
         }
     }
 }

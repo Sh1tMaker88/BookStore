@@ -18,12 +18,8 @@ import com.service.BookService;
 import com.service.OrderService;
 import com.service.RequestService;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.LogManager;
 
 
 public class Initializer {
@@ -46,27 +42,18 @@ public class Initializer {
     private final Connector connector;
 
     static {
-        try (InputStream configuration = new FileInputStream("UI/src/main/resources/logger.properties")) {
-//            LogManager.getLogManager().readConfiguration(
-//                    com.Starter.class.getResourceAsStream("/logging.properties"));
-//            System.setProperty("java.util.logging.SimpleFormatter.format",
-//                    "[%1$tF %1$tT] -%4$s- (%2$s) \"%5$s%6$s\"%n");
 
-            LogManager.getLogManager().readConfiguration(configuration);
-        } catch (IOException e) {
-            System.err.println("There is no file configuration" + e.toString());
-        }
     }
 
     public Initializer() {
         ApplicationContext context = Runner.run("com",
                 new HashMap<>(Map.of(
-//                        IBookDao.class, BookDao.class,
-//                        IOrderDao.class, OrderDao.class,
-//                        IRequestDao.class, RequestDao.class,
-//                        IOrderService.class, OrderService.class,
-//                        IBookService.class, BookService.class,
-//                        IRequestService.class, RequestService.class
+                        IBookDao.class, BookDao.class,
+                        IOrderDao.class, OrderDao.class,
+                        IRequestDao.class, RequestDao.class,
+                        IOrderService.class, OrderService.class,
+                        IBookService.class, BookService.class,
+                        IRequestService.class, RequestService.class
                 )));
         this.connector = context.getObject(Connector.class);
         this.bookDao = context.getObject(BookDao.class);

@@ -14,16 +14,16 @@ import com.model.*;
 import com.propertyInjector.ApplicationContext;
 import com.util.comparator.RequestCounterComparator;
 import com.util.comparator.RequestIdComparator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Singleton
 public class RequestService implements IRequestService {
 
-    private static final Logger LOGGER = Logger.getLogger(RequestService.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(RequestService.class.getName());
     @InjectByType
     private final IRequestDao requestDao;
     @InjectByType
@@ -56,31 +56,17 @@ public class RequestService implements IRequestService {
     @Override
     public Request closeRequest(Long requestID) {
         try {
-            LOGGER.log(Level.INFO, "Closing request with id=" + requestID);
+            LOGGER.info("Closing request with id=" + requestID);
             Connection connection = connector.getConnection();
+            Request request = getById(requestID);
             PreparedStatement statement = connection.prepareStatement(CLOSE_REQUEST_QUERY);
             statement.setLong(1, requestID);
             statement.executeUpdate();
-            Request request = getById(requestID);
-            LOGGER.log(Level.INFO, request + " has been closed");
+            LOGGER.info(request + " has been closed");
             statement.close();
             return request;
-
-//            Request request = requestDao.getById(requestID);
-//            Book book = bookDao.getAll().stream()
-//                    .filter(e -> e.equals(request.getBook()))
-//                    .findFirst()
-//                    .get();
-//            Book realBook = bookDao.getById(book.getId());
-//            realBook.setBookStatus(BookStatus.IN_STOCK);
-//            bookDao.update(realBook);
-//            Request realRequest = requestDao.getById(request.getId());
-//            realRequest.setRequestStatus(RequestStatus.CLOSED);
-//            requestDao.update(realRequest);
-//            LOGGER.log(Level.INFO, "Request with id=" + requestID + " closed");
-//            return book;
         } catch (SQLException | DaoException e) {
-            LOGGER.log(Level.WARNING, "Method closeRequest failed", e);
+            LOGGER.warn("Method closeRequest failed", e);
             throw new ServiceException("Method closeRequest failed", e);
         }
     }
@@ -88,13 +74,13 @@ public class RequestService implements IRequestService {
     @Override
     public Request addRequest(Long bookId) {
         try {
-            LOGGER.log(Level.INFO, "Adding request for book with id=" + bookId);
+            LOGGER.info("Adding request for book with id=" + bookId);
             Connection connection = connector.getConnection();
             PreparedStatement statement = connection.prepareStatement(CHECK_IF_REQUEST_ON_THIS_BOOK_EXISTS_QUERY);
             statement.setLong(1, bookId);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                LOGGER.log(Level.INFO, "Request for book id=" + bookId + " is already created. Increase counter");
+                LOGGER.info("Request for book id=" + bookId + " is already created. Increase counter");
                 Request request = requestDao.getById(resultSet.getLong("id"));
                 resultSet.close();
                 statement.close();
@@ -105,29 +91,13 @@ public class RequestService implements IRequestService {
                 return request;
             } else {
                 //if no request for this book create new request
-                LOGGER.log(Level.INFO, "Creating request for book with id=" + bookId);
+                LOGGER.info("Creating request for book with id=" + bookId);
                 Request request = new Request(bookId);
                 requestDao.create(request);
                 return request;
             }
-//            LOGGER.log(Level.INFO, "Adding request for book with id=" + book.getId());
-//            Request request = new Request(book);
-//            if (bookDao.getAll().contains(book) &&
-//            book.getBookStatus().equals(BookStatus.IN_STOCK)){
-////                Book b = bookDao.getAll().stream()
-////                        .filter(e->e.getId()==book.getId())
-////                        .findFirst().get();
-////                Book realBook = bookDao.getById(b.getId());
-////                realBook.setBookStatus(BookStatus.OUT_OF_STOCK);
-////                bookDao.update(realBook);
-//                LOGGER.log(Level.INFO, "Book with id=" + book.getId() + " is already in stock");
-//            } else {
-//                request.setId(IdGenerator.generateRequestId());
-//                requestDao.create(request);
-//            }
-//            return request;
         } catch (SQLException | DaoException e) {
-            LOGGER.log(Level.WARNING, "Method addRequest failed", e);
+            LOGGER.warn("Method addRequest failed", e);
             throw new ServiceException("Method addRequest failed", e);
         }
     }
@@ -135,7 +105,7 @@ public class RequestService implements IRequestService {
     @Override
     public List<Request> sortRequestBy(RequestSort requestSort) {
         List<Request> list = requestDao.getAll();
-        switch (requestSort){
+        switch (requestSort) {
             case ID:
                 list.sort(new RequestIdComparator());
                 break;
@@ -146,7 +116,7 @@ public class RequestService implements IRequestService {
 //                list.sort(new RequestNumberOfRequestsComparator());
                 break;
             default:
-                LOGGER.log(Level.WARNING, "No such type of sort");
+                LOGGER.warn("No such type of sort");
                 throw new ServiceException("Method sortRequestBy failed");
         }
         return list;

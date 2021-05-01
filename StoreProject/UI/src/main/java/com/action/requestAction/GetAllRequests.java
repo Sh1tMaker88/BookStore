@@ -5,14 +5,14 @@ import com.exception.DaoException;
 import com.facade.Facade;
 import com.model.Request;
 import com.propertyInjector.ApplicationContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class GetAllRequests {
 
-    private static final Logger LOGGER = Logger.getLogger(GetAllRequests.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(GetAllRequests.class.getName());
     final Facade facade = ApplicationContext.getInstance().getObject(Facade.class);
 
 
@@ -20,7 +20,7 @@ public class GetAllRequests {
         try {
             return facade.getRequestService().getAllRequests();
         } catch (DaoException e){
-            LOGGER.log(Level.WARNING, "Method doIt from class GetAllRequests failed");
+            LOGGER.warn("Method doIt from class GetAllRequests failed", e);
             throw new ActionException("Method doIt failed", e);
         }
     }

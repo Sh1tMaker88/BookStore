@@ -5,17 +5,17 @@ import com.exception.ActionException;
 import com.model.Request;
 import com.util.comparator.RequestCounterComparator;
 import com.util.comparator.RequestIdComparator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class RequestSorter implements IAction{
 
-    private static final Logger LOGGER = Logger.getLogger(RequestSorter.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(RequestSorter.class.getName());
     private Map<Integer, Comparator<Request>> sortRequestsBy;
     private List<Request> requests;
     private int sortId;
@@ -42,9 +42,9 @@ public class RequestSorter implements IAction{
                     break;
             }
             requests.sort(sortRequestsBy.get(sortId));
-            LOGGER.log(Level.INFO, requests.toString());
+            LOGGER.info(requests.toString());
         } catch(ActionException e){
-            LOGGER.log(Level.WARNING, "Method execute failed", e);
+            LOGGER.warn("Method execute failed", e);
         }
     }
 }

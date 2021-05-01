@@ -6,15 +6,15 @@ import com.dao.util.Connector;
 import com.exception.DaoException;
 import com.model.Book;
 import com.propertyInjector.ApplicationContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Singleton
 public class BookDao extends AbstractDao<Book> implements IBookDao {
 
-    private static final Logger LOGGER = Logger.getLogger(BookDao.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(BookDao.class.getName());
     private Connector connector;
     private static final String INSERT_QUERY = "INSERT INTO book" +
             "(name, author, publish_year, page_number, isbn, price, status, description, arrival_date) " +
@@ -38,9 +38,9 @@ public class BookDao extends AbstractDao<Book> implements IBookDao {
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_ORDER_COUNT_QUERY)) {
             statement.setLong(1, book.getId());
             statement.executeUpdate();
-            LOGGER.log(Level.INFO, "Update order count for book with id=" + book.getId());
+            LOGGER.info("Update order count for book with id=" + book.getId());
         } catch (SQLException e) {
-            LOGGER.log(Level.WARNING, e.getMessage());
+            LOGGER.warn(e.getMessage());
             throw new DaoException(e);
         }
     }

@@ -14,25 +14,24 @@ import com.exception.DaoException;
 import com.exception.ServiceException;
 import com.model.*;
 import com.propertyInjector.ApplicationContext;
-import com.util.IdGenerator;
 import com.util.comparator.OrderDateOfDoneComparator;
 import com.util.comparator.OrderIdComparator;
 import com.util.comparator.OrderPriceComparator;
 import com.util.comparator.OrderStatusComparator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Singleton
 public class OrderService implements IOrderService {
 
-    private static final Logger LOGGER = Logger.getLogger(OrderService.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(OrderService.class.getName());
     @InjectByType
     private final IBookDao bookDao;
     @InjectByType
@@ -65,7 +64,7 @@ public class OrderService implements IOrderService {
     @Override
     public Order addOrder(String customerName, List<Long> booksId) {
         try {
-            LOGGER.log(Level.INFO, "Generating order for customer '" + customerName + "'");
+            LOGGER.info("Generating order for customer '" + customerName + "'");
             Order order = new Order(customerName, booksId);
             //increase number that points how much this book has been ordered
             for (Long b : booksId) {
@@ -76,7 +75,7 @@ public class OrderService implements IOrderService {
             orderDao.createOrder(order);
             return order;
         } catch (DaoException e) {
-            LOGGER.log(Level.WARNING, "Method addOrder failed", e);
+            LOGGER.warn("Method addOrder failed", e);
             throw new ServiceException("Method addOrder failed", e);
         }
     }
@@ -87,23 +86,25 @@ public class OrderService implements IOrderService {
         try {
             Connection connection = connector.getConnection();
             statement = connection.prepareStatement(DECREASE_COUNT_OF_ORDER_BOOK);
-            LOGGER.log(Level.INFO, "Cancelling order with id=" + orderId);
+            LOGGER.info("Cancelling order with id=" + orderId);
             if (orderDao.getById(orderId).getId().equals(orderId)) {
                 statement.setLong(1, orderId);
                 statement.executeUpdate();
                 Order order = orderDao.getById(orderId);
                 order.setStatus(OrderStatus.CANCEL);
                 orderDao.update(order);
-                LOGGER.log(Level.INFO, "Order with id=" + orderId + " cancelled");
+                LOGGER.info("Order with id=" + orderId + " cancelled");
             } else {
-                LOGGER.log(Level.INFO, "There is no order with such id=" + orderId);
+                LOGGER.info("There is no order with such id=" + orderId);
             }
         } catch (SQLException | DaoException e) {
-            LOGGER.log(Level.WARNING, "Method cancelOrder failed", e);
+            LOGGER.warn("Method cancelOrder failed", e);
             throw new ServiceException("Method cancelOrder failed", e);
         } finally {
             try {
-                statement.close();
+                if (statement != null) {
+                    statement.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -113,7 +114,7 @@ public class OrderService implements IOrderService {
     @Override
     public void changeOrderStatus(Long orderId, OrderStatus status) {
         try {
-            LOGGER.log(Level.INFO, "Changing order status with id=" + orderId);
+            LOGGER.info("Changing order status with id=" + orderId);
             if (orderDao.getAll().stream().anyMatch(el -> el.getId().equals(orderId))) {
                 Order order = orderDao.getById(orderId);
                 order.setStatus(status);
@@ -124,16 +125,16 @@ public class OrderService implements IOrderService {
                 else if (status.equals(OrderStatus.DONE)) {
                     order.setDateOfDone(LocalDateTime.now());
                     orderDao.update(order);
-                    LOGGER.log(Level.INFO, "Order with id=" + orderId + "has changed status to " + status);
+                    LOGGER.info("Order with id=" + orderId + "has changed status to " + status);
                 } else if (status.equals(OrderStatus.NEW)) {
                     order.setDateOfDone(null);
                     orderDao.update(order);
                 }
             } else {
-                LOGGER.log(Level.INFO, "There is no such order with id=" + orderId);
+                LOGGER.info("There is no such order with id=" + orderId);
             }
         } catch (DaoException e) {
-            LOGGER.log(Level.WARNING, "Method changeOrderStatus failed", e);
+            LOGGER.warn("Method changeOrderStatus failed", e);
             throw new ServiceException("Method changeOrderStatus failed", e);
         }
 
@@ -147,10 +148,10 @@ public class OrderService implements IOrderService {
                     .filter(e -> e.getStatus().equals(OrderStatus.DONE))
                     .mapToDouble(Order::getTotalPrice)
                     .sum();
-            LOGGER.log(Level.INFO, "From " + fromDate + " till " + tillDate + " we earned: " + result);
+            LOGGER.info("From " + fromDate + " till " + tillDate + " we earned: " + result);
             return result;
         } catch (DaoException e) {
-            LOGGER.log(Level.WARNING, "Method priceGetByPeriodOfTime failed", e);
+            LOGGER.warn("Method priceGetByPeriodOfTime failed", e);
             throw new ServiceException("Method priceGetByPeriodOfTime failed", e);
         }
     }
@@ -162,10 +163,10 @@ public class OrderService implements IOrderService {
             list = list.stream().filter(e -> e.getDateOfDone().isAfter(fromDate) && e.getDateOfDone().isBefore(tillDate))
                     .filter(e -> e.getStatus().equals(OrderStatus.DONE))
                     .collect(Collectors.toList());
-            LOGGER.log(Level.INFO, "From " + fromDate + " till " + tillDate + " were done orders: \n" + list);
+            LOGGER.info("From " + fromDate + " till " + tillDate + " were done orders: \n" + list);
             return list;
         } catch (DaoException e) {
-            LOGGER.log(Level.WARNING, "Method ordersDoneByPeriodOfTime failed", e);
+            LOGGER.warn("Method ordersDoneByPeriodOfTime failed", e);
             throw new ServiceException("Method ordersDoneByPeriodOfTime failed", e);
         }
     }
@@ -199,7 +200,7 @@ public class OrderService implements IOrderService {
                 listToSort.sort(new OrderDateOfDoneComparator());
                 break;
             default:
-                LOGGER.log(Level.WARNING, "No such type of sort");
+                LOGGER.warn("No such type of sort");
                 throw new ServiceException("Method sortOrdersBy failed");
         }
         return listToSort;
