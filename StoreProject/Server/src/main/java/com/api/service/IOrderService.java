@@ -1,11 +1,8 @@
 package com.api.service;
 
-import com.api.dao.IBookDao;
-import com.api.dao.IOrderDao;
-import com.api.dao.IRequestDao;
-import com.models.Book;
-import com.models.Order;
-import com.models.OrderStatus;
+import com.model.Book;
+import com.model.Order;
+import com.model.OrderStatus;
 import com.service.OrderSort;
 
 import java.time.LocalDateTime;

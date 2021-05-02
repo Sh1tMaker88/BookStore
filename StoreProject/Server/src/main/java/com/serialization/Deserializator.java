@@ -7,9 +7,9 @@ import com.api.dao.IRequestDao;
 import com.dao.BookDao;
 import com.dao.OrderDao;
 import com.dao.RequestDao;
-import com.models.Book;
-import com.models.Order;
-import com.models.Request;
+import com.model.Book;
+import com.model.Order;
+import com.model.Request;
 import com.propertyInjector.ApplicationContext;
 import com.util.IdGenerator;
 
@@ -19,8 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Deserializator {
-
-    //todo path to files set in properties
 
     private static final Logger LOGGER = Logger.getLogger(Deserializator.class.getName());
     @InjectByType
@@ -111,13 +109,14 @@ public class Deserializator {
                         }
                     }
                     //setting ID to books in order
-                    for (Book b : ((Order) orderObj).getBooks()) {
-                        for (Map.Entry<Book, Long> entry : idMapBooks.entrySet()){
-                            if (b.equals(entry.getKey())){
-                                b.setId(entry.getValue());
-                            }
-                        }
-                    }
+                    //no need it now
+//                    for (Book b : ((Order) orderObj).getBooks()) {
+//                        for (Map.Entry<Book, Long> entry : idMapBooks.entrySet()){
+//                            if (b.equals(entry.getKey())){
+//                                b.setId(entry.getValue());
+//                            }
+//                        }
+//                    }
                     orderDao.create((Order) orderObj);
                     IdGenerator.setOrderId(IdGenerator.getOrderId() + 1);
                 }

@@ -1,23 +1,23 @@
 package com.action;
 
-import com.action.orderActions.GetAllOrders;
-import com.exceptions.ActionException;
-import com.models.Order;
-import com.util.comparators.OrderDateOfDoneComparator;
-import com.util.comparators.OrderIdComparator;
-import com.util.comparators.OrderPriceComparator;
-import com.util.comparators.OrderStatusComparator;
+import com.action.orderAction.GetAllOrders;
+import com.exception.ActionException;
+import com.model.Order;
+import com.util.comparator.OrderDateOfDoneComparator;
+import com.util.comparator.OrderIdComparator;
+import com.util.comparator.OrderPriceComparator;
+import com.util.comparator.OrderStatusComparator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class OrderSorter implements IAction{
 
-    private static final Logger LOGGER = Logger.getLogger(OrderSorter.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(OrderSorter.class.getName());
     private Map<Integer, Comparator<Order>> sortOrdersBy;
     private List<Order> orders;
     private int sortId;
@@ -45,12 +45,11 @@ public class OrderSorter implements IAction{
                     setOrders(new GetAllOrders().doIt());
                     break;
             }
-            setOrders(new GetAllOrders().doIt());
             orders.sort(sortOrdersBy.get(sortId));
-            System.out.println(orders);
+            LOGGER.info(orders.toString());
         }
         catch (ActionException e){
-            LOGGER.log(Level.WARNING, "Method execute failed", e);
+            LOGGER.warn("Method execute failed", e);
         }
     }
 }

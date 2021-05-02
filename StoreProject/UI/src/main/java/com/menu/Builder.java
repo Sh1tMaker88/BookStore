@@ -2,13 +2,14 @@ package com.menu;
 
 import com.action.BookSorter;
 import com.action.RequestSorter;
-import com.action.bookActions.AddBookToStock;
-import com.action.bookActions.DiscardBook;
-import com.action.orderActions.AddOrder;
-import com.action.orderActions.CancelOrder;
-import com.action.orderActions.ChangeOrderStatus;
-import com.action.requestActions.AddRequest;
-import com.action.requestActions.CloseRequest;
+import com.action.bookAction.AddBookToStock;
+import com.action.bookAction.CreateBook;
+import com.action.bookAction.DiscardBook;
+import com.action.orderAction.AddOrder;
+import com.action.orderAction.CancelOrder;
+import com.action.orderAction.ChangeOrderStatus;
+import com.action.requestAction.AddRequest;
+import com.action.requestAction.CloseRequest;
 import com.action.OrderSorter;
 
 
@@ -77,13 +78,15 @@ public class Builder {
         rootMenu.setName("<Book menu>");
         rootMenu.addMenuItem(new MenuItem("1 - See all books", ()-> System.out.println("-Choose sort for output-"),
                 BookSortMenuGetAll()));
-        rootMenu.addMenuItem(new MenuItem("2 - Add book to stock", new AddBookToStock(),
+        rootMenu.addMenuItem(new MenuItem("2 - Create book", new CreateBook(),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("3 - Discard book", new DiscardBook(),
+        rootMenu.addMenuItem(new MenuItem("3 - Add book to stock", new AddBookToStock(),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("4 - See books that not bought more that 6 month",
+        rootMenu.addMenuItem(new MenuItem("4 - Discard book", new DiscardBook(),
+                getRootMenu()));
+        rootMenu.addMenuItem(new MenuItem("5 - See books that not bought more that 6 month",
                 ()-> System.out.println("-Choose sort for output-"), BookSortMenuSixMonthOld()));
-        rootMenu.addMenuItem(new MenuItem("5 - Back to root menu", ()-> System.out.println("-Back-"),
+        rootMenu.addMenuItem(new MenuItem("6 - Back to root menu", ()-> System.out.println("-Back-"),
                 getRootMenu()));
         return rootMenu;
     }
@@ -139,7 +142,7 @@ public class Builder {
         rootMenu.setName("Get all sort by...");
         rootMenu.addMenuItem(new MenuItem("1 - Sort by ID", new RequestSorter(1, "getAll"),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("2 - Alphabetical sort", new RequestSorter(2, "getAll"),
+        rootMenu.addMenuItem(new MenuItem("2 - Sort by count of requests", new RequestSorter(2, "getAll"),
                 getRootMenu()));
         return rootMenu;
     }

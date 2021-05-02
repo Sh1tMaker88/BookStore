@@ -1,21 +1,21 @@
 package com.action;
 
-import com.action.bookActions.GetAllBooks;
-import com.exceptions.ActionException;
-import com.models.Book;
-import com.action.bookActions.GetBooksNotBoughtMoreThanSixMonth;
-import com.util.comparators.*;
+import com.action.bookAction.GetAllBooks;
+import com.exception.ActionException;
+import com.model.Book;
+import com.action.bookAction.GetBooksNotBoughtMoreThanSixMonth;
+import com.util.comparator.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class BookSorter implements IAction{
 
-    private static final Logger LOGGER = Logger.getLogger(BookSorter.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(BookSorter.class.getName());
     private Map<Integer, Comparator<Book>> sortBooksBy;
     private List<Book> books;
     private int sortId;
@@ -48,9 +48,9 @@ public class BookSorter implements IAction{
                     break;
             }
             books.sort(sortBooksBy.get(sortId));
-            System.out.println(books);
+            LOGGER.info(books.toString());
         } catch (ActionException e){
-            LOGGER.log(Level.WARNING, "Method execute failed", e);
+            LOGGER.warn("Method execute failed", e);
         }
     }
 }

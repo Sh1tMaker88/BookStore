@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface GenericDao<T> {
 
-    void create(T entity);
+    T create(T entity);
 
     T getById(Long id);
 

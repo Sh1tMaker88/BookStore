@@ -1,7 +1,8 @@
 package com.api.dao;
 
-import com.models.Order;
+import com.model.Order;
 
 
 public interface IOrderDao extends GenericDao<Order> {
+//    public Order createOrder(Order entity);
 }

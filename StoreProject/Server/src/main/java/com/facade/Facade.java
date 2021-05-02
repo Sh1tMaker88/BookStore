@@ -2,17 +2,10 @@ package com.facade;
 
 import com.annotations.InjectByType;
 import com.annotations.Singleton;
-import com.api.dao.IBookDao;
-import com.api.dao.IOrderDao;
-import com.api.dao.IRequestDao;
 import com.api.service.IBookService;
 import com.api.service.IOrderService;
 import com.api.service.IRequestService;
-import com.dao.BookDao;
-import com.dao.OrderDao;
-import com.dao.RequestDao;
 import com.propertyInjector.ApplicationContext;
-import com.serialization.Deserializator;
 import com.service.BookService;
 import com.service.OrderService;
 import com.service.RequestService;

@@ -1,7 +1,8 @@
 package com.api.dao;
 
-import com.models.Book;
+import com.model.Book;
 
 
 public interface IBookDao extends GenericDao<Book> {
+//    public void updateOrderCount(Book book);
 }

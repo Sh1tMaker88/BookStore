@@ -1,0 +1,30 @@
+<?xml version = "1.0" encoding = "utf-8" ?>
+
+<!DOCTYPE hibernate-configuration SYSTEM
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+
+        <property name="connection.driver_class"> com.mysql.cj.jdbc.Driver </property>
+        <property name="connection.url"> jdbc:mysql://localhost:3306/bookstore </property>
+        <property name="connection.username"> root </property>
+        <property name="connection.password"> root_admin </property>
+        <property name="connection.pool_size"> 1 </property>
+
+        <property name="hibernate.dialect"> org.hibernate.dialect.MySQL8Dialect </property>
+
+        <property name="hibernate.jdbc.use_get_generated_keys"> true </property>
+
+        <property name="show_sql"> true </property>
+        <property name="format_sql"> true </property>
+        <property name="use_sql_comments"> true </property>
+
+        <property name="hibernate.hbm2ddl.auto"> update </property>
+
+        <mapping class="com.model.Request" />
+        <mapping class="com.model.Book" />
+        <mapping class="com.model.Order" />
+
+    </session-factory>
+</hibernate-configuration>
