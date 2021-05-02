@@ -92,7 +92,7 @@ public class RequestService implements IRequestService {
             } else {
                 //if no request for this book create new request
                 LOGGER.info("Creating request for book with id=" + bookId);
-                Request request = new Request(bookId);
+                Request request = new Request(bookDao.getById(bookId));
                 requestDao.create(request);
                 return request;
             }

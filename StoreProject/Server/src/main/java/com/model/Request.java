@@ -21,7 +21,7 @@ public class Request extends AIdentity implements Serializable {
     @EqualsAndHashCode.Include
     @OneToOne (cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
     @JoinColumn(name = "book_id")
-    private Book bookId;
+    private Book book;
 
     @EqualsAndHashCode.Include
     @Column(name = "date")
@@ -38,12 +38,12 @@ public class Request extends AIdentity implements Serializable {
 
     }
 
-    public Request(Long bookId) {
-        this.bookId = bookId;
+    public Request(Book book) {
+        this.book = book;
     }
 
-    public Request(Long bookId, int requestCount) {
-        this.bookId = bookId;
+    public Request(Book book, int requestCount) {
+        this.book = book;
         this.requestCount = requestCount;
     }
 
@@ -51,7 +51,7 @@ public class Request extends AIdentity implements Serializable {
     public String toString() {
         return "Request{" +
                 "requestID=" + getId() +
-                ", book_id=" + bookId +
+                ", book_id=" + book.getId() +
                 ", requestDate=" + requestDate.format(DateTimeFormatter.ofPattern("yyyy-MMM-dd", Locale.ENGLISH)) +
                 ", requestStatus=" + requestStatus +
                 "}\n";

@@ -15,6 +15,7 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Entity
+@Table(name = "ordering", schema = "bookstore")
 public class Order extends AIdentity implements Serializable {
     static final long serialVersionUID = 4L;
 
@@ -25,7 +26,7 @@ public class Order extends AIdentity implements Serializable {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE}
             , fetch = FetchType.EAGER)
     @JoinTable(
-            name = "order_book",
+            name = "ordering_book",
             joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )

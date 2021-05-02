@@ -26,7 +26,7 @@ public class RequestDao extends AbstractDao<Request> implements IRequestDao {
 
     @Override
     protected Request updateEntityFields(Request entityToUpdate, Request entity) {
-        entityToUpdate.setBookId(entity.getBookId());
+        entityToUpdate.setBook(entity.getBook());
         entityToUpdate.setRequestDate(entity.getRequestDate());
         entityToUpdate.setRequestCount(entity.getRequestCount());
         entityToUpdate.setRequestStatus(entity.getRequestStatus());
