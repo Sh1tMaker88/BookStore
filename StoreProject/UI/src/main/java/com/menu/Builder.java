@@ -5,6 +5,7 @@ import com.action.RequestSorter;
 import com.action.bookAction.AddBookToStock;
 import com.action.bookAction.CreateBook;
 import com.action.bookAction.DiscardBook;
+import com.action.bookAction.GetBookDescription;
 import com.action.orderAction.AddOrder;
 import com.action.orderAction.CancelOrder;
 import com.action.orderAction.ChangeOrderStatus;
@@ -86,7 +87,9 @@ public class Builder {
                 getRootMenu()));
         rootMenu.addMenuItem(new MenuItem("5 - See books that not bought more that 6 month",
                 ()-> System.out.println("-Choose sort for output-"), BookSortMenuSixMonthOld()));
-        rootMenu.addMenuItem(new MenuItem("6 - Back to root menu", ()-> System.out.println("-Back-"),
+        rootMenu.addMenuItem(new MenuItem("6 - See book description", new GetBookDescription(),
+                getRootMenu()));
+        rootMenu.addMenuItem(new MenuItem("7 - Back to root menu", ()-> System.out.println("-Back-"),
                 getRootMenu()));
         return rootMenu;
     }

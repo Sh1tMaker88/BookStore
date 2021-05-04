@@ -10,12 +10,14 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "ordering", schema = "bookstore")
+@Table(name = "ordering")
 public class Order extends AIdentity implements Serializable {
     static final long serialVersionUID = 4L;
 
@@ -25,12 +27,10 @@ public class Order extends AIdentity implements Serializable {
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE}
             , fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "ordering_book",
+    @JoinTable(name = "ordering_book",
             joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id")
-    )
-    private List<Book> books = new ArrayList<>();
+            inverseJoinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"))
+    private List<Book> books;
 
     @EqualsAndHashCode.Include
     @Column(name = "price")
@@ -46,7 +46,6 @@ public class Order extends AIdentity implements Serializable {
 
     @Column(name = "date_of_done")
     private LocalDateTime DateOfDone;
-    private final Class<Book> bookClass = Book.class;
 
     public Order() {
 
@@ -69,10 +68,10 @@ public class Order extends AIdentity implements Serializable {
     @Override
     public String toString() {
         return "ORDER{" + "orderId=" + getId() +
+                ", booksID:" + books.stream().map(AIdentity::getId).collect(Collectors.toList()) +
                 ", status=" + status +
                 ", totalPrice=" + totalPrice +
                 ", customerName='" + customerName + '\'' +
-                ", books:" + books +
                 "}\n";
     }
 }

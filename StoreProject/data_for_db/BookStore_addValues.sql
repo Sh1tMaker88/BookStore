@@ -17,8 +17,8 @@ VALUES
     
 INSERT INTO ordering (customer_name, price, status, order_date, date_of_done)
 VALUES 
-	('Anton Vinogradov', 75.0, 'DONE', '2021-01-04', '2021-01-08'),
-	('Denis', 64.15, 'DONE', '2021-01-04', '2021-01-08'),
+	('Anton Vinogradov', 75.0, 'DONE', '2020-01-04', '2020-01-08'),
+	('Denis', 64.15, 'DONE', '2020-01-04', '2020-01-08'),
 	('Elena Zimova', 23.0, 'DONE', '2021-01-04', '2021-01-08'),
 	('Pavel Sidorov', 23.0, 'CANCEL', '2021-03-18', NULL),
 	('Alexander', 33.5, 'NEW', '2021-03-22', NULL),

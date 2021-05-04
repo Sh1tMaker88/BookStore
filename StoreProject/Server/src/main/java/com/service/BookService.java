@@ -6,17 +6,27 @@ import com.annotations.InjectValueFromProperties;
 import com.annotations.Singleton;
 import com.api.dao.IBookDao;
 import com.api.service.IBookService;
+import com.api.service.IRequestService;
 import com.dao.BookDao;
 import com.dao.util.Connector;
 import com.exception.DaoException;
 import com.exception.ServiceException;
 import com.model.Book;
 import com.model.BookStatus;
+import com.model.Request;
 import com.propertyInjector.ApplicationContext;
 import com.util.comparator.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,7 +42,9 @@ public class BookService implements IBookService {
     private static final Logger LOGGER = LogManager.getLogger(BookService.class.getName());
     @InjectByType
     private final IBookDao bookDao;
+    private final IRequestService requestService;
     private final Connector connector;
+    SessionFactory sessionFactory;
 
     @InjectValueFromProperties(configName = "server", propertyName = "closeRequestAfterAddingBook", type = "boolean")
     private boolean closeRequestAfterAddingBook;
@@ -41,10 +53,18 @@ public class BookService implements IBookService {
 
     private final String SHOW_DESCRIPTION_QUERY = "SELECT description FROM book WHERE id=?";
     private final String CLOSE_REQUEST_AFTER_ADDING_BOOK_QUERY = "UPDATE request SET status=? WHERE book_id=?";
+    private final String SEE_BOOKS_NOT_BOUGHT_LONG_PERIOD_QUERY = "SELECT * FROM book JOIN ordering_book " +
+            "ON ordering_book.book_id=book.id " +
+            "WHERE ordering_book.book_id IN  +" +
+            "(SELECT book_id FROM ordering o JOIN ordering_book o_b ON o.id=o_b.order_id  +" +
+            "WHERE DATEDIFF(CURDATE(), DATE_ADD(o.order_date, INTERVAL ? MONTH)) > 1  +" +
+            "ORDER BY book_id)";
 
     public BookService() {
         this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
+        this.requestService = ApplicationContext.getInstance().getObject(RequestService.class);
         this.connector = ApplicationContext.getInstance().getObject(Connector.class);
+        this.sessionFactory = new Configuration().configure().buildSessionFactory();
     }
 
     @Override
@@ -89,14 +109,10 @@ public class BookService implements IBookService {
         Book book = bookDao.getById(bookId);
         book.setBookStatus(BookStatus.IN_STOCK);
         if (closeRequestAfterAddingBook) {
-            try (Connection connection = connector.getConnection()) {
-                PreparedStatement statement = connection.prepareStatement(CLOSE_REQUEST_AFTER_ADDING_BOOK_QUERY);
-                statement.setString(1, "CLOSED");
-                statement.setLong(2, bookId);
-                statement.executeUpdate();
-                statement.close();
-            } catch (SQLException e) {
-                throw new ServiceException("Closing request for book id=" + book.getId() + " failed", e);
+            if (book.getRequest() != null) {
+                Request request = book.getRequest();
+                LOGGER.info("Closing request id=" + request.getId());
+                requestService.closeRequest(request.getId());
             }
         }
         LOGGER.info("Adding book to stock " + book);
@@ -119,28 +135,41 @@ public class BookService implements IBookService {
         }
     }
 
+    //todo this
     @Override
     public void showDescription(Long id) {
-        Connection connection = connector.getConnection();
-        try (PreparedStatement statement = connection.prepareStatement(SHOW_DESCRIPTION_QUERY)) {
-            statement.setLong(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            LOGGER.info("Description for book with id=" + id + " is:\n"
-                    + resultSet.getString("description"));
-        } catch (SQLException e) {
+//        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+//        CriteriaQuery<Book> criteriaQuery = criteriaBuilder.createQuery(Book.class);
+//        Root<Book> root = criteriaQuery.from(Book.class);
+//        Selection selection = root.get("Description for book with id=");
+        try {
+            Session session = sessionFactory.openSession();
+            String query = String.format("SELECT description FROM Book WHERE id=%d", id);
+            List<String> list = session.createQuery(query).getResultList();
+            LOGGER.info("Description for book with id=" + id + ":\n"
+                    + list);
+            session.close();
+        } catch (HibernateException e) {
             LOGGER.warn("Method showDescription failed", e);
             throw new ServiceException("Method showDescription failed", e);
         }
     }
 
+    //todo this
     @Override
     public List<Book> booksNotBoughtMoreThanSixMonth() {
         try {
-            List<Book> list = bookDao.getAll();
-            LocalDate lc = LocalDate.now().minusMonths(monthToSetBookAsUnsold);
-            list = list.stream().filter(e -> e.getArrivalDate().compareTo(lc) < 0)
-                    .collect(Collectors.toList());
+            Session session = sessionFactory.openSession();
+            String q = "FROM Book WHERE orders ";
+            String query = String.format("FROM Book WHERE orders.getBook JOIN ordering_book o_b ON o.id=o_b.order_id ");
+            List<Book> list = session.createQuery(query).getResultList();
+
+
+
+//            List<Book> list = bookDao.getAll();
+//            LocalDate lc = LocalDate.now().minusMonths(monthToSetBookAsUnsold);
+//            list = list.stream().filter(e -> e.getArrivalDate().compareTo(lc) < 0)
+//                    .collect(Collectors.toList());
             return list;
         } catch (ServiceException e) {
             LOGGER.warn("Method booksNotBoughtMoreThanSixMonth failed", e);
@@ -148,6 +177,8 @@ public class BookService implements IBookService {
         }
     }
 
+    @Deprecated
+    @Override
     public List<Book> sortBooksBy(BookSort bookSort) {
         List<Book> books = bookDao.getAll();
         switch (bookSort) {

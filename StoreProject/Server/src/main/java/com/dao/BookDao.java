@@ -1,15 +1,12 @@
 package com.dao;
 
-import com.annotations.Singleton;
 import com.api.dao.IBookDao;
+import com.annotations.Singleton;
 import com.dao.util.Connector;
-import com.exception.DaoException;
 import com.model.Book;
 import com.propertyInjector.ApplicationContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.sql.*;
 
 @Singleton
 public class BookDao extends AbstractDao<Book> implements IBookDao {
@@ -50,6 +47,11 @@ public class BookDao extends AbstractDao<Book> implements IBookDao {
     @Override
     protected String getClassName() {
         return "Book";
+    }
+
+    @Override
+    protected Class<Book> getClazz() {
+        return Book.class;
     }
 
 //    @Override

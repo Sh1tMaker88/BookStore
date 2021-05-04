@@ -12,12 +12,14 @@ import com.dao.RequestDao;
 import com.dao.util.Connector;
 import com.exception.DaoException;
 import com.exception.ServiceException;
-import com.model.*;
 import com.propertyInjector.ApplicationContext;
 import com.util.comparator.OrderDateOfDoneComparator;
 import com.util.comparator.OrderIdComparator;
 import com.util.comparator.OrderPriceComparator;
 import com.util.comparator.OrderStatusComparator;
+import com.model.Book;
+import com.model.Order;
+import com.model.OrderStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -183,6 +185,7 @@ public class OrderService implements IOrderService {
         System.out.println("Customer name: " + order.getCustomerName() + " and books he ordered: " + order.getBooks());
     }
 
+    @Deprecated
     @Override
     public List<Order> sortOrdersBy(OrderSort orderSort) {
         List<Order> listToSort = orderDao.getAll();

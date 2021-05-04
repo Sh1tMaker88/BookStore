@@ -19,7 +19,7 @@ public class Request extends AIdentity implements Serializable {
     static final long serialVersionUID = 4L;
 
     @EqualsAndHashCode.Include
-    @OneToOne (cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
+    @OneToOne (cascade = CascadeType.ALL)
     @JoinColumn(name = "book_id")
     private Book book;
 

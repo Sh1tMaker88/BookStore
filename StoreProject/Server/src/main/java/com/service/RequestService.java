@@ -10,10 +10,10 @@ import com.dao.RequestDao;
 import com.dao.util.Connector;
 import com.exception.DaoException;
 import com.exception.ServiceException;
-import com.model.*;
 import com.propertyInjector.ApplicationContext;
 import com.util.comparator.RequestCounterComparator;
 import com.util.comparator.RequestIdComparator;
+import com.model.Request;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -102,6 +102,7 @@ public class RequestService implements IRequestService {
         }
     }
 
+    @Deprecated
     @Override
     public List<Request> sortRequestBy(RequestSort requestSort) {
         List<Request> list = requestDao.getAll();

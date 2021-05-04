@@ -3,13 +3,10 @@ package com.dao;
 import com.annotations.Singleton;
 import com.api.dao.IOrderDao;
 import com.dao.util.Connector;
-import com.exception.DaoException;
 import com.model.Order;
 import com.propertyInjector.ApplicationContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.sql.*;
 
 @Singleton
 public class OrderDao extends AbstractDao<Order> implements IOrderDao {
@@ -49,6 +46,11 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
     @Override
     protected String getClassName() {
         return "Order";
+    }
+
+    @Override
+    protected Class<Order> getClazz() {
+        return Order.class;
     }
 
 //    @Override

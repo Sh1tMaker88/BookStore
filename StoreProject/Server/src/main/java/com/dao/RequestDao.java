@@ -4,10 +4,6 @@ import com.annotations.Singleton;
 import com.api.dao.IRequestDao;
 import com.model.Request;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-
 @Singleton
 public class RequestDao extends AbstractDao<Request> implements IRequestDao {
 
@@ -36,6 +32,11 @@ public class RequestDao extends AbstractDao<Request> implements IRequestDao {
     @Override
     protected String getClassName() {
         return "Request";
+    }
+
+    @Override
+    protected Class<Request> getClazz() {
+        return Request.class;
     }
 
 

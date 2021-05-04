@@ -3,6 +3,7 @@ package com.model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,6 +15,8 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Entity
+@Table(name = "book")
+//@DynamicUpdate
 public class Book extends AIdentity implements Serializable {
 
     static final long serialVersionUID = 4L;
@@ -53,13 +56,7 @@ public class Book extends AIdentity implements Serializable {
     @OneToOne(mappedBy = "book")
     private Request request;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE}
-            , fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "ordering_book",
-            joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "order_id")
-    )
+    @ManyToMany(mappedBy = "books")
     private List<Order> orders;
 
     public Book() {
