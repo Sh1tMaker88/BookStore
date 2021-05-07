@@ -10,13 +10,20 @@ import com.dao.RequestDao;
 import com.dao.util.Connector;
 import com.exception.DaoException;
 import com.exception.ServiceException;
+import com.model.*;
 import com.propertyInjector.ApplicationContext;
 import com.util.comparator.RequestCounterComparator;
 import com.util.comparator.RequestIdComparator;
-import com.model.Request;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
+import javax.persistence.Query;
+import javax.persistence.criteria.*;
+import javax.transaction.Transactional;
 import java.sql.*;
 import java.util.List;
 
@@ -25,22 +32,13 @@ public class RequestService implements IRequestService {
 
     private static final Logger LOGGER = LogManager.getLogger(RequestService.class.getName());
     @InjectByType
-    private final IRequestDao requestDao;
+    private  IRequestDao requestDao;
     @InjectByType
-    private final IBookDao bookDao;
-    @InjectByType
-    private final Connector connector;
-    private final String CLOSE_REQUEST_QUERY = "UPDATE request JOIN book ON request.book_id = book.id " +
-            "SET request.status = 'CLOSED', book.status = 'IN_STOCK' WHERE request.id=?";
-    private final String CHECK_IF_REQUEST_ON_THIS_BOOK_EXISTS_QUERY = "SELECT id, book_id FROM request WHERE book_id=?";
-    private final String INCREASE_REQUEST_COUNTER_QUERY = "UPDATE request SET request_count = request_count + 1 " +
-            "WHERE book_id=?";
-
+    private  IBookDao bookDao;
 
     public RequestService() {
-        this.requestDao = ApplicationContext.getInstance().getObject(RequestDao.class);
-        this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
-        this.connector = ApplicationContext.getInstance().getObject(Connector.class);
+//        this.requestDao = ApplicationContext.getInstance().getObject(RequestDao.class);
+//        this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
     }
 
     @Override
@@ -54,49 +52,63 @@ public class RequestService implements IRequestService {
     }
 
     @Override
+    @Transactional
     public Request closeRequest(Long requestID) {
         try {
             LOGGER.info("Closing request with id=" + requestID);
-            Connection connection = connector.getConnection();
             Request request = getById(requestID);
-            PreparedStatement statement = connection.prepareStatement(CLOSE_REQUEST_QUERY);
-            statement.setLong(1, requestID);
-            statement.executeUpdate();
-            LOGGER.info(request + " has been closed");
-            statement.close();
-            return request;
-        } catch (SQLException | DaoException e) {
+            request.setRequestStatus(RequestStatus.CLOSED);
+            Book book = request.getBook();
+            book.setBookStatus(BookStatus.IN_STOCK);
+            request.setBook(book);
+            return requestDao.update(request);
+        } catch (HibernateException | DaoException e) {
             LOGGER.warn("Method closeRequest failed", e);
             throw new ServiceException("Method closeRequest failed", e);
         }
+
+//        Session session = factory.openSession();
+//        session.beginTransaction();
+//        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+//        CriteriaUpdate<Request> update = criteriaBuilder.createCriteriaUpdate(Request.class);
+//        Root<Request> request = update.from(Request.class);
+//
+//        Subquery<Book> subquery = update.subquery(Book.class);
+//        Root<Book> bookRoot = subquery.from(Book.class);
+//        subquery.select(bookRoot.get("book"));
+//        Path<Book> path =
+//
+//        update.set(request.get(Request_.book).get(Book_.bookStatus), BookStatus.IN_STOCK)
+//                .set(request.get(Request_.requestStatus), RequestStatus.CLOSED)
+//                .where(criteriaBuilder.equal(request.get(Request_.id), requestID))
+//                .where(criteriaBuilder.in(request.get()).value(subquery));
+//        Query query = session.createQuery(update);
+//        query.executeUpdate();
+//        session.getTransaction().commit();
+//        session.close();
+//        return getById(requestID);
+
     }
 
     @Override
+    @Transactional
     public Request addRequest(Long bookId) {
         try {
             LOGGER.info("Adding request for book with id=" + bookId);
-            Connection connection = connector.getConnection();
-            PreparedStatement statement = connection.prepareStatement(CHECK_IF_REQUEST_ON_THIS_BOOK_EXISTS_QUERY);
-            statement.setLong(1, bookId);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                LOGGER.info("Request for book id=" + bookId + " is already created. Increase counter");
-                Request request = requestDao.getById(resultSet.getLong("id"));
-                resultSet.close();
-                statement.close();
-                PreparedStatement statementForUpdate = connection.prepareStatement(INCREASE_REQUEST_COUNTER_QUERY);
-                statementForUpdate.setLong(1, bookId);
-                statementForUpdate.executeUpdate();
-                statementForUpdate.close();
-                return request;
+            Request request;
+            if (requestDao.checkIfRequestExist(bookId)) {
+                request = requestDao.getRequestByBookId(bookId);
+                request.setRequestCount(request.getRequestCount() + 1);
+                LOGGER.info("Request is already exists, increasing its counter to " + request.getRequestCount());
+                requestDao.update(request);
             } else {
-                //if no request for this book create new request
-                LOGGER.info("Creating request for book with id=" + bookId);
-                Request request = new Request(bookDao.getById(bookId));
+                Book book = bookDao.getById(bookId);
+                request = new Request(book);
                 requestDao.create(request);
-                return request;
+                LOGGER.info("Created request" + request);
             }
-        } catch (SQLException | DaoException e) {
+            return request;
+        } catch (HibernateException | DaoException e) {
             LOGGER.warn("Method addRequest failed", e);
             throw new ServiceException("Method addRequest failed", e);
         }

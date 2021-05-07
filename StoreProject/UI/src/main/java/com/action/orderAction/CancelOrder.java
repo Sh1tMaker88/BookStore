@@ -9,8 +9,6 @@ import com.propertyInjector.ApplicationContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-
 public class CancelOrder implements IAction {
 
     private static final Logger LOGGER = LogManager.getLogger(CancelOrder.class.getName());

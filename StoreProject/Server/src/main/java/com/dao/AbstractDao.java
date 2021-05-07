@@ -12,6 +12,7 @@ import org.hibernate.cfg.Configuration;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.transaction.Transactional;
 import java.util.List;
 
 public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> {
@@ -31,8 +32,9 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     public T create(T entity) {
         try (Session session = factory.openSession()) {
             session.beginTransaction();
-            T t = (T) session.save(entity);
+            session.saveOrUpdate(entity);
             session.getTransaction().commit();
+            T t = getById(entity.getId());
             if (t == null) {
                 throw new DaoException("Create entity failed");
             }
@@ -49,7 +51,6 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
 ////        Root<T> root = query.from(getClass());
 //        return entityManager.createQuery(query).getResultList();
 
-
         try (Session session = factory.openSession()) {
             session.beginTransaction();
             T t = session.get(getClazz(), id);
@@ -62,13 +63,17 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
         }
     }
 
+    //todo configure it to use with lazy init
     @Override
     public List<T> getAll() {
-        try (Session session = factory.openSession()) {
-            session.beginTransaction();
+        try (Session repSession = factory.openSession()) {
+            repSession.beginTransaction();
             String query = String.format("FROM %s", getClassName());
-            List<T> list = (List<T>) session.createQuery(query).list();
+            List<T> list = (List<T>) repSession.createQuery(query).list();
             return list;
+        } catch (HibernateException e) {
+            LOGGER.warn("GetAll failed");
+            throw new DaoException("GetAll failed", e);
         }
     }
 

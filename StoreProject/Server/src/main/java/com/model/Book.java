@@ -56,7 +56,11 @@ public class Book extends AIdentity implements Serializable {
     @OneToOne(mappedBy = "book")
     private Request request;
 
-    @ManyToMany(mappedBy = "books")
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE}
+            , fetch = FetchType.EAGER)
+    @JoinTable(name = "ordering_book",
+            joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"))
     private List<Order> orders;
 
     public Book() {

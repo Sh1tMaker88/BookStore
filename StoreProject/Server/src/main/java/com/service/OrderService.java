@@ -6,13 +6,8 @@ import com.api.dao.IBookDao;
 import com.api.dao.IOrderDao;
 import com.api.dao.IRequestDao;
 import com.api.service.IOrderService;
-import com.dao.BookDao;
-import com.dao.OrderDao;
-import com.dao.RequestDao;
-import com.dao.util.Connector;
 import com.exception.DaoException;
 import com.exception.ServiceException;
-import com.propertyInjector.ApplicationContext;
 import com.util.comparator.OrderDateOfDoneComparator;
 import com.util.comparator.OrderIdComparator;
 import com.util.comparator.OrderPriceComparator;
@@ -22,10 +17,9 @@ import com.model.Order;
 import com.model.OrderStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,22 +29,16 @@ public class OrderService implements IOrderService {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderService.class.getName());
     @InjectByType
-    private final IBookDao bookDao;
+    private IBookDao bookDao;
     @InjectByType
-    private final IOrderDao orderDao;
+    private IOrderDao orderDao;
     @InjectByType
-    private final IRequestDao requestDao;
-    private final Connector connector;
-
-    private final String DECREASE_COUNT_OF_ORDER_BOOK = "UPDATE book SET order_count = order_count - 1 " +
-            "WHERE book.id IN (SELECT order_book.book_id FROM order_book JOIN bookStore.order " +
-            "ON bookStore.order.id = order_book.order_id WHERE bookStore.order.id=?);";
+    private IRequestDao requestDao;
 
     public OrderService() {
-        this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
-        this.orderDao = ApplicationContext.getInstance().getObject(OrderDao.class);
-        this.requestDao = ApplicationContext.getInstance().getObject(RequestDao.class);
-        this.connector = ApplicationContext.getInstance().getObject(Connector.class);
+//        this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
+//        this.orderDao = ApplicationContext.getInstance().getObject(OrderDao.class);
+//        this.requestDao = ApplicationContext.getInstance().getObject(RequestDao.class);
     }
 
     @Override
@@ -64,16 +52,19 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    @Transactional
     public Order addOrder(String customerName, List<Book> books) {
         try {
             LOGGER.info("Generating order for customer '" + customerName + "'");
             Order order = new Order(customerName, books);
-            //increase number that points how much this book has been ordered
+            double totalPrice = 0.0;
             for (Book b : books) {
                 Book book = bookDao.getById(b.getId());
-                book.setOrderCount(book.getOrderCount());
+                book.setOrderCount(book.getOrderCount() + 1);
+                totalPrice = totalPrice + book.getPrice();
                 bookDao.update(book);
             }
+            order.setTotalPrice(totalPrice);
             orderDao.create(order);
             return order;
         } catch (DaoException e) {
@@ -83,63 +74,67 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    @Transactional
     public void cancelOrder(Long orderId) {
-        PreparedStatement statement = null;
         try {
-            Connection connection = connector.getConnection();
-            statement = connection.prepareStatement(DECREASE_COUNT_OF_ORDER_BOOK);
-            LOGGER.info("Cancelling order with id=" + orderId);
-            if (orderDao.getById(orderId).getId().equals(orderId)) {
-                statement.setLong(1, orderId);
-                statement.executeUpdate();
-                Order order = orderDao.getById(orderId);
-                order.setStatus(OrderStatus.CANCEL);
-                orderDao.update(order);
-                LOGGER.info("Order with id=" + orderId + " cancelled");
-            } else {
-                LOGGER.info("There is no order with such id=" + orderId);
+            Order order = getById(orderId);
+            order.setStatus(OrderStatus.CANCEL);
+            orderDao.update(order);
+            LOGGER.info("Order with id=" + orderId + " cancelled");
+            for (Book book : order.getBooks()) {
+                book.setOrderCount(book.getOrderCount() - 1);
+                bookDao.update(book);
             }
-        } catch (SQLException | DaoException e) {
+        } catch (HibernateException | DaoException e) {
             LOGGER.warn("Method cancelOrder failed", e);
             throw new ServiceException("Method cancelOrder failed", e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
+
+//        try (Session session = factory.openSession()) {
+//        begin tranaction
+//            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+//            CriteriaUpdate<Order> criteriaUpdate = criteriaBuilder.createCriteriaUpdate(Order.class);
+//            Root<Order> root = criteriaUpdate.from(Order.class);
+//            var subquery = criteriaUpdate.subquery(Book.class).from(Book.class);
+//            criteriaUpdate.set(root.get("status"), OrderStatus.CANCEL)
+//                    .where(criteriaBuilder.equal(root.get("id"), orderId));
+//
+//
+//            criteriaUpdate.set(subquery.get("orderCount")
+//                    , Optional.ofNullable(criteriaBuilder.sum(subquery.get("orderCount"), 1)))
+//                    .where(subquery.get("id").in(root.get("books")));
+//
+//            Query query = session.createQuery(criteriaUpdate);
+//            query.executeUpdate();
+//
+//            session.getTransaction().commit();
+//
+//        }
     }
 
     @Override
+    @Transactional
     public void changeOrderStatus(Long orderId, OrderStatus status) {
         try {
             LOGGER.info("Changing order status with id=" + orderId);
-            if (orderDao.getAll().stream().anyMatch(el -> el.getId().equals(orderId))) {
-                Order order = orderDao.getById(orderId);
-                order.setStatus(status);
-                if (status.equals(OrderStatus.CANCEL)) {
-                    cancelOrder(orderId);
-                }
-                //if order is done we set date and time of the end of the order
-                else if (status.equals(OrderStatus.DONE)) {
-                    order.setDateOfDone(LocalDateTime.now());
-                    orderDao.update(order);
-                    LOGGER.info("Order with id=" + orderId + "has changed status to " + status);
-                } else if (status.equals(OrderStatus.NEW)) {
-                    order.setDateOfDone(null);
-                    orderDao.update(order);
-                }
-            } else {
-                LOGGER.info("There is no such order with id=" + orderId);
+            Order order = orderDao.getById(orderId);
+            order.setStatus(status);
+            if (status.equals(OrderStatus.CANCEL)) {
+                cancelOrder(orderId);
+            }
+            //if order is done we set date and time of the end of the order
+            else if (status.equals(OrderStatus.DONE)) {
+                order.setDateOfDone(LocalDateTime.now());
+                orderDao.update(order);
+                LOGGER.info("Order with id=" + orderId + "has changed status to " + status);
+            } else if (status.equals(OrderStatus.NEW)) {
+                order.setDateOfDone(null);
+                orderDao.update(order);
             }
         } catch (DaoException e) {
             LOGGER.warn("Method changeOrderStatus failed", e);
             throw new ServiceException("Method changeOrderStatus failed", e);
         }
-
     }
 
     @Override

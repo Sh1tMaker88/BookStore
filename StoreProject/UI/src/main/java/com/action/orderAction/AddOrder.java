@@ -1,5 +1,6 @@
 package com.action.orderAction;
 
+import com.model.AIdentity;
 import com.model.Book;
 import com.util.ConsoleScanner;
 import com.action.IAction;
@@ -13,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AddOrder implements IAction {
 
@@ -21,27 +23,21 @@ public class AddOrder implements IAction {
 
     @Override
     public void execute() {
-        try  {
+        try {
             LOGGER.info("Enter customer name");
             String customerName = ConsoleScanner.scanString();
             boolean flag = true;
             List<Book> list = new ArrayList<>();
+            LOGGER.info("Enter book ID. 0 - will get you back to root menu");
             while (flag) {
-                LOGGER.info("Enter book ID. 0 - will get you back to root menu");
                 Long id = ConsoleScanner.scanLong();
                 if (id == 0L) {
                     flag = false;
-                }
-                //if there is this ID add book to list
-                boolean isAnyID = facade.getBookService().getAllBooks().stream().
-                        anyMatch(e -> e.getId().equals(id));
-                if (isAnyID) {
-                    list.add(facade.getBookService().getById(id));
                 } else {
-                    LOGGER.info("There is no such ID");
+                    list.add(facade.getBookService().getById(id));
+                    LOGGER.info("Already added books with ID: " + list.stream().map(AIdentity::getId).collect(Collectors.toList()));
+                    LOGGER.info("If you want add more book enter it ID, if no - '0' and it will finish your order");
                 }
-                LOGGER.info("If you want add more book enter it ID, if no - 0");
-                LOGGER.info("Already added: " + list.toString());
             }
             if (!list.isEmpty()) {
                 facade.getOrderService().addOrder(customerName, list);
