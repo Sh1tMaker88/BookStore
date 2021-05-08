@@ -5,6 +5,7 @@ import com.model.Order;
 import com.model.OrderStatus;
 import com.service.OrderSort;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,13 +21,11 @@ public interface IOrderService {
 
     void changeOrderStatus(Long orderId, OrderStatus status);
 
-    double priceGetByPeriodOfTime(LocalDateTime fromDate, LocalDateTime tillDate);
+    double priceGetByPeriodOfTime(LocalDate fromDate, LocalDate tillDate);
 
-    List<Order> ordersDoneByPeriodOfTime(LocalDateTime fromDate, LocalDateTime tillDate);
+    List<Order> ordersDoneByPeriodOfTime(LocalDate fromDate, LocalDate tillDate);
 
-//    List<Order> ordersDoneByPeriodOfTime(LocalDateTime fromDate, LocalDateTime tillDate, OrderSort orderSort);
-
-    void showDetails(Order order);
+    void showDetails(Long orderId);
 
     List<Order> sortOrdersBy(OrderSort orderSort);
 }

@@ -8,7 +8,6 @@ import com.api.dao.IBookDao;
 import com.api.dao.IOrderDao;
 import com.api.service.IBookService;
 import com.api.service.IRequestService;
-import com.dao.util.Connector;
 import com.exception.DaoException;
 import com.exception.ServiceException;
 import com.model.Book;
@@ -138,7 +137,7 @@ public class BookService implements IBookService {
         }
     }
 
-    //todo this
+    //todo need to select latest orders adn not all of them
     @Override
     @Transactional
     public List<Book> booksNotBoughtMoreThanSixMonth() {

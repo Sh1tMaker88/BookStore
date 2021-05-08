@@ -5,26 +5,15 @@ import com.annotations.Singleton;
 import com.api.dao.IBookDao;
 import com.api.dao.IRequestDao;
 import com.api.service.IRequestService;
-import com.dao.BookDao;
-import com.dao.RequestDao;
-import com.dao.util.Connector;
 import com.exception.DaoException;
 import com.exception.ServiceException;
 import com.model.*;
-import com.propertyInjector.ApplicationContext;
 import com.util.comparator.RequestCounterComparator;
 import com.util.comparator.RequestIdComparator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-
-import javax.persistence.Query;
-import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
-import java.sql.*;
 import java.util.List;
 
 @Singleton

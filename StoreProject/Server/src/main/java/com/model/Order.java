@@ -68,10 +68,12 @@ public class Order extends AIdentity implements Serializable {
     @Override
     public String toString() {
         return "ORDER{" + "orderId=" + getId() +
+                ", customerName='" + customerName + '\'' +
                 ", booksID:" + books.stream().map(AIdentity::getId).collect(Collectors.toList()) +
                 ", status=" + status +
                 ", totalPrice=" + totalPrice +
-                ", customerName='" + customerName + '\'' +
+                ", ordered=" + orderDate +
+                ", completed=" + DateOfDone +
                 "}\n";
     }
 }

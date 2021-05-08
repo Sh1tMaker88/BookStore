@@ -30,46 +30,44 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
 
     @Override
     public T create(T entity) {
-        try (Session session = factory.openSession()) {
-            session.beginTransaction();
-            session.saveOrUpdate(entity);
-            session.getTransaction().commit();
-            T t = getById(entity.getId());
-            if (t == null) {
-                throw new DaoException("Create entity failed");
-            }
-            LOGGER.info(t + " has been created");
-            return t;
+        Session session = factory.openSession();
+        session.beginTransaction();
+        session.save(entity);
+        session.getTransaction().commit();
+        T t = getById(entity.getId());
+        if (t == null) {
+            throw new DaoException("Create entity failed");
         }
+        LOGGER.info(t + " has been created");
+        session.close();
+        return t;
     }
 
     @Override
     public T getById(Long id) {
-//        EntityManager entityManager;
-//        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-//        CriteriaQuery<T> query = builder.createQuery(getClass());
-////        Root<T> root = query.from(getClass());
-//        return entityManager.createQuery(query).getResultList();
-
-        try (Session session = factory.openSession()) {
-            session.beginTransaction();
-            T t = session.get(getClazz(), id);
-            if (t == null) {
-                LOGGER.warn("No such ID=" + id);
-                throw new DaoException("No such id=" + id);
-            }
-            session.getTransaction().commit();
-            return t;
+        Session session = factory.openSession();
+        session.beginTransaction();
+        T t = session.get(getClazz(), id);
+        if (t == null) {
+            LOGGER.warn("No such ID=" + id);
+            throw new DaoException("No such id=" + id);
         }
+        session.getTransaction().commit();
+        session.close();
+        return t;
+
     }
 
     //todo configure it to use with lazy init
     @Override
     public List<T> getAll() {
-        try (Session repSession = factory.openSession()) {
+        try {
+            Session repSession = factory.openSession();
             repSession.beginTransaction();
             String query = String.format("FROM %s", getClassName());
             List<T> list = (List<T>) repSession.createQuery(query).list();
+//            String s = (list.toString());
+            repSession.close();
             return list;
         } catch (HibernateException e) {
             LOGGER.warn("GetAll failed");
@@ -79,34 +77,30 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
 
     @Override
     public void delete(T entity) {
-        try (Session session = factory.openSession()) {
-            session.beginTransaction();
-            T t = getById(entity.getId());
-            if (t == null) {
-                throw new DaoException("No such entity in data base, delete failed");
-            }
-            session.delete(entity);
-            session.getTransaction().commit();
-            LOGGER.info(t + " has been deleted");
+        Session session = factory.openSession();
+        session.beginTransaction();
+        T t = getById(entity.getId());
+        if (t == null) {
+            throw new DaoException("No such entity in data base, delete failed");
         }
+        session.delete(entity);
+        session.getTransaction().commit();
+        session.close();
+        LOGGER.info(t + " has been deleted");
     }
 
 
-    //todo use dynamic update
+    //todo use dynamic update , use merge
     @Override
     public T update(T entity) {
-        try (Session session = factory.openSession()) {
-            session.beginTransaction();
-            T entityToUpdate = getById(entity.getId());
-            if (entityToUpdate == null) {
-                throw new DaoException("No such entity in data base");
-            }
-            entityToUpdate = updateEntityFields(entityToUpdate, entity);
-            session.update(entityToUpdate);
-            session.getTransaction().commit();
-            LOGGER.info(entityToUpdate + " has been updated");
-            return entityToUpdate;
-        }
+        Session session = factory.openSession();
+        session.beginTransaction();
+        T t = (T) session.merge(entity);
+        session.getTransaction().commit();
+        LOGGER.info(t + " has been updated");
+        session.close();
+        return t;
+
     }
 
     protected abstract T updateEntityFields(T entityToUpdate, T entity);

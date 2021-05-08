@@ -10,6 +10,8 @@ public abstract class AIdentity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
+//    @Access(AccessType.PROPERTY)
+//    @Basic(fetch = FetchType.EAGER)
     private Long id;
 
     public Long getId() {

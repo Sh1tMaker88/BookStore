@@ -20,9 +20,9 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Singleton
 public class OrderService implements IOrderService {
@@ -57,6 +57,7 @@ public class OrderService implements IOrderService {
         try {
             LOGGER.info("Generating order for customer '" + customerName + "'");
             Order order = new Order(customerName, books);
+            String s = order.toString();
             double totalPrice = 0.0;
             for (Book b : books) {
                 Book book = bookDao.getById(b.getId());
@@ -108,7 +109,6 @@ public class OrderService implements IOrderService {
 //            query.executeUpdate();
 //
 //            session.getTransaction().commit();
-//
 //        }
     }
 
@@ -138,15 +138,11 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public double priceGetByPeriodOfTime(LocalDateTime fromDate, LocalDateTime tillDate) {
+    public double priceGetByPeriodOfTime(LocalDate fromDate, LocalDate tillDate) {
         try {
-            List<Order> list = orderDao.getAll();
-            double result = list.stream().filter(e -> e.getDateOfDone().isAfter(fromDate) && e.getDateOfDone().isBefore(tillDate))
-                    .filter(e -> e.getStatus().equals(OrderStatus.DONE))
-                    .mapToDouble(Order::getTotalPrice)
-                    .sum();
-            LOGGER.info("From " + fromDate + " till " + tillDate + " we earned: " + result);
-            return result;
+            Double price = orderDao.getPriceByPeriodOfTime(fromDate, tillDate);
+            LOGGER.info("From '" + fromDate + "' till '" + tillDate + "' we earned: " + price);
+            return price;
         } catch (DaoException e) {
             LOGGER.warn("Method priceGetByPeriodOfTime failed", e);
             throw new ServiceException("Method priceGetByPeriodOfTime failed", e);
@@ -154,13 +150,10 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<Order> ordersDoneByPeriodOfTime(LocalDateTime fromDate, LocalDateTime tillDate) {
+    public List<Order> ordersDoneByPeriodOfTime(LocalDate fromDate, LocalDate tillDate) {
         try {
-            List<Order> list = orderDao.getAll();
-            list = list.stream().filter(e -> e.getDateOfDone().isAfter(fromDate) && e.getDateOfDone().isBefore(tillDate))
-                    .filter(e -> e.getStatus().equals(OrderStatus.DONE))
-                    .collect(Collectors.toList());
-            LOGGER.info("From " + fromDate + " till " + tillDate + " were done orders: \n" + list);
+            List<Order> list = orderDao.getOrdersDoneByPeriod(fromDate, tillDate);
+            LOGGER.info("From '" + fromDate + "' till '" + tillDate + "' were done orders: \n" + list);
             return list;
         } catch (DaoException e) {
             LOGGER.warn("Method ordersDoneByPeriodOfTime failed", e);
@@ -168,16 +161,10 @@ public class OrderService implements IOrderService {
         }
     }
 
-//    @Override
-//    public List<Order> ordersDoneByPeriodOfTime(LocalDateTime fromDate, LocalDateTime tillDate, OrderSort orderSort) {
-//        List<Order> list = this.ordersDoneByPeriodOfTime(fromDate, tillDate);
-//        list = this.sortOrdersBy(orderSort);
-//        return list;
-//    }
-
     @Override
-    public void showDetails(Order order) {
-        System.out.println("Customer name: " + order.getCustomerName() + " and books he ordered: " + order.getBooks());
+    public void showDetails(Long orderId) {
+        Order order =  orderDao.getById(orderId);
+        LOGGER.info("\n" + order);
     }
 
     @Deprecated
@@ -202,13 +189,5 @@ public class OrderService implements IOrderService {
                 throw new ServiceException("Method sortOrdersBy failed");
         }
         return listToSort;
-    }
-
-    public static double totalPrice(List<Book> books) {
-        double total = 0;
-        for (Book book : books) {
-            total += book.getPrice();
-        }
-        return total;
     }
 }

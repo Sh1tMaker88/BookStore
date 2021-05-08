@@ -57,10 +57,10 @@ public class BookDao extends AbstractDao<Book> implements IBookDao {
     @Override
     public Set<Book> getBookThatHaveNoOrdersForPeriodOfTime(int monthToSetBookAsUnsold) {
         return getAll().stream()
-                .filter(el -> el.getOrders() == null)
                 .filter(book -> book.getArrivalDate()
-                    .plusMonths(monthToSetBookAsUnsold)
-                    .isBefore(LocalDate.now()))
+                        .plusMonths(monthToSetBookAsUnsold)
+                        .isBefore(LocalDate.now()))
+                .filter(el -> el.getOrders().isEmpty())
                 .collect(Collectors.toSet());
     }
 

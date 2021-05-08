@@ -6,9 +6,7 @@ import com.action.bookAction.AddBookToStock;
 import com.action.bookAction.CreateBook;
 import com.action.bookAction.DiscardBook;
 import com.action.bookAction.GetBookDescription;
-import com.action.orderAction.AddOrder;
-import com.action.orderAction.CancelOrder;
-import com.action.orderAction.ChangeOrderStatus;
+import com.action.orderAction.*;
 import com.action.requestAction.AddRequest;
 import com.action.requestAction.CloseRequest;
 import com.action.OrderSorter;
@@ -49,13 +47,19 @@ public class Builder {
         rootMenu.setName("<Order menu>");
         rootMenu.addMenuItem(new MenuItem("1 - See all orders", () -> System.out.println("-Choose sort for output-"),
                 OrderSortMenuGetAll()));
-        rootMenu.addMenuItem(new MenuItem("2 - Add order", new AddOrder(),
+        rootMenu.addMenuItem(new MenuItem("2 - See order details", new GetOrderDetails(),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("3 - Cancel order", new CancelOrder(),
+        rootMenu.addMenuItem(new MenuItem("3 - Add order", new AddOrder(),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("4 - Change order status", new ChangeOrderStatus(),
+        rootMenu.addMenuItem(new MenuItem("4 - Cancel order", new CancelOrder(),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("5 - Back to root menu", ()-> System.out.println("-Back-"),
+        rootMenu.addMenuItem(new MenuItem("5 - Change order status", new ChangeOrderStatus(),
+                getRootMenu()));
+        rootMenu.addMenuItem(new MenuItem("6 - Get money earned by period of time", new PriceByPeriodOfTime(),
+                getRootMenu()));
+        rootMenu.addMenuItem(new MenuItem("7 - Get orders done by period of time", new OrderDoneByPeriodOfTime(),
+                getRootMenu()));
+        rootMenu.addMenuItem(new MenuItem("8 - Back to root menu", ()-> System.out.println("-Back-"),
                 getRootMenu()));
         return rootMenu;
     }
