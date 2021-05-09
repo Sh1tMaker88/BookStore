@@ -1,10 +1,6 @@
 package com.api.service;
 
-import com.api.dao.IBookDao;
-import com.api.dao.IRequestDao;
-import com.models.Book;
-import com.models.Order;
-import com.models.Request;
+import com.model.Request;
 import com.service.RequestSort;
 
 import java.util.List;
@@ -15,11 +11,9 @@ public interface IRequestService {
 
     Request getById(Long id);
 
-    Book closeRequest(Long requestID);
+    Request closeRequest(Long requestID);
 
-    void closeRequest(Book book);
-
-    Request addRequest(Book book);
+    Request addRequest(Long bookId);
 
 //    List<Request> listOfRequestToBook(Book book);
 

@@ -37,7 +37,7 @@ public class SetValue {
                         break;
                 }
             } else {
-                String[] fieldType = field.getType().toString().split(".");
+                String[] fieldType = field.getType().toString().split("\\.");
                 if (fieldType[fieldType.length - 1].equalsIgnoreCase(toType)) {
                     if (toType.equals("String")) {
                         field.set(obj, value);

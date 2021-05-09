@@ -1,28 +1,29 @@
 package com.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class IdGenerator implements Serializable {
 
-    private static final Logger LOGGER = Logger.getLogger(IdGenerator.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(IdGenerator.class.getName());
     private static Long bookId = 1L;
     private static Long orderId = 1L;
     private static Long requestId = 1L;
 
     public static Long generateBookId(){
-        LOGGER.log(Level.INFO, "Setting bookID");
+        LOGGER.info("Setting bookID");
         return bookId++;
     }
 
     public static Long generateOrderId(){
-        LOGGER.log(Level.INFO, "Setting orderID");
+        LOGGER.info("Setting orderID");
         return orderId++;
     }
 
     public static Long generateRequestId(){
-        LOGGER.log(Level.INFO, "Setting requestID");
+        LOGGER.info("Setting requestID");
         return requestId++;
     }
 

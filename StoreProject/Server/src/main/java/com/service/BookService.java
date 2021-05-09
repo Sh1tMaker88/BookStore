@@ -5,33 +5,35 @@ import com.annotations.InjectByType;
 import com.annotations.InjectValueFromProperties;
 import com.annotations.Singleton;
 import com.api.dao.IBookDao;
-import com.api.dao.IRequestDao;
+import com.api.dao.IOrderDao;
 import com.api.service.IBookService;
-import com.dao.BookDao;
-import com.dao.RequestDao;
-import com.exceptions.DaoException;
-import com.exceptions.ServiceException;
-import com.models.Book;
-import com.models.BookStatus;
-import com.propertyInjector.ApplicationContext;
-import com.util.IdGenerator;
-import com.util.comparators.*;
-
+import com.api.service.IRequestService;
+import com.exception.DaoException;
+import com.exception.ServiceException;
+import com.model.Book;
+import com.model.BookStatus;
+import com.model.Request;
+import com.util.comparator.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Singleton
 @ClassToInjectProperty
 public class BookService implements IBookService {
 
-    private static final Logger LOGGER = Logger.getLogger(BookService.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(BookService.class.getName());
     @InjectByType
-    private final IBookDao bookDao;
+    private IBookDao bookDao;
     @InjectByType
-    private final IRequestDao requestDao;
+    private IOrderDao orderDao;
+    @InjectByType
+    private IRequestService requestService;
 
     @InjectValueFromProperties(configName = "server", propertyName = "closeRequestAfterAddingBook", type = "boolean")
     private boolean closeRequestAfterAddingBook;
@@ -39,28 +41,9 @@ public class BookService implements IBookService {
     private int monthToSetBookAsUnsold;
 
     public BookService() {
-        this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
-        this.requestDao = ApplicationContext.getInstance().getObject(RequestDao.class);
-
-//        try {
-//            FileInputStream fis  = new FileInputStream("Server/src/main/resources/myProp.properties");
-//            Properties prop = new Properties();
-//            prop.load(fis);
-//            this.closeRequestAfterAddingBook =
-//                    Boolean.parseBoolean
-//                            (prop.getProperty("CLOSE_REQUEST_AFTER_ADDING_BOOK", "false"));
-//            this.monthToSetBookAsUnsold = Integer.parseInt(prop.getProperty("UNSOLD_BOOK_MONTH", "-1"));
-//        } catch (IOException e) {
-//            LOGGER.log(Level.WARNING, "Properties file not found");
-//        }
-    }
-
-    public boolean isCloseRequestAfterAddingBook() {
-        return closeRequestAfterAddingBook;
-    }
-
-    public int getMonthToSetBookAsUnsold() {
-        return monthToSetBookAsUnsold;
+//        this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
+//        this.requestService = ApplicationContext.getInstance().getObject(RequestService.class);
+//        this.connector = ApplicationContext.getInstance().getObject(Connector.class);
     }
 
     @Override
@@ -74,69 +57,103 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public Book addBookToStock(String name, String author, int yearOfPublish, double price, String isbn, int pageNumber) {
+    @Transactional
+    public Book createBook(String name, String author, String isbn, int pageNumber
+            , double price, int yearOfPublish, String description, BookStatus bookStatus, LocalDate arrivalDate) {
         try {
-            Book book = new Book(name, author, yearOfPublish, price, isbn, pageNumber);
-            return addBookToStock(book);
+            Book book = new Book(name, author, isbn, pageNumber, price, yearOfPublish
+                    , description, bookStatus, arrivalDate);
+            LOGGER.info("Creating book in data base: " + book);
+            return bookDao.create(book);
         } catch (DaoException e) {
-            LOGGER.log(Level.WARNING, "Method addBookToStock failed", e);
-            throw new ServiceException("Method addBookToStock failed", e);
+            LOGGER.warn("Method createBook failed", e);
+            throw new ServiceException("Method createBook failed", e);
         }
     }
 
     @Override
-    public Book addBookToStock(Book book) {
+    @Transactional
+    public Book createBook(String name, String author, String isbn, int pageNumber
+            , double price, int yearOfPublish, String description) {
         try {
-            book.setId(IdGenerator.generateBookId());
+            Book book = new Book(name, author, isbn, pageNumber, price, yearOfPublish, description);
+            LOGGER.info("Creating book in data base: " + book);
+            return bookDao.create(book);
+        } catch (HibernateException | DaoException e) {
+            LOGGER.info("Method createBook failed", e);
+            throw new ServiceException("Method createBook failed", e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public Book addBookToStock(Long bookId) {
+        try {
+            Book book = bookDao.getById(bookId);
+            book.setBookStatus(BookStatus.IN_STOCK);
             if (closeRequestAfterAddingBook) {
-                if (requestDao.getAll().stream().anyMatch(e -> e.getBook().equals(book))) {
-                    RequestService requestService = ApplicationContext.getInstance().getObject(RequestService.class);
-                    requestService.closeRequest(book.getId());
+                if (book.getRequest() != null) {
+                    Request request = book.getRequest();
+                    LOGGER.info("Closing request id=" + request.getId());
+                    requestService.closeRequest(request.getId());
                 }
             }
-            LOGGER.log(Level.INFO, "Creating book" + book);
-            bookDao.create(book);
-            return book;
-        } catch (DaoException e) {
-            LOGGER.log(Level.WARNING, "Method addBookToStock failed", e);
-            throw new ServiceException("Method addBookToStock failed", e);
-        }
-    }
-
-    @Override
-    public Book discardBook(Long bookId) {
-        try {
-            LOGGER.log(Level.INFO, "Discarding book with id=" + bookId);
-            Book book = bookDao.getById(bookId);
-            book.setBookStatus(BookStatus.OUT_OF_STOCK);
-            LOGGER.log(Level.INFO, "Updating book");
+            LOGGER.info("Adding book to stock " + book);
             bookDao.update(book);
             return book;
-        } catch (DaoException e) {
-            LOGGER.log(Level.WARNING, "Method addBookToStock failed", e);
+        } catch (HibernateException | DaoException e) {
+            LOGGER.info("Method addBookToStock failed", e);
             throw new ServiceException("Method addBookToStock failed", e);
         }
     }
 
-    @Override
-    public void showDescription(Book book) {
-        System.out.println("Description of " + book.getName() + ":\n" + book.getDescription());
-    }
 
     @Override
-    public List<Book> booksNotBoughtMoreThanSixMonth() {
+    @Transactional
+    public Book discardBook(Long bookId) {
         try {
-            List<Book> list = bookDao.getAll();
-            LocalDate lc = LocalDate.now().minusMonths(monthToSetBookAsUnsold);
-            list = list.stream().filter(e -> e.getArrivalDate().compareTo(lc) < 0)
-                    .collect(Collectors.toList());
-            return list;
-        } catch (ServiceException e) {
-            LOGGER.log(Level.WARNING, "Method booksNotBoughtMoreThanSixMonth failed", e);
-            throw e;
+            LOGGER.info("Discarding book with id=" + bookId);
+            Book book = bookDao.getById(bookId);
+            book.setBookStatus(BookStatus.OUT_OF_STOCK);
+            LOGGER.info("Updating book");
+            bookDao.update(book);
+            return book;
+        } catch (HibernateException | DaoException e) {
+            LOGGER.info("Method discardBook failed", e);
+            throw new ServiceException("Method discardBook failed", e);
         }
     }
 
+    @Override
+    @Transactional
+    public void showDescription(Long id) {
+        try {
+            String description = bookDao.getDescription(id);
+            LOGGER.info("Description for book with id=" + id + ":\n"
+                    + description);
+        } catch (HibernateException | DaoException e) {
+            LOGGER.warn("Method showDescription failed", e);
+            throw new ServiceException("Method showDescription failed", e);
+        }
+    }
+
+    //todo need to select latest orders adn not all of them
+    @Override
+    @Transactional
+    public List<Book> booksNotBoughtMoreThanSixMonth() {
+        try {
+            Set<Book> list = orderDao.getBooksThatAreNotBought(monthToSetBookAsUnsold);
+            Set<Book> list2 = bookDao.getBookThatHaveNoOrdersForPeriodOfTime(monthToSetBookAsUnsold);
+            list.addAll(list2);
+            return new ArrayList<>(list);
+        } catch (ServiceException e) {
+            LOGGER.warn("Method booksNotBoughtMoreThanSixMonth failed", e);
+            throw new ServiceException("Method booksNotBoughtMoreThanSixMonth failed", e);
+        }
+    }
+
+    @Deprecated
+    @Override
     public List<Book> sortBooksBy(BookSort bookSort) {
         List<Book> books = bookDao.getAll();
         switch (bookSort) {
@@ -156,7 +173,7 @@ public class BookService implements IBookService {
                 books.sort(new BookYearOfPublishComparator());
                 break;
             default:
-                LOGGER.log(Level.WARNING, "No such type of sort");
+                LOGGER.warn("No such type of sort");
                 throw new ServiceException("Method sortBooksBy failed");
         }
         return books;

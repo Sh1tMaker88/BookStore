@@ -1,10 +1,10 @@
 package com.api.service;
 
-import com.api.dao.IBookDao;
-import com.api.dao.IRequestDao;
-import com.models.Book;
+import com.model.Book;
+import com.model.BookStatus;
 import com.service.BookSort;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IBookService {
@@ -13,13 +13,17 @@ public interface IBookService {
 
     Book getById(Long id);
 
-    Book addBookToStock(String name, String author, int yearOfPublish, double price, String isbn, int pageNumber);
+    Book createBook(String name, String author, String isbn, int pageNumber
+            , double price, int yearOfPublish, String description, BookStatus bookStatus, LocalDate arrivalDate);
 
-    Book addBookToStock(Book book);
+    Book createBook(String name, String author, String isbn, int pageNumber
+            , double price, int yearOfPublish, String description);
+
+    Book addBookToStock(Long bookId);
 
     Book discardBook(Long bookId);
 
-    void showDescription(Book book);
+    void showDescription(Long id);
 
     List<Book> booksNotBoughtMoreThanSixMonth();
 

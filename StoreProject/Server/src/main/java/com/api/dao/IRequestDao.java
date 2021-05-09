@@ -1,6 +1,9 @@
 package com.api.dao;
 
-import com.models.Request;
+import com.model.Request;
 
 public interface IRequestDao extends GenericDao<Request> {
+    boolean checkIfRequestExist(Long bookId);
+
+    Request getRequestByBookId(Long bookId);
 }

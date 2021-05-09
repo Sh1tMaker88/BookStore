@@ -1,20 +1,15 @@
 package com.serialization;
 
-import com.annotations.InjectByType;
 import com.api.dao.IBookDao;
 import com.api.dao.IOrderDao;
 import com.api.dao.IRequestDao;
 import com.dao.BookDao;
 import com.dao.OrderDao;
 import com.dao.RequestDao;
-import com.facade.Facade;
-import com.models.Book;
-import com.models.Order;
-import com.models.Request;
+import com.model.Book;
+import com.model.Order;
+import com.model.Request;
 import com.propertyInjector.ApplicationContext;
-import com.service.BookService;
-import com.service.OrderService;
-import com.service.RequestService;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

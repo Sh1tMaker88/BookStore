@@ -5,16 +5,31 @@ plugins {
 group 'org.example'
 version '1.0-SNAPSHOT'
 
-repositories {
-    mavenCentral()
+
+allprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testImplementation group: 'junit', name: 'junit', version: '4.12'
+        compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
+        annotationProcessor 'org.projectlombok:lombok:1.18.20'
+        implementation 'org.reflections:reflections:0.9.11'
+        implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
+        implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.1'
+
+        implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.4.31.Final'
+    }
 }
 
 dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-    implementation 'mysql:mysql-connector-java:8.0.23'
 
-    implementation 'org.reflections:reflections:0.9.11'
+    implementation project(':api')
     implementation project(':UI')
     implementation project(':Server')
     implementation project(':DI')
 }
+
