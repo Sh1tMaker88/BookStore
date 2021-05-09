@@ -103,8 +103,6 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
 
     }
 
-    protected abstract T updateEntityFields(T entityToUpdate, T entity);
-
     protected abstract String getClassName();
 
     protected abstract Class<T> getClazz();

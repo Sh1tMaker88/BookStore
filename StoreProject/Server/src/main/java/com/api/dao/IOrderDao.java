@@ -2,12 +2,11 @@ package com.api.dao;
 
 import com.model.Book;
 import com.model.Order;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-
 
 public interface IOrderDao extends GenericDao<Order> {
     Set<Book> getBooksThatAreNotBought(int monthToSetBookAsUnsold);

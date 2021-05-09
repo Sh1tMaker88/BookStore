@@ -6,16 +6,21 @@ import com.exception.ActionException;
 import com.exception.DaoException;
 import com.exception.ServiceException;
 import com.facade.Facade;
-import com.propertyInjector.ApplicationContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
+@Component
 public class AddBookToStock implements IAction {
 
     private static final Logger LOGGER = LogManager.getLogger(CreateBook.class.getName());
-    final Facade facade = ApplicationContext.getInstance().getObject(Facade.class);
+    private Facade facade;
+
+    @Autowired
+    public void setFacade(Facade facade) {
+        this.facade = facade;
+    }
 
     @Override
     public void execute() {

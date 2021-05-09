@@ -1,17 +1,12 @@
 package com.dao;
 
-import com.annotations.InjectByType;
-import com.annotations.Singleton;
 import com.api.dao.IOrderDao;
-import com.dao.util.Connector;
-import com.exception.DaoException;
 import com.model.Book;
 import com.model.Order;
 import com.model.OrderStatus;
-import com.propertyInjector.ApplicationContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,25 +14,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Singleton
+@Repository
 public class OrderDao extends AbstractDao<Order> implements IOrderDao {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderDao.class.getName());
 
     public OrderDao() {
 
-    }
-
-    @Override
-    @Deprecated
-    protected Order updateEntityFields(Order entityToUpdate, Order entity) {
-        entityToUpdate.setCustomerName(entity.getCustomerName());
-        entityToUpdate.setTotalPrice(entity.getTotalPrice());
-        entityToUpdate.setStatus(entity.getStatus());
-        entityToUpdate.setOrderDate(entity.getOrderDate());
-        entityToUpdate.setDateOfDone(entity.getDateOfDone());
-        entityToUpdate.setBooks(entity.getBooks());
-        return entityToUpdate;
     }
 
     @Override
@@ -50,6 +33,7 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
         return Order.class;
     }
 
+    //todo rework to selecting using HQL
     @Override
     public Set<Book> getBooksThatAreNotBought(int monthToSetBookAsUnsold) {
         return getAll().stream()

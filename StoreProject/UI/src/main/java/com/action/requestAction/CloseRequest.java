@@ -1,21 +1,25 @@
 package com.action.requestAction;
 
-import com.menu.MenuController;
 import com.util.ConsoleScanner;
 import com.action.IAction;
 import com.exception.DaoException;
 import com.exception.ServiceException;
 import com.facade.Facade;
-import com.propertyInjector.ApplicationContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
+@Component
 public class CloseRequest implements IAction {
 
     private static final Logger LOGGER = LogManager.getLogger(CloseRequest.class.getName());
-    final Facade facade = ApplicationContext.getInstance().getObject(Facade.class);
+    private Facade facade;
+
+    @Autowired
+    public void setFacade(Facade facade) {
+        this.facade = facade;
+    }
 
     @Override
     public void execute() {

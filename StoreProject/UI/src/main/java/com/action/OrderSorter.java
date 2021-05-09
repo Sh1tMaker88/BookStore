@@ -1,5 +1,6 @@
 package com.action;
 
+import com.SpringContext;
 import com.action.orderAction.GetAllOrders;
 import com.exception.ActionException;
 import com.model.Order;
@@ -43,7 +44,7 @@ public class OrderSorter implements IAction{
         try {
             switch (method) {
                 case "getAll":
-                    setOrders(new GetAllOrders().doIt());
+                    setOrders(SpringContext.getInstance().getBean(GetAllOrders.class).doIt());
                     break;
             }
             orders.sort(sortOrdersBy.get(sortId));

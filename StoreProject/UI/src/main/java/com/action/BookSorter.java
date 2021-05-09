@@ -1,5 +1,6 @@
 package com.action;
 
+import com.SpringContext;
 import com.action.bookAction.GetAllBooks;
 import com.exception.ActionException;
 import com.model.Book;
@@ -41,10 +42,10 @@ public class BookSorter implements IAction{
         try {
             switch (method) {
                 case "getAll":
-                    setBooks(new GetAllBooks().doIt());
+                    setBooks(SpringContext.getInstance().getBean(GetAllBooks.class).doIt());
                     break;
                 case "oldBooks":
-                    setBooks(new GetBooksNotBoughtMoreThanSixMonth().doIt());
+                    setBooks(SpringContext.getInstance().getBean(GetBooksNotBoughtMoreThanSixMonth.class).doIt());
                     break;
             }
             books.sort(sortBooksBy.get(sortId));

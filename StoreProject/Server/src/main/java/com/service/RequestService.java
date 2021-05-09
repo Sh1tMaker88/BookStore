@@ -1,7 +1,5 @@
 package com.service;
 
-import com.annotations.InjectByType;
-import com.annotations.Singleton;
 import com.api.dao.IBookDao;
 import com.api.dao.IRequestDao;
 import com.api.service.IRequestService;
@@ -13,21 +11,23 @@ import com.util.comparator.RequestIdComparator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.util.List;
 
-@Singleton
+@Service
 public class RequestService implements IRequestService {
 
     private static final Logger LOGGER = LogManager.getLogger(RequestService.class.getName());
-    @InjectByType
-    private  IRequestDao requestDao;
-    @InjectByType
-    private  IBookDao bookDao;
+    private final IRequestDao requestDao;
+    private final IBookDao bookDao;
 
-    public RequestService() {
-//        this.requestDao = ApplicationContext.getInstance().getObject(RequestDao.class);
-//        this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
+    @Autowired
+    public RequestService(IRequestDao requestDao, IBookDao bookDao) {
+        this.requestDao = requestDao;
+        this.bookDao = bookDao;
     }
 
     @Override

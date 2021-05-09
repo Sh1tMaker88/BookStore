@@ -1,5 +1,6 @@
 package com.menu;
 
+import com.SpringContext;
 import com.action.BookSorter;
 import com.action.RequestSorter;
 import com.action.bookAction.AddBookToStock;
@@ -10,14 +11,18 @@ import com.action.orderAction.*;
 import com.action.requestAction.AddRequest;
 import com.action.requestAction.CloseRequest;
 import com.action.OrderSorter;
+import org.springframework.context.ApplicationContext;
 
 
 public class Builder {
 
     private static Builder instance;
     private Menu rootMenu;
+    private ApplicationContext context = SpringContext.getInstance();
 
-    private Builder(){}
+    private Builder(){
+
+    }
 
     public static Builder getInstance(){
         if (instance == null){
@@ -47,17 +52,17 @@ public class Builder {
         rootMenu.setName("<Order menu>");
         rootMenu.addMenuItem(new MenuItem("1 - See all orders", () -> System.out.println("-Choose sort for output-"),
                 OrderSortMenuGetAll()));
-        rootMenu.addMenuItem(new MenuItem("2 - See order details", new GetOrderDetails(),
+        rootMenu.addMenuItem(new MenuItem("2 - See order details", context.getBean(GetOrderDetails.class),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("3 - Add order", new AddOrder(),
+        rootMenu.addMenuItem(new MenuItem("3 - Add order", context.getBean(AddOrder.class),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("4 - Cancel order", new CancelOrder(),
+        rootMenu.addMenuItem(new MenuItem("4 - Cancel order", context.getBean(CancelOrder.class),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("5 - Change order status", new ChangeOrderStatus(),
+        rootMenu.addMenuItem(new MenuItem("5 - Change order status", context.getBean(ChangeOrderStatus.class),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("6 - Get money earned by period of time", new PriceByPeriodOfTime(),
+        rootMenu.addMenuItem(new MenuItem("6 - Get money earned by period of time", context.getBean(PriceByPeriodOfTime.class),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("7 - Get orders done by period of time", new OrderDoneByPeriodOfTime(),
+        rootMenu.addMenuItem(new MenuItem("7 - Get orders done by period of time", context.getBean(OrderDoneByPeriodOfTime.class),
                 getRootMenu()));
         rootMenu.addMenuItem(new MenuItem("8 - Back to root menu", ()-> System.out.println("-Back-"),
                 getRootMenu()));
@@ -83,15 +88,15 @@ public class Builder {
         rootMenu.setName("<Book menu>");
         rootMenu.addMenuItem(new MenuItem("1 - See all books", ()-> System.out.println("-Choose sort for output-"),
                 BookSortMenuGetAll()));
-        rootMenu.addMenuItem(new MenuItem("2 - Create book", new CreateBook(),
+        rootMenu.addMenuItem(new MenuItem("2 - Create book", context.getBean(CreateBook.class),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("3 - Add book to stock", new AddBookToStock(),
+        rootMenu.addMenuItem(new MenuItem("3 - Add book to stock", context.getBean(AddBookToStock.class),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("4 - Discard book", new DiscardBook(),
+        rootMenu.addMenuItem(new MenuItem("4 - Discard book", context.getBean(DiscardBook.class),
                 getRootMenu()));
         rootMenu.addMenuItem(new MenuItem("5 - See books that not bought more that 6 month",
                 ()-> System.out.println("-Choose sort for output-"), BookSortMenuSixMonthOld()));
-        rootMenu.addMenuItem(new MenuItem("6 - See book description", new GetBookDescription(),
+        rootMenu.addMenuItem(new MenuItem("6 - See book description", context.getBean(GetBookDescription.class),
                 getRootMenu()));
         rootMenu.addMenuItem(new MenuItem("7 - Back to root menu", ()-> System.out.println("-Back-"),
                 getRootMenu()));
@@ -135,9 +140,9 @@ public class Builder {
         rootMenu.setName("<Requests menu>");
         rootMenu.addMenuItem(new MenuItem("1 - See all requests", ()-> System.out.println("-Choose sort for output-"),
                 RequestSortMenuGetAll()));
-        rootMenu.addMenuItem(new MenuItem("2 - Add request", new AddRequest(),
+        rootMenu.addMenuItem(new MenuItem("2 - Add request", context.getBean(AddRequest.class),
                 getRootMenu()));
-        rootMenu.addMenuItem(new MenuItem("3 - Close request", new CloseRequest(),
+        rootMenu.addMenuItem(new MenuItem("3 - Close request", context.getBean(CloseRequest.class),
                 getRootMenu()));
         rootMenu.addMenuItem(new MenuItem("4 - Back to root menu", ()-> System.out.println("-Back-"),
                 getRootMenu()));

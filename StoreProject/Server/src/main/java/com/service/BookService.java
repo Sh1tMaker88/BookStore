@@ -1,9 +1,5 @@
 package com.service;
 
-import com.annotations.ClassToInjectProperty;
-import com.annotations.InjectByType;
-import com.annotations.InjectValueFromProperties;
-import com.annotations.Singleton;
 import com.api.dao.IBookDao;
 import com.api.dao.IOrderDao;
 import com.api.service.IBookService;
@@ -17,33 +13,34 @@ import com.util.comparator.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Singleton
-@ClassToInjectProperty
+@Service
 public class BookService implements IBookService {
 
     private static final Logger LOGGER = LogManager.getLogger(BookService.class.getName());
-    @InjectByType
-    private IBookDao bookDao;
-    @InjectByType
-    private IOrderDao orderDao;
-    @InjectByType
-    private IRequestService requestService;
+    private final IBookDao bookDao;
+    private final IOrderDao orderDao;
+    private final IRequestService requestService;
 
-    @InjectValueFromProperties(configName = "server", propertyName = "closeRequestAfterAddingBook", type = "boolean")
+    @Value("${CLOSE_REQUEST_AFTER_ADDING_BOOK}")
     private boolean closeRequestAfterAddingBook;
-    @InjectValueFromProperties
+    @Value("${MONTH_TO_SET_BOOK_AS_UNSOLD}")
     private int monthToSetBookAsUnsold;
 
-    public BookService() {
-//        this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
-//        this.requestService = ApplicationContext.getInstance().getObject(RequestService.class);
-//        this.connector = ApplicationContext.getInstance().getObject(Connector.class);
+    @Autowired
+    public BookService(IBookDao bookDao, IOrderDao orderDao, IRequestService requestService) {
+        this.bookDao = bookDao;
+        this.orderDao = orderDao;
+        this.requestService = requestService;
     }
 
     @Override

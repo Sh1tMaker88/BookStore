@@ -4,14 +4,21 @@ import com.action.IAction;
 import com.exception.DaoException;
 import com.exception.ServiceException;
 import com.facade.Facade;
-import com.propertyInjector.ApplicationContext;
 import com.util.ConsoleScanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class GetBookDescription implements IAction {
     private static final Logger LOGGER = LogManager.getLogger(GetBookDescription.class.getName());
-    final Facade facade = ApplicationContext.getInstance().getObject(Facade.class);
+    private Facade facade;
+
+    @Autowired
+    public void setFacade(Facade facade) {
+        this.facade = facade;
+    }
 
     @Override
     public void execute() {

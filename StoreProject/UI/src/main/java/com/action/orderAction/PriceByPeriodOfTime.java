@@ -4,19 +4,23 @@ import com.action.IAction;
 import com.exception.DaoException;
 import com.exception.ServiceException;
 import com.facade.Facade;
-import com.propertyInjector.ApplicationContext;
 import com.util.ConsoleScanner;
-import com.util.DateConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
+@Component
 public class PriceByPeriodOfTime implements IAction {
     private static final Logger LOGGER = LogManager.getLogger(PriceByPeriodOfTime.class.getName());
-    final Facade facade = ApplicationContext.getInstance().getObject(Facade.class);
+    private Facade facade;
+
+    @Autowired
+    public void setFacade(Facade facade) {
+        this.facade = facade;
+    }
 
     @Override
     public void execute() {

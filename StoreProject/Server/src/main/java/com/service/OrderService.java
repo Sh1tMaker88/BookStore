@@ -1,10 +1,7 @@
 package com.service;
 
-import com.annotations.InjectByType;
-import com.annotations.Singleton;
 import com.api.dao.IBookDao;
 import com.api.dao.IOrderDao;
-import com.api.dao.IRequestDao;
 import com.api.service.IOrderService;
 import com.exception.DaoException;
 import com.exception.ServiceException;
@@ -18,27 +15,25 @@ import com.model.OrderStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Singleton
+@Service
 public class OrderService implements IOrderService {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderService.class.getName());
-    @InjectByType
-    private IBookDao bookDao;
-    @InjectByType
-    private IOrderDao orderDao;
-    @InjectByType
-    private IRequestDao requestDao;
+    private final IBookDao bookDao;
+    private final IOrderDao orderDao;
 
-    public OrderService() {
-//        this.bookDao = ApplicationContext.getInstance().getObject(BookDao.class);
-//        this.orderDao = ApplicationContext.getInstance().getObject(OrderDao.class);
-//        this.requestDao = ApplicationContext.getInstance().getObject(RequestDao.class);
+    @Autowired
+    public OrderService(IBookDao bookDao, IOrderDao orderDao) {
+        this.bookDao = bookDao;
+        this.orderDao = orderDao;
     }
 
     @Override
