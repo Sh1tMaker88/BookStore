@@ -57,7 +57,7 @@ public class Book extends AIdentity implements Serializable {
     private Request request;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE}
-            , fetch = FetchType.EAGER)
+            , fetch = FetchType.LAZY)
     @JoinTable(name = "ordering_book",
             joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"))

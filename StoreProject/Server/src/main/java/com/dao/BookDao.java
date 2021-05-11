@@ -5,6 +5,8 @@ import com.model.Book;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -31,6 +33,7 @@ public class BookDao extends AbstractDao<Book> implements IBookDao {
     }
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public Set<Book> getBookThatHaveNoOrdersForPeriodOfTime(int monthToSetBookAsUnsold) {
         return getAll().stream()
                 .filter(book -> book.getArrivalDate()

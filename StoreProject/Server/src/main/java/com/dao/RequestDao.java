@@ -3,6 +3,8 @@ package com.dao;
 import com.api.dao.IRequestDao;
 import com.model.Request;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class RequestDao extends AbstractDao<Request> implements IRequestDao {
@@ -18,6 +20,7 @@ public class RequestDao extends AbstractDao<Request> implements IRequestDao {
     }
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public boolean checkIfRequestExist(Long bookId) {
         return getAll().stream()
                 .anyMatch(e -> e.getBook()
@@ -26,10 +29,11 @@ public class RequestDao extends AbstractDao<Request> implements IRequestDao {
     }
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public Request getRequestByBookId(Long bookId) {
         return getAll().stream()
-                .findFirst()
                 .filter(e -> e.getBook().getId().equals(bookId))
+                .findFirst()
                 .get();
     }
 }

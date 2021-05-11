@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@Transactional
 public class BookService implements IBookService {
 
     private static final Logger LOGGER = LogManager.getLogger(BookService.class.getName());
@@ -54,7 +55,6 @@ public class BookService implements IBookService {
     }
 
     @Override
-    @Transactional
     public Book createBook(String name, String author, String isbn, int pageNumber
             , double price, int yearOfPublish, String description, BookStatus bookStatus, LocalDate arrivalDate) {
         try {
@@ -69,7 +69,6 @@ public class BookService implements IBookService {
     }
 
     @Override
-    @Transactional
     public Book createBook(String name, String author, String isbn, int pageNumber
             , double price, int yearOfPublish, String description) {
         try {
@@ -83,7 +82,6 @@ public class BookService implements IBookService {
     }
 
     @Override
-    @Transactional
     public Book addBookToStock(Long bookId) {
         try {
             Book book = bookDao.getById(bookId);
@@ -106,7 +104,6 @@ public class BookService implements IBookService {
 
 
     @Override
-    @Transactional
     public Book discardBook(Long bookId) {
         try {
             LOGGER.info("Discarding book with id=" + bookId);
@@ -122,7 +119,6 @@ public class BookService implements IBookService {
     }
 
     @Override
-    @Transactional
     public void showDescription(Long id) {
         try {
             String description = bookDao.getDescription(id);
@@ -134,9 +130,8 @@ public class BookService implements IBookService {
         }
     }
 
-    //todo Spring Transaction
+    //todo rework
     @Override
-    @Transactional
     public List<Book> booksNotBoughtMoreThanSixMonth() {
         try {
             Set<Book> list = orderDao.getBooksThatAreNotBought(monthToSetBookAsUnsold);

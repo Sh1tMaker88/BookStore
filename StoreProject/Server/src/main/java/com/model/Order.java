@@ -26,7 +26,7 @@ public class Order extends AIdentity implements Serializable {
     private String customerName;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE}
-            , fetch = FetchType.EAGER)
+            , fetch = FetchType.LAZY)
     @JoinTable(name = "ordering_book",
             joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"))

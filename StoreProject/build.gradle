@@ -27,7 +27,7 @@ allprojects {
         implementation group: 'org.springframework', name: 'spring-context', version: '5.3.5'
         implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.5'
         implementation group: 'org.springframework', name: 'spring-tx', version: '5.3.5'
-
+        implementation group: 'org.springframework', name: 'spring-orm', version: '5.3.5'
 
     }
 }

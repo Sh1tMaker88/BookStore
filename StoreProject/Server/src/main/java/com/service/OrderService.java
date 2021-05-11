@@ -17,13 +17,14 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Transactional
 public class OrderService implements IOrderService {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderService.class.getName());
@@ -47,7 +48,6 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    @Transactional
     public Order addOrder(String customerName, List<Book> books) {
         try {
             LOGGER.info("Generating order for customer '" + customerName + "'");
@@ -70,7 +70,6 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    @Transactional
     public void cancelOrder(Long orderId) {
         try {
             Order order = getById(orderId);
@@ -108,7 +107,6 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    @Transactional
     public void changeOrderStatus(Long orderId, OrderStatus status) {
         try {
             LOGGER.info("Changing order status with id=" + orderId);

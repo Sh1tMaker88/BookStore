@@ -1,6 +1,8 @@
 package com.util;
 
+import com.configuration.SpringConfig;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
@@ -13,7 +15,7 @@ public class SpringContextUtil {
 
     public static ApplicationContext getInstance() {
         if (instance == null) {
-            instance = new ClassPathXmlApplicationContext("appContext.xml");
+            instance = new AnnotationConfigApplicationContext(SpringConfig.class);
         }
         return instance;
     }
