@@ -1,6 +1,6 @@
 package com.action;
 
-import com.SpringContext;
+import com.util.SpringContextUtil;
 import com.action.requestAction.GetAllRequests;
 import com.exception.ActionException;
 import com.model.Request;
@@ -39,7 +39,7 @@ public class RequestSorter implements IAction{
         try {
             switch (method) {
                 case "getAll":
-                    setRequests(SpringContext.getInstance().getBean(GetAllRequests.class).doIt());
+                    setRequests(SpringContextUtil.getInstance().getBean(GetAllRequests.class).doIt());
                     break;
             }
             requests.sort(sortRequestsBy.get(sortId));

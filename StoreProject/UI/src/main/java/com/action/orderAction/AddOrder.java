@@ -2,7 +2,7 @@ package com.action.orderAction;
 
 import com.model.AIdentity;
 import com.model.Book;
-import com.util.ConsoleScanner;
+import com.util.ConsoleScannerUtil;
 import com.action.IAction;
 import com.exception.DaoException;
 import com.exception.ServiceException;
@@ -31,12 +31,12 @@ public class AddOrder implements IAction {
     public void execute() {
         try {
             LOGGER.info("Enter customer name");
-            String customerName = ConsoleScanner.scanString();
+            String customerName = ConsoleScannerUtil.scanString();
             boolean flag = true;
             List<Book> list = new ArrayList<>();
             LOGGER.info("Enter book ID. 0 - will get you back to root menu");
             while (flag) {
-                Long id = ConsoleScanner.scanLong();
+                Long id = ConsoleScannerUtil.scanLong();
                 if (id == 0L) {
                     flag = false;
                 } else {

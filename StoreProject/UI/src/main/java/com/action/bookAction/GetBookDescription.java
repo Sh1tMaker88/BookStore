@@ -4,7 +4,7 @@ import com.action.IAction;
 import com.exception.DaoException;
 import com.exception.ServiceException;
 import com.facade.Facade;
-import com.util.ConsoleScanner;
+import com.util.ConsoleScannerUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class GetBookDescription implements IAction {
     public void execute() {
         try {
             LOGGER.info("To see description of book enter book id. If you want to back to root menu enter '0'");
-            Long id = ConsoleScanner.scanLong();
+            Long id = ConsoleScannerUtil.scanLong();
             facade.getBookService().showDescription(id);
         } catch (DaoException | ServiceException e) {
             LOGGER.warn("Method execute failed", e);

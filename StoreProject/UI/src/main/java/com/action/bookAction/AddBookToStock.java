@@ -1,6 +1,6 @@
 package com.action.bookAction;
 
-import com.util.ConsoleScanner;
+import com.util.ConsoleScannerUtil;
 import com.action.IAction;
 import com.exception.ActionException;
 import com.exception.DaoException;
@@ -27,7 +27,7 @@ public class AddBookToStock implements IAction {
 
         try {
             LOGGER.info("To add book to stock enter book id, enter 0 to go to root menu");
-            Long id = ConsoleScanner.scanLong();
+            Long id = ConsoleScannerUtil.scanLong();
             if (id != 0) {
                 facade.getBookService().addBookToStock(id);
                 LOGGER.info("You have added book to stock id=" + id);

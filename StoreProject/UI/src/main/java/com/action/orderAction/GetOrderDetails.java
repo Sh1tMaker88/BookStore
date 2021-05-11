@@ -4,7 +4,7 @@ import com.action.IAction;
 import com.exception.DaoException;
 import com.exception.ServiceException;
 import com.facade.Facade;
-import com.util.ConsoleScanner;
+import com.util.ConsoleScannerUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class GetOrderDetails implements IAction {
         try {
             System.out.println(facade);
             LOGGER.info("Enter order ID to see its details or '0' to back to root menu");
-            Long id = ConsoleScanner.scanLong();
+            Long id = ConsoleScannerUtil.scanLong();
             if (!id.equals(0L)){
                 facade.getOrderService().showDetails(id);
             }

@@ -16,8 +16,8 @@ import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -134,7 +134,7 @@ public class BookService implements IBookService {
         }
     }
 
-    //todo need to select latest orders adn not all of them
+    //todo Spring Transaction
     @Override
     @Transactional
     public List<Book> booksNotBoughtMoreThanSixMonth() {

@@ -1,6 +1,6 @@
 package com.action.bookAction;
 
-import com.util.ConsoleScanner;
+import com.util.ConsoleScannerUtil;
 import com.action.IAction;
 import com.exception.ActionException;
 import com.exception.DaoException;
@@ -35,7 +35,7 @@ public class CreateBook implements IAction {
                     "status('in_stock' or 'out_of_stock'), arrival date format 'yyyy-MM-dd') separated by ','\n" +
                     "- give parameters without arrival date and status(status become 'in_stock' and date set for today\n" +
                     "If you dont want to add book enter '0'");
-            String line = ConsoleScanner.scanString();
+            String line = ConsoleScannerUtil.scanString();
             String[] params = line.split(",");
             if (!line.equals("0")) {
                 if (params.length == 9) {

@@ -7,9 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class RequestDao extends AbstractDao<Request> implements IRequestDao {
 
-    public RequestDao() {
-    }
-
     @Override
     protected String getClassName() {
         return "Request";

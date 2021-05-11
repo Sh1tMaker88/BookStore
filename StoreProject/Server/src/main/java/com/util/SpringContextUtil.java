@@ -1,13 +1,13 @@
-package com;
+package com.util;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
-public class SpringContext {
+public class SpringContextUtil {
     private static ApplicationContext instance;
 
-    private SpringContext() {
+    private SpringContextUtil() {
 
     }
 

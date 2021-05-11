@@ -1,6 +1,6 @@
 package com.action.bookAction;
 
-import com.util.ConsoleScanner;
+import com.util.ConsoleScannerUtil;
 import com.exception.DaoException;
 import com.exception.ServiceException;
 import com.facade.Facade;
@@ -26,7 +26,7 @@ public class DiscardBook implements IAction {
     public void execute() {
         try {
             LOGGER.info("To discard book enter book ID, or enter '0' to back to root menu");
-            Long id = ConsoleScanner.scanLong();
+            Long id = ConsoleScannerUtil.scanLong();
             if (id != 0) {
                 facade.getBookService().discardBook(id);
                 LOGGER.info("You discarded book " + facade.getBookService().getById(id));

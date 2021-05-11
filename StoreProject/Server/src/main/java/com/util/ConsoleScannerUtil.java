@@ -8,12 +8,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 
-public class ConsoleScanner {
+public class ConsoleScannerUtil {
 
     private static final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    private static final Logger LOGGER = LogManager.getLogger(ConsoleScanner.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(ConsoleScannerUtil.class.getName());
 
-    public ConsoleScanner() {
+    public ConsoleScannerUtil() {
     }
 
     public static int scanInt() {

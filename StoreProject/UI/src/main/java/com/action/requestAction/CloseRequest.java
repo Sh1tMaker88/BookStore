@@ -1,6 +1,6 @@
 package com.action.requestAction;
 
-import com.util.ConsoleScanner;
+import com.util.ConsoleScannerUtil;
 import com.action.IAction;
 import com.exception.DaoException;
 import com.exception.ServiceException;
@@ -25,7 +25,7 @@ public class CloseRequest implements IAction {
     public void execute() {
         try {
             LOGGER.info("To close request enter request ID, or enter '0' to back to previous menu");
-            Long id = ConsoleScanner.scanLong();
+            Long id = ConsoleScannerUtil.scanLong();
             if (id != 0) {
                 facade.getRequestService().closeRequest(id);
                 LOGGER.info("You closed request " + facade.getRequestService().getById(id));

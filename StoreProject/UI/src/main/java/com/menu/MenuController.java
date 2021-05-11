@@ -1,7 +1,7 @@
 package com.menu;
 
 
-import com.util.ConsoleScanner;
+import com.util.ConsoleScannerUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,7 +40,7 @@ public class MenuController {
         boolean flag = true;
         while (flag) {
             try {
-                int index = ConsoleScanner.scanInt();
+                int index = ConsoleScannerUtil.scanInt();
                 if (index == 0) {
                     flag = false;
                     System.out.printf("%7s\nClosing menu\n%7s\n", "***", "***");

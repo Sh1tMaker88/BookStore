@@ -1,6 +1,6 @@
 package com.action.requestAction;
 
-import com.util.ConsoleScanner;
+import com.util.ConsoleScannerUtil;
 import com.action.IAction;
 import com.exception.DaoException;
 import com.exception.ServiceException;
@@ -26,7 +26,7 @@ public class AddRequest implements IAction {
 
         try {
             LOGGER.info("To add request you must enter book ID, or enter '0' to back to previous menu");
-            Long id = ConsoleScanner.scanLong();
+            Long id = ConsoleScannerUtil.scanLong();
             if (id != 0) {
                 facade.getRequestService().addRequest(id);
             }

@@ -1,6 +1,6 @@
 package com.action.orderAction;
 
-import com.util.ConsoleScanner;
+import com.util.ConsoleScannerUtil;
 import com.action.IAction;
 import com.exception.DaoException;
 import com.exception.ServiceException;
@@ -26,13 +26,13 @@ public class ChangeOrderStatus implements IAction {
     public void execute() {
         try {
             LOGGER.info("To change order status enter order ID, or enter '0' to back to previous menu");
-            Long id = ConsoleScanner.scanLong();
+            Long id = ConsoleScannerUtil.scanLong();
             if (id != 0) {
                 OrderStatus statusTo = null;
                 while (statusTo == null) {
                     LOGGER.info("Enter order status:\n" +
                             "'1' - to set as new, '2' - to set as cancel, '3' - to set as done)");
-                    String status = ConsoleScanner.scanString();
+                    String status = ConsoleScannerUtil.scanString();
                     switch (status.trim()) {
                         case "1":
                             statusTo = OrderStatus.NEW;

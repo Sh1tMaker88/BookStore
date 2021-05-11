@@ -1,6 +1,6 @@
 package com.menu;
 
-import com.SpringContext;
+import com.util.SpringContextUtil;
 import com.action.BookSorter;
 import com.action.RequestSorter;
 import com.action.bookAction.AddBookToStock;
@@ -18,7 +18,7 @@ public class Builder {
 
     private static Builder instance;
     private Menu rootMenu;
-    private ApplicationContext context = SpringContext.getInstance();
+    private ApplicationContext context = SpringContextUtil.getInstance();
 
     private Builder(){
 

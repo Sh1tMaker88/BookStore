@@ -1,14 +1,9 @@
-# Created by .ignore support plugin (hsz.mobi)
 ### Java template
 # Compiled class file
 *.class
 
-#idea files
-.idea
-
 # Log file
 *.log
-*.lck
 
 # BlueJ files
 *.ctxt
@@ -32,7 +27,7 @@ hs_err_pid*
 .gradle
 /build/
 
-# Ignore Gradle GUI com.config
+# Ignore Gradle GUI config
 gradle-app.setting
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)

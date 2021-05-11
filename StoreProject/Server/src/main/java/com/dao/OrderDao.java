@@ -19,10 +19,6 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderDao.class.getName());
 
-    public OrderDao() {
-
-    }
-
     @Override
     protected String getClassName() {
         return "Order";
@@ -33,11 +29,11 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
         return Order.class;
     }
 
-    //todo rework to selecting using HQL
+    //todo rework to selecting using Criteria
     @Override
     public Set<Book> getBooksThatAreNotBought(int monthToSetBookAsUnsold) {
         return getAll().stream()
-                .filter(order -> order.getOrderDate()
+                .filter(order -> !order.getOrderDate()
                         .plusMonths(monthToSetBookAsUnsold)
                         .isBefore(LocalDateTime.now()))
                 .flatMap(el -> el.getBooks().stream())

@@ -1,6 +1,6 @@
 package com.action;
 
-import com.SpringContext;
+import com.util.SpringContextUtil;
 import com.action.orderAction.GetAllOrders;
 import com.exception.ActionException;
 import com.model.Order;
@@ -11,7 +11,6 @@ import com.util.comparator.OrderStatusComparator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.transaction.Transactional;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +43,7 @@ public class OrderSorter implements IAction{
         try {
             switch (method) {
                 case "getAll":
-                    setOrders(SpringContext.getInstance().getBean(GetAllOrders.class).doIt());
+                    setOrders(SpringContextUtil.getInstance().getBean(GetAllOrders.class).doIt());
                     break;
             }
             orders.sort(sortOrdersBy.get(sortId));
