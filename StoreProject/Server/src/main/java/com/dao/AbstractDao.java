@@ -3,8 +3,6 @@ package com.dao;
 import com.api.dao.GenericDao;
 import com.exception.DaoException;
 import com.model.AIdentity;
-import com.model.Book;
-import com.model.Order;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -16,7 +14,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository
 public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> {

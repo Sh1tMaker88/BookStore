@@ -33,8 +33,6 @@ public class SpringConfig {
     private String showSQL;
     @Value("${PACKAGES_TO_SCAN}")
     private String packageToScan;
-    @Value("${PACKAGES_TO_SCAN}")
-    private String formatSQL;
     @Value("${DIALECT}")
     private String dialect;
 
