@@ -1,6 +1,5 @@
 package com.menu;
 
-import com.util.SpringContextUtil;
 import com.action.BookSorter;
 import com.action.RequestSorter;
 import com.action.bookAction.AddBookToStock;
@@ -11,24 +10,19 @@ import com.action.orderAction.*;
 import com.action.requestAction.AddRequest;
 import com.action.requestAction.CloseRequest;
 import com.action.OrderSorter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class Builder {
 
-    private static Builder instance;
     private Menu rootMenu;
-    private ApplicationContext context = SpringContextUtil.getInstance();
+    private final ApplicationContext context;
 
-    private Builder(){
-
-    }
-
-    public static Builder getInstance(){
-        if (instance == null){
-            instance = new Builder();
-        }
-        return instance;
+    @Autowired
+    public Builder(ApplicationContext context) {
+        this.context = context;
     }
 
     public void buildMenu(){

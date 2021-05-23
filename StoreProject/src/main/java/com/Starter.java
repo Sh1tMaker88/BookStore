@@ -9,6 +9,6 @@ public class Starter {
     public static void main(String[] args) {
 //        new Initializer();
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
-        MenuController.getInstance().run();
+        context.getBean(MenuController.class).run();
     }
 }

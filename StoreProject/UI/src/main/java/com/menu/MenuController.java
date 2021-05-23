@@ -4,31 +4,29 @@ package com.menu;
 import com.util.ConsoleScannerUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class MenuController {
 
     private static final Logger LOGGER = LogManager.getLogger(MenuController.class.getName());
 
-    private static MenuController instance;
-    private Builder builder;
-    private Navigator navigator;
+    private final Builder builder;
+    private final Navigator navigator;
+    private boolean flag = true;
 
-    private MenuController() {
-        builder = Builder.getInstance();
-        builder.buildMenu();
-        navigator = Navigator.getInstance();
+    @Autowired
+    public MenuController(Builder builder, Navigator navigator) {
+        this.builder = builder;
+        this.navigator = navigator;
     }
-
-    public static MenuController getInstance() {
-        if (instance == null) {
-            instance = new MenuController();
-        }
-        return instance;
-    }
-
 
     public void run() {
+        while (flag) {
+            builder.buildMenu();
+            flag = false;
+        }
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -51,7 +49,8 @@ public class MenuController {
                     System.out.println("Wrong key, use numbers in menu only");
                 }
             } catch ( NumberFormatException e) {
-                LOGGER.warn("Incorrect input");            }
+                LOGGER.warn("Incorrect input");
+            }
         }
     }
 }

@@ -1,10 +1,12 @@
 plugins {
     id 'java'
+    id 'war'
 }
 
 group 'org.example'
 version '1.0-SNAPSHOT'
 
+def springVersion = '5.3.5'
 
 allprojects {
     apply plugin: 'java'
@@ -14,29 +16,34 @@ allprojects {
     }
 
     dependencies {
+//        implementation 'org.reflections:reflections:0.9.11'
         testImplementation group: 'junit', name: 'junit', version: '4.12'
         compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
         annotationProcessor 'org.projectlombok:lombok:1.18.20'
-        implementation 'org.reflections:reflections:0.9.11'
         implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
         implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.1'
 
-        implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.4.31.Final'
+        implementation group: 'org.springframework', name: 'spring-core', version: springVersion
+        implementation group: 'org.springframework', name: 'spring-context', version: springVersion
+        implementation group: 'org.springframework', name: 'spring-beans', version: springVersion
+        implementation group: 'org.springframework', name: 'spring-tx', version: springVersion
+        implementation group: 'org.springframework', name: 'spring-orm', version: springVersion
+//        implementation group: 'org.springframework', name: 'spring-web', version: springVersion
+//        implementation group: 'org.springframework', name: 'spring-webmvc', version: springVersion
 
-        implementation group: 'org.springframework', name: 'spring-core', version: '5.3.5'
-        implementation group: 'org.springframework', name: 'spring-context', version: '5.3.5'
-        implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.5'
-        implementation group: 'org.springframework', name: 'spring-tx', version: '5.3.5'
-        implementation group: 'org.springframework', name: 'spring-orm', version: '5.3.5'
+        implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.3'
+
+        implementation 'mysql:mysql-connector-java:8.0.23'
+        implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.4.31.Final'
+        compileOnly group: 'org.hibernate', name: 'hibernate-jpamodelgen', version: '5.4.31.Final'
 
     }
 }
 
 dependencies {
 
-    implementation project(':api')
-    implementation project(':UI')
-    implementation project(':Server')
-    implementation project(':DI')
+    compile project(':api')
+    compile project(':services')
+    compile project(':UI')
 }
 

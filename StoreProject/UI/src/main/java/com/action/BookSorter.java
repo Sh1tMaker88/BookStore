@@ -1,13 +1,17 @@
 package com.action;
 
-import com.util.SpringContextUtil;
 import com.action.bookAction.GetAllBooks;
+import com.action.util.SpringContextHolder;
 import com.exception.ActionException;
 import com.model.Book;
 import com.action.bookAction.GetBooksNotBoughtMoreThanSixMonth;
 import com.util.comparator.*;
+import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -21,6 +25,7 @@ public class BookSorter implements IAction{
     private List<Book> books;
     private int sortId;
     String method;
+    private final ApplicationContext context;
 
     public BookSorter(int sortId, String method){
         this.sortId = sortId;
@@ -31,6 +36,7 @@ public class BookSorter implements IAction{
         sortBooksBy.put(3, new BookPriceComparator());
         sortBooksBy.put(4, new BookYearOfPublishComparator());
         sortBooksBy.put(5, new BookAvailabilityComparator());
+        this.context = SpringContextHolder.getApplicationContext();
     }
 
     public void setBooks(List<Book> books) {
@@ -42,10 +48,10 @@ public class BookSorter implements IAction{
         try {
             switch (method) {
                 case "getAll":
-                    setBooks(SpringContextUtil.getInstance().getBean(GetAllBooks.class).doIt());
+                    setBooks(context.getBean(GetAllBooks.class).doIt());
                     break;
                 case "oldBooks":
-                    setBooks(SpringContextUtil.getInstance().getBean(GetBooksNotBoughtMoreThanSixMonth.class).doIt());
+                    setBooks(context.getBean(GetBooksNotBoughtMoreThanSixMonth.class).doIt());
                     break;
             }
             books.sort(sortBooksBy.get(sortId));
