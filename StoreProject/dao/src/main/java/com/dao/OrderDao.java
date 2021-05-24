@@ -33,7 +33,6 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
 
     //todo rework to selecting using Criteria
     @Override
-    @Transactional
     public Set<Book> getBooksThatAreNotBought(int monthToSetBookAsUnsold) {
         return getAll().stream()
                 .filter(order -> !order.getOrderDate()
@@ -44,7 +43,6 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
     }
 
     @Override
-    @Transactional
     public Double getPriceByPeriodOfTime(LocalDate fromDate, LocalDate tillDate) {
         return getAll().stream()
                 .filter(e -> e.getStatus().equals(OrderStatus.DONE))
@@ -55,7 +53,6 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
     }
 
     @Override
-    @Transactional
     public List<Order> getOrdersDoneByPeriod(LocalDate fromDate, LocalDate tillDate) {
         return getAll().stream()
                 .filter(e -> e.getStatus().equals(OrderStatus.DONE))

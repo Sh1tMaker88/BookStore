@@ -20,7 +20,6 @@ public class RequestDao extends AbstractDao<Request> implements IRequestDao {
     }
 
     @Override
-    @Transactional
     public boolean checkIfRequestExist(Long bookId) {
         return getAll().stream()
                 .anyMatch(e -> e.getBook()
@@ -29,7 +28,6 @@ public class RequestDao extends AbstractDao<Request> implements IRequestDao {
     }
 
     @Override
-    @Transactional
     public Request getRequestByBookId(Long bookId) {
         return getAll().stream()
                 .filter(e -> e.getBook().getId().equals(bookId))

@@ -31,7 +31,6 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     }
 
     @Override
-    @Transactional
     public T create(T entity) {
         Session session = sessionFactory.getCurrentSession();
         session.persist(entity);
@@ -44,7 +43,6 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     }
 
     @Override
-    @Transactional
     public T getById(Long id) {
         Session session = sessionFactory.getCurrentSession();
         T t = session.get(getClazz(), id);
@@ -56,7 +54,6 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     }
 
     @Override
-    @Transactional
     public List<T> getAll() {
         try {
             Session repSession = sessionFactory.getCurrentSession();
@@ -72,7 +69,6 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     }
 
     @Override
-    @Transactional
     public void delete(T entity) {
         Session session = sessionFactory.getCurrentSession();
         T t = getById(entity.getId());
@@ -83,7 +79,6 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     }
 
     @Override
-    @Transactional
     public T update(T entity) {
         Session session = sessionFactory.getCurrentSession();
         T t = (T) session.merge(entity);

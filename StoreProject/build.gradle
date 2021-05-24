@@ -28,14 +28,16 @@ allprojects {
         implementation group: 'org.springframework', name: 'spring-beans', version: springVersion
         implementation group: 'org.springframework', name: 'spring-tx', version: springVersion
         implementation group: 'org.springframework', name: 'spring-orm', version: springVersion
-//        implementation group: 'org.springframework', name: 'spring-web', version: springVersion
-//        implementation group: 'org.springframework', name: 'spring-webmvc', version: springVersion
+        implementation group: 'org.springframework', name: 'spring-web', version: springVersion
+        implementation group: 'org.springframework', name: 'spring-webmvc', version: springVersion
 
         implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.3'
 
         implementation 'mysql:mysql-connector-java:8.0.23'
         implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.4.31.Final'
         compileOnly group: 'org.hibernate', name: 'hibernate-jpamodelgen', version: '5.4.31.Final'
+
+        compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 
     }
 }

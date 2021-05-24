@@ -1,8 +1,8 @@
 rootProject.name = 'StoreProject'
 include 'UI'
-include 'Server'
 include 'api'
 include 'model'
 include 'dao'
 include 'services'
+include 'conroller'
 

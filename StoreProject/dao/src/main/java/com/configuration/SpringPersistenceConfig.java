@@ -1,6 +1,8 @@
 package com.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +11,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -19,8 +22,9 @@ import static org.hibernate.cfg.AvailableSettings.*;
 @ComponentScan("com")
 @PropertySource("classpath:server.properties")
 @EnableTransactionManagement
-public class SpringConfig {
+public class SpringPersistenceConfig {
 
+    private final ApplicationContext applicationContext;
     @Value("${URL}")
     private String url;
     @Value("${NAME}")
@@ -33,6 +37,11 @@ public class SpringConfig {
     private String packageToScan;
     @Value("${DIALECT}")
     private String dialect;
+
+    @Autowired
+    public SpringPersistenceConfig(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
     @Bean
     public DataSource dataSource() {

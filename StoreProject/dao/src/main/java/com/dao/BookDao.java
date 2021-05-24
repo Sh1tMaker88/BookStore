@@ -33,7 +33,6 @@ public class BookDao extends AbstractDao<Book> implements IBookDao {
     }
 
     @Override
-    @Transactional
     public Set<Book> getBookThatHaveNoOrdersForPeriodOfTime(int monthToSetBookAsUnsold) {
         return getAll().stream()
                 .filter(book -> book.getArrivalDate()
