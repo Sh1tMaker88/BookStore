@@ -107,7 +107,6 @@ public class BookService implements IBookService {
         }
     }
 
-
     @Override
     @Transactional
     public Book discardBook(Long bookId) {

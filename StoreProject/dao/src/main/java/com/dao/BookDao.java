@@ -29,7 +29,7 @@ public class BookDao extends AbstractDao<Book> implements IBookDao {
 
     @Override
     public String getDescription(Long id) {
-        return getById(id).getDescription();
+        return getById(id).getDescription().toString();
     }
 
     @Override

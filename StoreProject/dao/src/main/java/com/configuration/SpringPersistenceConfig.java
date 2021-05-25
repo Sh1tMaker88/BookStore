@@ -24,7 +24,7 @@ import static org.hibernate.cfg.AvailableSettings.*;
 @EnableTransactionManagement
 public class SpringPersistenceConfig {
 
-    private final ApplicationContext applicationContext;
+//    private final ApplicationContext applicationContext;
     @Value("${URL}")
     private String url;
     @Value("${NAME}")
@@ -38,10 +38,10 @@ public class SpringPersistenceConfig {
     @Value("${DIALECT}")
     private String dialect;
 
-    @Autowired
-    public SpringPersistenceConfig(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
+//    @Autowired
+//    public SpringPersistenceConfig(ApplicationContext applicationContext) {
+//        this.applicationContext = applicationContext;
+//    }
 
     @Bean
     public DataSource dataSource() {

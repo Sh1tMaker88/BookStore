@@ -34,18 +34,22 @@ allprojects {
         implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.3'
 
         implementation 'mysql:mysql-connector-java:8.0.23'
-        implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.4.31.Final'
         compileOnly group: 'org.hibernate', name: 'hibernate-jpamodelgen', version: '5.4.31.Final'
+        implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.4.31.Final'
 
         compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+        implementation group: 'javax.servlet', name: 'jstl', version: '1.2'
+//        compileOnly group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+
+
 
     }
 }
 
 dependencies {
-
     compile project(':api')
     compile project(':services')
     compile project(':UI')
+    compile project(':conroller')
 }
 
