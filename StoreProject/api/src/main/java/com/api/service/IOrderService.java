@@ -15,6 +15,10 @@ public interface IOrderService {
 
     Order getById(Long id);
 
+    void saveOrder(Order order);
+
+    void deleteOrder(Long id);
+
     Order addOrder(String customerName, List<Book> books);
 
     void cancelOrder(Long orderId);

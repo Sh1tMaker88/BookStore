@@ -1,5 +1,10 @@
 package com.model;
 
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +20,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "book")
-//@DynamicUpdate
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
 public class Book extends AIdentity implements Serializable {
 
     static final long serialVersionUID = 4L;
@@ -46,15 +51,23 @@ public class Book extends AIdentity implements Serializable {
     @Column(name = "description")
     private String description = "";
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     @Column(name = "arrival_date")
-    private LocalDate arrivalDate;
+    private LocalDate arrivalDate = LocalDate.now();
+
 
     @Column(name = "order_count")
     private int orderCount = 0;
 
-    @OneToOne(mappedBy = "book")
+    @JsonBackReference(value = "request")
+    @OneToOne(mappedBy = "book", fetch = FetchType.LAZY)
     private Request request;
 
+//    @JsonIgnore
+    @JsonIgnoreProperties("books")
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE}
             , fetch = FetchType.LAZY)
     @JoinTable(name = "ordering_book",

@@ -47,6 +47,16 @@ public class RequestService implements IRequestService {
     }
 
     @Override
+    public void saveRequest(Request request) {
+        requestDao.save(request);
+    }
+
+    @Override
+    public void deleteRequest(Long id) {
+        requestDao.delete(id);
+    }
+
+    @Override
     @Transactional(propagation = Propagation.NESTED)
     public Request closeRequest(Long requestID) {
         try {

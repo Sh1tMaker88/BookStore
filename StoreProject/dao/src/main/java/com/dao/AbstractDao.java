@@ -8,11 +8,14 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.annotations.Where;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository
@@ -31,6 +34,12 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     }
 
     @Override
+    public void save(T entity) {
+        Session session = sessionFactory.getCurrentSession();
+        session.saveOrUpdate(entity);
+    }
+
+    @Override
     public T create(T entity) {
         Session session = sessionFactory.getCurrentSession();
         session.persist(entity);
@@ -45,11 +54,13 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     @Override
     public T getById(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        T t = session.get(getClazz(), id);
-        if (t == null) {
-            LOGGER.warn("No such ID=" + id);
-            throw new DaoException("No such id=" + id);
-        }
+        Query query = session.createQuery(getQuery(getClassName()) + " WHERE o.id= (:entityId)");
+        query.setParameter("entityId", id);
+        T t = (T)query.getSingleResult();
+//        if (t == null) {
+//            LOGGER.warn("No such ID=" + id);
+//            throw new DaoException("No such id=" + id);
+//        }
         return t;
     }
 
@@ -57,14 +68,12 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     public List<T> getAll() {
         try {
             Session repSession = sessionFactory.getCurrentSession();
-            String query = getClassName().equalsIgnoreCase("order") ?
-                    String.format("FROM %s AS o JOIN FETCH o.books books", getClassName()) :
-                    String.format("FROM %s", getClassName());
+            String query = getQuery(getClassName());
             List<T> list = (List<T>) repSession.createQuery(query).list();
             return list;
         } catch (HibernateException e) {
             LOGGER.warn("GetAll failed");
-            throw new DaoException("GetAll failed", e);
+            throw new DaoException(e.getMessage());
         }
     }
 
@@ -79,12 +88,40 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     }
 
     @Override
+    public void delete(Long id) {
+        Session session = sessionFactory.getCurrentSession();
+        String q = String.format("DELETE FROM %s WHERE id=(:entityId)", getClassName());
+        Query query = session.createQuery(q);
+        query.setParameter("entityId", id);
+        query.executeUpdate();
+    }
+
+    @Override
     public T update(T entity) {
         Session session = sessionFactory.getCurrentSession();
         T t = (T) session.merge(entity);
+//    Query query = session.createQuery("SELECT o FROM Order AS o JOIN FETCH o.books")
         LOGGER.info(t + " has been updated");
         return t;
 
+    }
+
+    private String getQuery(String column) {
+        String query;
+        switch (column) {
+            case "Book":
+                query = "SELECT o FROM Book AS o LEFT JOIN FETCH o.orders orders LEFT JOIN FETCH o.request request";
+                break;
+            case "Order":
+                query = "SELECT o FROM Order AS o LEFT JOIN FETCH o.books";
+                break;
+            case "Request":
+                query = "SELECT o FROM Request AS o LEFT JOIN FETCH o.book book";
+                break;
+            default:
+                query = "from Book";
+        }
+        return query;
     }
 
     protected abstract String getClassName();

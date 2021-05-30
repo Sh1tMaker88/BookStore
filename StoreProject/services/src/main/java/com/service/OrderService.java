@@ -49,6 +49,16 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    public void saveOrder(Order order) {
+        orderDao.save(order);
+    }
+
+    @Override
+    public void deleteOrder(Long id) {
+        orderDao.delete(id);
+    }
+
+    @Override
     public Order addOrder(String customerName, List<Book> books) {
         try {
             LOGGER.info("Generating order for customer '" + customerName + "'");
