@@ -53,5 +53,18 @@ public class BookController {
         }
     }
 
+    @PutMapping("/books/{id}/add-to-stock")
+    public Book addBookToStock(@PathVariable Long id) {
+        return bookService.addBookToStock(id);
+    }
 
+    @PutMapping("/books/{id}/discard")
+    public Book discardBook(@PathVariable Long id) {
+        return bookService.discardBook(id);
+    }
+
+    @GetMapping("/books/poor-purchased")
+    public List<Book> getPoorPurchasedBooks() {
+        return bookService.booksNotBoughtMoreThanSixMonth();
+    }
 }

@@ -61,7 +61,8 @@ public class Book extends AIdentity implements Serializable {
     @Column(name = "order_count")
     private int orderCount = 0;
 
-    @JsonBackReference(value = "request")
+//    @JsonBackReference(value = "request")
+    @JsonIgnoreProperties("book")
     @OneToOne(mappedBy = "book", fetch = FetchType.LAZY)
     private Request request;
 

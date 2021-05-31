@@ -92,6 +92,7 @@ public class SpringPersistenceConfig {
     public HibernateTransactionManager transactionManager() {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory().getObject());
+        transactionManager.setNestedTransactionAllowed(true);
         return transactionManager;
     }
 
