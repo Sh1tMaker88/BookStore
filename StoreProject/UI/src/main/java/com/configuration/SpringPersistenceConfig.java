@@ -60,12 +60,12 @@ public class SpringPersistenceConfig {
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
         try {
             dataSource.setDriverClass(driver);
+            dataSource.setJdbcUrl(url);
+            dataSource.setUser(username);
+            dataSource.setPassword(password);
         } catch (PropertyVetoException e) {
             e.getLocalizedMessage();
         }
-        dataSource.setJdbcUrl(url);
-        dataSource.setUser(username);
-        dataSource.setPassword(password);
         return dataSource;
     }
 

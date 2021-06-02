@@ -1,5 +1,6 @@
 package com.action.orderAction;
 
+import com.model.Order;
 import com.util.ConsoleScannerUtil;
 import com.action.IAction;
 import com.exception.DaoException;
@@ -27,8 +28,8 @@ public class CancelOrder implements IAction {
             LOGGER.info("To discard order enter order ID, if you want back to root menu enter '0'");
             Long id = ConsoleScannerUtil.scanLong();
             if (!id.equals(0L)){
-                facade.getOrderService().cancelOrder(id);
-                LOGGER.info("You discarded order " + facade.getOrderService().getById(id));
+                Order order = facade.getOrderService().cancelOrder(id);
+                LOGGER.info("You discarded order " + order.getId());
             }
         } catch (DaoException | ServiceException e) {
             LOGGER.warn("Method execute failed", e);

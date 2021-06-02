@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -85,7 +84,7 @@ public class BookService implements IBookService {
 
     @Override
     public void saveBook(Book book) {
-        bookDao.save(book);
+        bookDao.saveOrUpdate(book);
     }
 
     @Override

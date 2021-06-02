@@ -7,6 +7,8 @@ import com.model.OrderStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,6 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Repository
+
 public class OrderDao extends AbstractDao<Order> implements IOrderDao {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderDao.class.getName());

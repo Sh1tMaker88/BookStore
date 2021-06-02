@@ -20,6 +20,7 @@ public class RequestDao extends AbstractDao<Request> implements IRequestDao {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
     public boolean checkIfRequestExist(Long bookId) {
         return getAll().stream()
                 .anyMatch(e -> e.getBook()

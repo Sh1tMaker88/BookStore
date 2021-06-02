@@ -1,8 +1,6 @@
 package com.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -22,11 +20,11 @@ import java.util.Locale;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "request")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
 public class Request extends AIdentity implements Serializable {
     static final long serialVersionUID = 4L;
 
-    @JsonManagedReference(value = "request")
-    @JsonIgnoreProperties("orders")
+    @JsonIgnoreProperties({"orders", "request"})
     @EqualsAndHashCode.Include
     @OneToOne (cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")

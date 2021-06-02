@@ -34,7 +34,7 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     }
 
     @Override
-    public void save(T entity) {
+    public void saveOrUpdate(T entity) {
         Session session = sessionFactory.getCurrentSession();
         session.saveOrUpdate(entity);
     }
@@ -54,7 +54,7 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     @Override
     public T getById(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery(getQuery(getClassName()) + " WHERE o.id= (:entityId)");
+        Query query = session.createQuery(getQuery(getClassName()) + " WHERE o.id=(:entityId)");
         query.setParameter("entityId", id);
         T t = (T)query.getSingleResult();
 //        if (t == null) {
@@ -110,7 +110,7 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
         String query;
         switch (column) {
             case "Book":
-                query = "SELECT o FROM Book AS o LEFT JOIN FETCH o.orders orders LEFT JOIN FETCH o.request request";
+                query = "SELECT o FROM Book AS o LEFT JOIN FETCH o.orders LEFT JOIN FETCH o.request";
                 break;
             case "Order":
                 query = "SELECT o FROM Order AS o LEFT JOIN FETCH o.books";

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -50,7 +51,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public void saveOrder(Order order) {
-        orderDao.save(order);
+        orderDao.saveOrUpdate(order);
     }
 
     @Override
@@ -61,13 +62,12 @@ public class OrderService implements IOrderService {
     @Override
     public Order addOrder(String customerName, List<Book> books) {
         try {
-            LOGGER.info("Generating order for customer '" + customerName + "'");
+            LOGGER.info("Creating order for customer '" + customerName + "'");
             Order order = new Order(customerName, books);
             String s = order.toString();
             double totalPrice = 0.0;
             for (Book b : books) {
                 Book book = bookDao.getById(b.getId());
-                book.setOrderCount(book.getOrderCount() + 1);
                 totalPrice = totalPrice + book.getPrice();
                 bookDao.update(book);
             }
@@ -81,16 +81,28 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void cancelOrder(Long orderId) {
+    public Order addOrderUsingId(String customerName, List<Long> booksId) {
+        try {
+            LOGGER.info("Generating order for customer '" + customerName + "'");
+            List<Book> books = new ArrayList<>();
+            for (Long id : booksId) {
+                books.add(bookDao.getById(id));
+            }
+            return addOrder(customerName, books);
+        } catch (DaoException e) {
+            LOGGER.warn("Method addOrder failed", e);
+            throw new ServiceException("Method addOrder failed", e);
+        }
+    }
+
+    @Override
+    public Order cancelOrder(Long orderId) {
         try {
             Order order = getById(orderId);
+            LOGGER.info("Cancelling order with id=" + orderId);
             order.setStatus(OrderStatus.CANCEL);
             orderDao.update(order);
-            LOGGER.info("Order with id=" + orderId + " cancelled");
-            for (Book book : order.getBooks()) {
-                book.setOrderCount(book.getOrderCount() - 1);
-                bookDao.update(book);
-            }
+            return order;
         } catch (HibernateException | DaoException e) {
             LOGGER.warn("Method cancelOrder failed", e);
             throw new ServiceException("Method cancelOrder failed", e);
@@ -118,7 +130,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void changeOrderStatus(Long orderId, OrderStatus status) {
+    public Order changeOrderStatus(Long orderId, OrderStatus status) {
         try {
             LOGGER.info("Changing order status with id=" + orderId);
             Order order = orderDao.getById(orderId);
@@ -129,12 +141,17 @@ public class OrderService implements IOrderService {
             //if order is done we set date and time of the end of the order
             else if (status.equals(OrderStatus.DONE)) {
                 order.setDateOfDone(LocalDateTime.now());
+                for (Book book : order.getBooks()) {
+                    book.setOrderCount(book.getOrderCount() + 1);
+                    bookDao.update(book);
+                }
                 orderDao.update(order);
-                LOGGER.info("Order with id=" + orderId + "has changed status to " + status);
             } else if (status.equals(OrderStatus.NEW)) {
                 order.setDateOfDone(null);
                 orderDao.update(order);
             }
+            LOGGER.info("Order with id=" + orderId + "has changed status to " + status);
+            return order;
         } catch (DaoException e) {
             LOGGER.warn("Method changeOrderStatus failed", e);
             throw new ServiceException("Method changeOrderStatus failed", e);
@@ -142,7 +159,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public double priceGetByPeriodOfTime(LocalDate fromDate, LocalDate tillDate) {
+    public Double priceGetByPeriodOfTime(LocalDate fromDate, LocalDate tillDate) {
         try {
             Double price = orderDao.getPriceByPeriodOfTime(fromDate, tillDate);
             LOGGER.info("From '" + fromDate + "' till '" + tillDate + "' we earned: " + price);
