@@ -3,15 +3,19 @@
 <Configuration status="warn">
     <Properties>
         <Property name="basePath">C:\Users\User\IdeaProjects\StoreProject</Property>
+        <Property name="maxSize">10MB</Property>
+        <Property name="log.level">WARN</Property>
     </Properties>
 
     <Appenders>
-        <RollingFile name="fileLogger" fileName="${basePath}/store.log" filePattern="${basePath}/store-%d{yyyy-MM-dd}.log">
+        <RollingFile name="fileLogger" fileName="${basePath}/store.log"
+                     filePattern="${basePath}/store-%d{yyyy-MM-dd}.log">
+            <LevelRangeFilter minLevel="INFO" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout>
                 <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
             </PatternLayout>
             <Policies>
-                <SizeBasedTriggeringPolicy size="2MB" />
+                <SizeBasedTriggeringPolicy size="10MB" />
                 <TimeBasedTriggeringPolicy interval="1" modulate="true" />
             </Policies>
         </RollingFile>
@@ -21,6 +25,10 @@
         </Console>
     </Appenders>
     <Loggers>
+<!--        <Logger name="org.hibernate">-->
+<!--            <level value="warn"/>-->
+<!--        </Logger>-->
+
 <!--        <Logger name="com." level="debug" additivity="true">-->
 <!--            <appender-ref ref="fileLogger" level="debug" />-->
 <!--        </Logger>-->

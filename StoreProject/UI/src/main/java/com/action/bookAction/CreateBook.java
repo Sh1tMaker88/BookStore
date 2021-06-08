@@ -1,23 +1,29 @@
 package com.action.bookAction;
 
-import com.util.ConsoleScanner;
+import com.util.ConsoleScannerUtil;
 import com.action.IAction;
 import com.exception.ActionException;
 import com.exception.DaoException;
 import com.exception.ServiceException;
 import com.facade.Facade;
 import com.model.BookStatus;
-import com.propertyInjector.ApplicationContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.time.LocalDate;
 
+@Component
 public class CreateBook implements IAction {
 
     private static final Logger LOGGER = LogManager.getLogger(CreateBook.class.getName());
-    final Facade facade = ApplicationContext.getInstance().getObject(Facade.class);
+    private Facade facade;
+
+    @Autowired
+    public void setFacade(Facade facade) {
+        this.facade = facade;
+    }
 
     @Override
     public void execute() {
@@ -29,7 +35,7 @@ public class CreateBook implements IAction {
                     "status('in_stock' or 'out_of_stock'), arrival date format 'yyyy-MM-dd') separated by ','\n" +
                     "- give parameters without arrival date and status(status become 'in_stock' and date set for today\n" +
                     "If you dont want to add book enter '0'");
-            String line = ConsoleScanner.scanString();
+            String line = ConsoleScannerUtil.scanString();
             String[] params = line.split(",");
             if (!line.equals("0")) {
                 if (params.length == 9) {

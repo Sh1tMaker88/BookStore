@@ -6,5 +6,5 @@ group 'org.example'
 version '1.0-SNAPSHOT'
 
 dependencies {
-
+    compile project(':model')
 }
