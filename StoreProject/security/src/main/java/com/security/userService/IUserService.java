@@ -8,9 +8,11 @@ public interface IUserService {
 
     public boolean userExists(String username);
 
-    public void createUser(User user);
+    public boolean saveUser(User user);
 
     public User getUser(Long id);
 
     public List<User> getList();
+
+    boolean deleteUser(Long userId);
 }

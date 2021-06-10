@@ -1,6 +1,8 @@
 package com.controller.webConfiguration;
 
 import com.configuration.SpringPersistenceConfig;
+import com.security.configuration.MySecurityConfig;
+import com.security.configuration.MySecurityInitializer;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 
@@ -8,12 +10,12 @@ public class MyDispatcherServletInitializer extends AbstractAnnotationConfigDisp
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{SpringPersistenceConfig.class};
+        return new Class[]{MySecurityConfig.class, SpringPersistenceConfig.class, SpringControllerConfiguration.class};
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{SpringControllerConfiguration.class};
+        return null;
     }
 
     @Override

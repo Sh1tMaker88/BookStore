@@ -1,5 +1,6 @@
 package com.controller.webConfiguration;
 
+import com.configuration.SpringPersistenceConfig;
 import com.security.configuration.MySecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -16,7 +17,7 @@ import org.springframework.web.servlet.view.JstlView;
 @Configuration
 @ComponentScan({"com.controller"})
 @EnableWebMvc
-@Import(MySecurityConfig.class)
+@ComponentScan({"com.menu", "com.action", "com.exception", "com.facade", "com.service", "com.dao", "com.security"})
 public class SpringControllerConfiguration implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;

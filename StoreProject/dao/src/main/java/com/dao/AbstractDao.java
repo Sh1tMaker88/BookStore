@@ -15,7 +15,7 @@ import javax.persistence.Query;
 import java.util.List;
 
 @Repository
-public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> {
+public abstract class  AbstractDao<T extends AIdentity> implements GenericDao<T> {
 
     private static final Logger LOGGER = LogManager.getLogger(AbstractDao.class.getName());
 

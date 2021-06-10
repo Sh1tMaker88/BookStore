@@ -10,8 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 //@Component
-public class MyAuthenticationProvider /*implements AuthenticationProvider*/ {
-
+//public class MyAuthenticationProvider implements AuthenticationProvider {
+//
 //    private final MyUserDetailsService userDetailsService;
 //    private final PasswordEncoder passwordEncoder;
 //
@@ -47,4 +47,4 @@ public class MyAuthenticationProvider /*implements AuthenticationProvider*/ {
 //    public boolean supports(Class<?> authentication) {
 //        return authentication.equals(UsernamePasswordAuthenticationToken.class);
 //    }
-}
+//}

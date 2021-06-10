@@ -1,33 +1,27 @@
 package com.security.userService;
 
 import com.security.userDao.UserDao;
+import com.security.userModel.Role;
 import com.security.userModel.User;
-import com.security.userModel.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 @Service
-@Transactional
-public class UserService implements IUserService, UserDetailsService {
+public class UserService implements IUserService {
 
-    private UserDao userDao;
+    private final UserDao userDao;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserDao userDao) {
+    public UserService(UserDao userDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -36,40 +30,35 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
-    public void createUser(User user) {
-        if (user.getRoles() == null) {
-            user.setRoles(new HashSet<>(Arrays.asList(UserRole.USER)));
+    public boolean saveUser(User user) {
+        User userFromDB = userDao.findByUserName(user.getUsername());
+        if (userFromDB != null) {
+            return false;
         }
+        user.setRoles(Collections.singleton(new Role(1L, "USER")));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.createUser(user);
+        return true;
     }
 
     @Override
     @PostAuthorize("returnObject.username == authentication.name")
     public User getUser(Long id) {
-//        User user = userDao.findById(id).get();
-        User user = userDao.findById(id);
-
-        return user;
+        return userDao.findById(id);
     }
 
     @Override
     @PostFilter("filterObject.roles.size() > 1")
     public List<User> getList() {
-        return null;
-//                userDao.findAll();
+        return userDao.findAllUsers();
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.findByUserName(username);
-        Set<GrantedAuthority> roles = new HashSet<>();
-        for (UserRole role : user.getRoles()) {
-            roles.add(new SimpleGrantedAuthority(role.name()));
+    public boolean deleteUser(Long userId) {
+        if (userDao.findById(userId) != null) {
+            userDao.deleteUserById(userId);
+            return true;
         }
-
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getUsername(),
-                user.getPassword(), roles);
-
-        return userDetails;
+        return false;
     }
 }

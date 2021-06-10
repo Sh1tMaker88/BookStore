@@ -7,7 +7,13 @@ import java.util.Optional;
 
 public interface IUserDao {
 
-    public Optional<User> findByUserName(String username);
+    public User findByUserName(String username);
 
     public List<User> findAllUsers();
+
+    public void createUser(User user);
+
+    public User findById(Long id);
+
+    boolean deleteUserById(Long userId);
 }

@@ -15,66 +15,69 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.filter.DelegatingFilterProxy;
 
 import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-//@EnableTransactionManagement(proxyTargetClass = true)
 //@Import(AclConfig.class)
 public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 
-//    private final MyAuthenticationProvider authenticationProvider;
-    private MyUserDetailsService userDetailsService;
+//    private MyAuthenticationProvider authenticationProvider;
+//    private MyUserDetailsService userDetailsService;
     private final DataSource dataSource;
 
     @Autowired
     public MySecurityConfig(
-//            MyAuthenticationProvider authenticationProvider,
+//            MyUserDetailsService userDetailsService,
             DataSource dataSource) {
-//        this.authenticationProvider = authenticationProvider;
         this.dataSource = dataSource;
+//        this.userDetailsService = userDetailsService;
     }
 
-    @Autowired
-    public void setUserDetailsService(final MyUserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-            .userDetailsService(userDetailsService)
-            .passwordEncoder(passwordEncoder());
-    }
+//    @Autowired
+//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//        auth
+////            .authenticationProvider(authenticationProvider)
+//            .userDetailsService(userDetailsService)
+//            .passwordEncoder(passwordEncoder());
+//    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.authenticationProvider(authenticationProvider);
-        auth.jdbcAuthentication()
+//        auth
+//            .authenticationProvider(authenticationProvider);
+//        auth
+//                .userDetailsService(userDetailsService);
+        auth
+            .jdbcAuthentication()
             .dataSource(dataSource)
-//            .usersByUsernameQuery("SELECT username, password, id FROM user WHERE username=?")
-//            .authoritiesByUsernameQuery("SELECT user_id, roles FROM user_role WHERE user_id=" +
-//                    "(SELECT id FROM user WHERE username=?)")
-            .passwordEncoder(new BCryptPasswordEncoder());
+//            .usersByUsernameQuery("SELECT username, password, enabled FROM users AS us WHERE us.username=?")
+//            .authoritiesByUsernameQuery("SELECT username,authority FROM authorities WHERE username=?")
+//            .groupAuthoritiesByUsername("SELECT username, role_name FROM users JOIN users_role " +
+//        "USING (username) WHERE username=?")
+            .passwordEncoder(passwordEncoder());
+//            .rolePrefix("ROLE_");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
+            .authorizeRequests()
+                .antMatchers("/registration").not().fullyAuthenticated()
                 .antMatchers("/admin/**").hasAnyRole("ADMIN")
                 .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
-                .anyRequest().authenticated()
+                .antMatchers("/").permitAll()
+//                .anyRequest().authenticated()
             .and()
                 .formLogin()
                 .defaultSuccessUrl("/")
                 .permitAll()
             .and()
                 .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
+                .logoutSuccessUrl("/")
                 .permitAll()
             .and()
                 .csrf().disable();
