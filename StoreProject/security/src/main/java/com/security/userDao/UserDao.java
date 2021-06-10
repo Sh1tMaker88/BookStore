@@ -53,7 +53,9 @@ public class UserDao implements IUserDao{
 
     @Override
     public List<User> findAllUsers() {
-        return null;
+        Session session = sessionFactory.getCurrentSession();
+        Query<User> query = session.createQuery("FROM User AS u JOIN FETCH u.roles", User.class);
+        return (List<User>) query.list();
     }
 
     @Override

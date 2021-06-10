@@ -37,6 +37,8 @@ public class SpringPersistenceConfig {
     private String driver;
     @Value("${PACKAGES_TO_SCAN}")
     private String packageToScan;
+    @Value("${PACKAGES_TO_SCAN2}")
+    private String packageToScan2;
     @Value("${DIALECT}")
     private String dialect;
 
@@ -84,7 +86,7 @@ public class SpringPersistenceConfig {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactoryBean =  new LocalSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource());
-        sessionFactoryBean.setPackagesToScan(packageToScan);
+        sessionFactoryBean.setPackagesToScan(packageToScan, packageToScan2);
         sessionFactoryBean.setHibernateProperties(hibernateProperties());
         return sessionFactoryBean;
     }

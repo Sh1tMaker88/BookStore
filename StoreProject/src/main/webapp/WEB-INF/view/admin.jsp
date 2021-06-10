@@ -16,9 +16,10 @@
     <div>
         <table>
             <thead>
-            <th>Username</th>
-            <th>Password</th>
-            <th>Roles</th>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Roles</th>
             </thead>
 
             <c:forEach items="${allUsers}" var="user">
@@ -27,7 +28,7 @@
                     <td>${user.username}</td>
                     <td>${user.password}</td>
                     <td>
-                        <c:forEach items="${user.roles}" var="role">${role.name()}</c:forEach>
+                        <c:forEach items="${user.roles}" var="role">${role.name}</c:forEach>
                     </td>
                     <td>
                         <form action="${pageContext.request.contextPath}/admin" method="post">

@@ -59,7 +59,6 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 //            .groupAuthoritiesByUsername("SELECT username, role_name FROM users JOIN users_role " +
 //        "USING (username) WHERE username=?")
             .passwordEncoder(passwordEncoder());
-//            .rolePrefix("ROLE_");
     }
 
     @Override

@@ -8,11 +8,13 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserService implements IUserService {
 
     private final UserDao userDao;
@@ -48,7 +50,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    @PostFilter("filterObject.roles.size() > 1")
+//    @PostFilter("filterObject.roles.size() > 1")
     public List<User> getList() {
         return userDao.findAllUsers();
     }

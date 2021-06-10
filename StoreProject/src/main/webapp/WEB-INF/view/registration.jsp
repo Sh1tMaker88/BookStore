@@ -16,7 +16,6 @@
 <h2>Registration</h2>
 
     <form:form method="POST" modelAttribute="userForm">
-        <div>
             <label for="nameInput">Enter username</label>
             <form:input path="username" id="nameInput"/>
             <form:errors path="username"/>
@@ -26,7 +25,6 @@
             <form:errors path="password"/>
             <br><br>
             <button type="submit">Confirm</button>
-        </div>
     </form:form>
 <br><br>
 <a href="/">Main page</a><br>

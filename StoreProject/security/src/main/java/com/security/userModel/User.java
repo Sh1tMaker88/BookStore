@@ -32,10 +32,10 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = Role.class, cascade = CascadeType.ALL)
     @JoinTable(name = "users_role",
-            joinColumns = @JoinColumn(name = "username"),
-            inverseJoinColumns = @JoinColumn(name = "role_name"))
+            joinColumns = @JoinColumn(name = "username" , referencedColumnName = "username"),
+            inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "role_name"))
     private Set<Role> roles;
 
     @Override
@@ -62,6 +62,4 @@ public class User implements Serializable {
                 ", roles=" + roles +
                 '}';
     }
-
-    //todo finish class and hashcode
 }
