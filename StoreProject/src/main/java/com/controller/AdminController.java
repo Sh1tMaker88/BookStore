@@ -26,7 +26,6 @@ public class AdminController {
     @GetMapping("/admin")
     public String usersList(Model model) {
         model.addAttribute("allUsers", userService.getList());
-        System.out.println(userService.getList());
         return "/admin";
     }
 

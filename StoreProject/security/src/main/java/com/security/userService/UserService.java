@@ -33,11 +33,10 @@ public class UserService implements IUserService {
 
     @Override
     public boolean saveUser(User user) {
-        User userFromDB = userDao.findByUserName(user.getUsername());
-        if (userFromDB != null) {
+        if (userDao.findByUserName(user.getUsername()) != null) {
             return false;
         }
-        user.setRoles(Collections.singleton(new Role(1L, "USER")));
+        user.setRoles(Collections.singleton(new Role("USER")));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.createUser(user);
         return true;

@@ -26,6 +26,8 @@
             <br><br>
             <button type="submit">Confirm</button>
     </form:form>
+
+<a href="/">Главная</a>
 <br><br>
 <a href="/">Main page</a><br>
 <a href="/login">Login page</a>

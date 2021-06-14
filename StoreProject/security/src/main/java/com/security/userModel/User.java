@@ -18,7 +18,6 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Column(name = "id")
     private Long id;
 
@@ -32,11 +31,14 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(targetEntity = Role.class, cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = Role.class)
     @JoinTable(name = "users_role",
             joinColumns = @JoinColumn(name = "username" , referencedColumnName = "username"),
             inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "role_name"))
     private Set<Role> roles;
+
+    public User() {
+    }
 
     @Override
     public boolean equals(Object o) {

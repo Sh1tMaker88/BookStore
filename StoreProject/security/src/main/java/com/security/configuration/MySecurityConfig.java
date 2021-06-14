@@ -22,7 +22,6 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-//@Import(AclConfig.class)
 public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 
 //    private MyAuthenticationProvider authenticationProvider;
@@ -37,28 +36,18 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 //        this.userDetailsService = userDetailsService;
     }
 
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth
-////            .authenticationProvider(authenticationProvider)
-//            .userDetailsService(userDetailsService)
-//            .passwordEncoder(passwordEncoder());
-//    }
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth
-//            .authenticationProvider(authenticationProvider);
-//        auth
-//                .userDetailsService(userDetailsService);
         auth
             .jdbcAuthentication()
             .dataSource(dataSource)
-//            .usersByUsernameQuery("SELECT username, password, enabled FROM users AS us WHERE us.username=?")
-//            .authoritiesByUsernameQuery("SELECT username,authority FROM authorities WHERE username=?")
-//            .groupAuthoritiesByUsername("SELECT username, role_name FROM users JOIN users_role " +
-//        "USING (username) WHERE username=?")
+            .usersByUsernameQuery("select username, password, enabled from users where username = ?")
+            .authoritiesByUsernameQuery("SELECT username,role_name FROM users_role WHERE username=?")
+            .groupAuthoritiesByUsername("SELECT id, username, role_name FROM users JOIN users_role " +
+        "USING (username) WHERE username=?")
+            .rolePrefix("ROLE_")
             .passwordEncoder(passwordEncoder());
+
     }
 
     @Override
@@ -72,6 +61,8 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 //                .anyRequest().authenticated()
             .and()
                 .formLogin()
+                .usernameParameter("username")
+                .passwordParameter("password")
                 .defaultSuccessUrl("/")
                 .permitAll()
             .and()
@@ -84,6 +75,6 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
+        return new BCryptPasswordEncoder();
     }
 }

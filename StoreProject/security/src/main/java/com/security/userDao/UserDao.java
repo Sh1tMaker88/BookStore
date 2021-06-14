@@ -47,8 +47,11 @@ public class UserDao implements IUserDao{
         Session session = sessionFactory.getCurrentSession();
         Query<User> query = session.createQuery(criteriaQuery);
         query.setParameter(nameParam, username);
-        User user = query.getSingleResult();
-        return user;
+        List<User> list = query.getResultList();
+        if (list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
     }
 
     @Override

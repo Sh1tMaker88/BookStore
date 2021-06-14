@@ -10,23 +10,24 @@ import java.util.Set;
 @Getter
 @Setter
 public class Role implements Serializable {
+
     @Id
     private Long id;
 
     @Column(name = "role_name")
     private String name;
 
-    @ManyToMany(targetEntity = User.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "users_role",
-    joinColumns = @JoinColumn(name = "role_name"),
-    inverseJoinColumns = @JoinColumn(name = "username"))
+//    @ManyToMany(targetEntity = User.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JoinTable(name = "users_role",
+//    joinColumns = @JoinColumn(name = "role_name"),
+//    inverseJoinColumns = @JoinColumn(name = "username"))
+    @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
     public Role() {
     }
 
-    public Role(Long id, String name) {
-        this.id = id;
+    public Role(String name) {
         this.name = name;
     }
 

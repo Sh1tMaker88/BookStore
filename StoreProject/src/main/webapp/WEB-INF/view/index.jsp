@@ -14,7 +14,10 @@
     <title>Start page</title>
 </head>
 <body>
-    Hello ${pageContext.request.userPrincipal.name}, role ${pageContext.request.isUserInRole('ADMIN')}, ${pageContext.request.isUserInRole('ROLE_ADMIN')}
+    --Hello ${pageContext.request.userPrincipal.name}-- role admin: ${pageContext.request.isUserInRole('ADMIN')} |
+    role_admin: ${pageContext.request.isUserInRole('ROLE_ADMIN')} |
+    user: ${pageContext.request.isUserInRole('USER')} |
+    role_user: ${pageContext.request.isUserInRole('ROLE_USER')}
     <div>
         <security:authorize access="!isAuthenticated()">
             <h3><a href="/login">Enter</a></h3>
