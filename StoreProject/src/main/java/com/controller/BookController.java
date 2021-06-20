@@ -1,7 +1,7 @@
 package com.controller;
 
 import com.api.service.IBookService;
-import com.controller.configuration.NoSuchEntityException;
+import com.controller.webExceptions.NoSuchEntityException;
 import com.model.Book;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;

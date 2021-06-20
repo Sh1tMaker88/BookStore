@@ -1,15 +1,15 @@
 package com.controller;
 
 import com.api.service.IRequestService;
-import com.controller.configuration.NoSuchEntityException;
+
+import com.controller.webExceptions.NoSuchEntityException;
 import com.model.Request;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpResponse;
+
 import java.util.List;
 
 @Log4j2

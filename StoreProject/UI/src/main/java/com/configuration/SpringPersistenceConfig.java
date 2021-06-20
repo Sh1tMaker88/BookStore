@@ -21,7 +21,7 @@ import java.util.Properties;
 import static org.hibernate.cfg.AvailableSettings.*;
 
 @Configuration
-@ComponentScan({"com.menu", "com.action", "com.exception", "com.facade", "com.service", "com.dao"})
+//@ComponentScan("com")
 @PropertySource("classpath:server.properties")
 @EnableTransactionManagement
 public class SpringPersistenceConfig {
@@ -37,6 +37,8 @@ public class SpringPersistenceConfig {
     private String driver;
     @Value("${PACKAGES_TO_SCAN}")
     private String packageToScan;
+    @Value("${PACKAGES_TO_SCAN2}")
+    private String packageToScan2;
     @Value("${DIALECT}")
     private String dialect;
 
@@ -76,6 +78,7 @@ public class SpringPersistenceConfig {
         properties.put(FORMAT_SQL, true);
         properties.put(USE_SQL_COMMENTS, true);
         properties.put(USE_GET_GENERATED_KEYS, true);
+//        properties.put(HBM2DDL_AUTO, "update");
         return properties;
     }
 
@@ -83,7 +86,7 @@ public class SpringPersistenceConfig {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactoryBean =  new LocalSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource());
-        sessionFactoryBean.setPackagesToScan(packageToScan);
+        sessionFactoryBean.setPackagesToScan(packageToScan, packageToScan2);
         sessionFactoryBean.setHibernateProperties(hibernateProperties());
         return sessionFactoryBean;
     }

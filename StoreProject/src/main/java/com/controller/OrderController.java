@@ -1,7 +1,7 @@
 package com.controller;
 
 import com.api.service.IOrderService;
-import com.controller.configuration.NoSuchEntityException;
+import com.controller.webExceptions.NoSuchEntityException;
 import com.model.Order;
 import com.model.OrderStatus;
 import lombok.extern.log4j.Log4j2;

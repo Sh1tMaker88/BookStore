@@ -8,12 +8,8 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.annotations.Where;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import java.util.List;
@@ -84,6 +80,7 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
         if (t == null) {
             throw new DaoException("No such entity in data base, delete failed");
         }
+        session.delete(t);
         LOGGER.info(t + " has been deleted");
     }
 
