@@ -31,7 +31,7 @@ public interface IOrderService {
 
     List<Order> ordersDoneByPeriodOfTime(LocalDate fromDate, LocalDate tillDate);
 
-    void showDetails(Long orderId);
+    Order showDetails(Long orderId);
 
     List<Order> sortOrdersBy(OrderSort orderSort);
 }

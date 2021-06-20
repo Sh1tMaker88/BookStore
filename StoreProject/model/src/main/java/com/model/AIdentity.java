@@ -12,7 +12,6 @@ public abstract class AIdentity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
 //    @JsonIdentityInfo()
 //    @Access(AccessType.PROPERTY)
 //    @Basic(fetch = FetchType.EAGER)

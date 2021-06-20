@@ -129,20 +129,22 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public void showDescription(Long id) {
+    public String showDescription(Long id) {
+        String description;
         try {
-            String description = bookDao.getDescription(id);
+            description = bookDao.getDescription(id);
             LOGGER.info("Description for book with id=" + id + ":\n"
                     + description);
         } catch (HibernateException | DaoException e) {
             LOGGER.warn("Method showDescription failed", e);
             throw new ServiceException("Method showDescription failed", e);
         }
+        return description;
     }
 
     //todo rework
     @Override
-    public List<Book> booksNotBoughtMoreThanSixMonth() {
+    public List<Book> unsoldBooks() {
         try {
             Set<Book> list = orderDao.getBooksThatAreNotBought(monthToSetBookAsUnsold);
             Set<Book> list2 = bookDao.getBookThatHaveNoOrdersForPeriodOfTime(monthToSetBookAsUnsold);

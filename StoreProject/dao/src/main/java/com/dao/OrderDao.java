@@ -32,17 +32,17 @@ public class OrderDao extends AbstractDao<Order> implements IOrderDao {
         return Order.class;
     }
 
-    //todo rework to selecting using Criteria
     @Override
     public Set<Book> getBooksThatAreNotBought(int monthToSetBookAsUnsold) {
         return getAll().stream()
-                .filter(order -> !order.getOrderDate()
+                .filter(order -> order.getOrderDate()
                         .plusMonths(monthToSetBookAsUnsold)
                         .isBefore(LocalDateTime.now()))
                 .flatMap(el -> el.getBooks().stream())
                 .collect(Collectors.toSet());
     }
 
+    //todo
     @Override
     public Double getPriceByPeriodOfTime(LocalDate fromDate, LocalDate tillDate) {
         return getAll().stream()

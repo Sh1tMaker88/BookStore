@@ -2,7 +2,6 @@ package com.controller;
 
 import com.security.userModel.User;
 import com.security.userService.IUserService;
-import com.security.userService.MyUserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

@@ -1,10 +1,11 @@
 package com.security.userService;
 
 import com.security.userModel.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface IUserService {
+public interface IUserService extends UserDetailsService {
 
     public boolean userExists(String username);
 

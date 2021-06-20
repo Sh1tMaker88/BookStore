@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,10 +13,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "book")
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
@@ -37,7 +36,6 @@ public class Book extends AIdentity implements Serializable {
     @Column(name = "page_number")
     private int pageNumber;
 
-    @EqualsAndHashCode.Include
     @Column(name = "isbn")
     private String isbn;
 
@@ -61,7 +59,6 @@ public class Book extends AIdentity implements Serializable {
     @Column(name = "order_count")
     private int orderCount = 0;
 
-//    @JsonBackReference(value = "request")
     @JsonIgnoreProperties("book")
     @OneToOne(mappedBy = "book", fetch = FetchType.LAZY)
     private Request request;
@@ -221,5 +218,27 @@ public class Book extends AIdentity implements Serializable {
 
     public List<Order> getOrders() {
         return orders;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return yearOfPublish == book.yearOfPublish &&
+                pageNumber == book.pageNumber &&
+                Double.compare(book.price, price) == 0 &&
+                orderCount == book.orderCount &&
+                name.equals(book.name) &&
+                Objects.equals(author, book.author) &&
+                isbn.equals(book.isbn) &&
+                bookStatus == book.bookStatus &&
+                Objects.equals(description, book.description) &&
+                arrivalDate.equals(book.arrivalDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, author, yearOfPublish, pageNumber, isbn, price, bookStatus, description, arrivalDate, orderCount);
     }
 }

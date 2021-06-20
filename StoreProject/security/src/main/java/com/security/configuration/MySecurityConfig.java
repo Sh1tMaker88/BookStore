@@ -1,21 +1,17 @@
 package com.security.configuration;
 
-import com.security.userService.MyUserDetailsService;
+import com.security.exceptionHandling.MyAccessDeniedHandler;
+import com.security.exceptionHandling.MyAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.filter.DelegatingFilterProxy;
 
 import javax.sql.DataSource;
 
@@ -24,16 +20,19 @@ import javax.sql.DataSource;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 
-//    private MyAuthenticationProvider authenticationProvider;
-//    private MyUserDetailsService userDetailsService;
     private final DataSource dataSource;
+//    private final MyAuthenticationEntryPoint entryPoint;
+//    private final MyAccessDeniedHandler accessDenied;
 
     @Autowired
     public MySecurityConfig(
-//            MyUserDetailsService userDetailsService,
-            DataSource dataSource) {
+            DataSource dataSource
+//            MyAuthenticationEntryPoint entryPoint,
+//            MyAccessDeniedHandler accessDenied
+    ) {
         this.dataSource = dataSource;
-//        this.userDetailsService = userDetailsService;
+//        this.entryPoint = entryPoint;
+//        this.accessDenied = accessDenied;
     }
 
     @Override
@@ -54,23 +53,26 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/registration").not().fullyAuthenticated()
+                .antMatchers("/").permitAll()
+                .antMatchers("/registration").permitAll()
                 .antMatchers("/admin/**").hasAnyRole("ADMIN")
                 .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
-                .antMatchers("/").permitAll()
-//                .anyRequest().authenticated()
+                .anyRequest().authenticated()
             .and()
                 .formLogin()
-                .usernameParameter("username")
-                .passwordParameter("password")
                 .defaultSuccessUrl("/")
                 .permitAll()
             .and()
                 .logout()
                 .logoutSuccessUrl("/")
                 .permitAll()
+//            .and()
+//                .exceptionHandling()
+//                .authenticationEntryPoint(entryPoint)
+//                .accessDeniedHandler(accessDenied)
             .and()
-                .csrf().disable();
+                .csrf()
+                .disable();
     }
 
     @Bean

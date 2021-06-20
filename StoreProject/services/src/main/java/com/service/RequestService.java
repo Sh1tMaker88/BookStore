@@ -17,7 +17,6 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,7 +100,7 @@ public class RequestService implements IRequestService {
         try {
             LOGGER.info("Adding request for book with id=" + bookId);
             Request request;
-            if (requestDao.checkIfRequestExist(bookId)) {
+            if (requestDao.checkIfRequestExistForBookID(bookId)) {
                 request = requestDao.getRequestByBookId(bookId);
                 request.setRequestCount(request.getRequestCount() + 1);
                 LOGGER.info("Request is already exists, increasing its counter to " + request.getRequestCount());

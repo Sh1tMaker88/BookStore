@@ -1,7 +1,6 @@
 package com.controller;
 
 import com.security.userService.IUserService;
-import com.security.userService.MyUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

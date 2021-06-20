@@ -1,6 +1,7 @@
 package com.dao;
 
 import com.api.dao.IRequestDao;
+import com.exception.DaoException;
 import com.model.Request;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -20,8 +21,8 @@ public class RequestDao extends AbstractDao<Request> implements IRequestDao {
     }
 
     @Override
-    @Transactional(propagation = Propagation.SUPPORTS)
-    public boolean checkIfRequestExist(Long bookId) {
+//    @Transactional(propagation = Propagation.SUPPORTS)
+    public boolean checkIfRequestExistForBookID(Long bookId) {
         return getAll().stream()
                 .anyMatch(e -> e.getBook()
                         .getId()
@@ -33,6 +34,6 @@ public class RequestDao extends AbstractDao<Request> implements IRequestDao {
         return getAll().stream()
                 .filter(e -> e.getBook().getId().equals(bookId))
                 .findFirst()
-                .get();
+                .orElseThrow(() -> new DaoException("No request for bookID=" + bookId));
     }
 }

@@ -28,50 +28,38 @@ import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 import java.util.*;
 
-@Component
-@Transactional
-public class MyUserDetailsService implements UserDetailsService {
-
-//    private final UserDao userDao;
-    private final PasswordEncoder passwordEncoder;
-    private final SessionFactory sessionFactory;
-
-    @Autowired
-    public MyUserDetailsService(
-//            UserDao userDao,
-            SessionFactory sessionFactory,
-            PasswordEncoder passwordEncoder) {
-//        this.userDao = userDao;
-        this.passwordEncoder = passwordEncoder;
-        this.sessionFactory = sessionFactory;
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//@Component
+//@Transactional
+//public class MyUserDetailsService implements IUserService{
+//
+////    private final UserDao userDao;
+//    private final PasswordEncoder passwordEncoder;
+//    private final SessionFactory sessionFactory;
+//
+//    @Autowired
+//    public MyUserDetailsService(
+////            UserDao userDao,
+//            SessionFactory sessionFactory,
+//            PasswordEncoder passwordEncoder) {
+////        this.userDao = userDao;
+//        this.passwordEncoder = passwordEncoder;
+//        this.sessionFactory = sessionFactory;
+//    }
+//
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 //        User user = userDao.findByUserName(username);
-        CriteriaBuilder builder = sessionFactory.getCriteriaBuilder();
-        CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
-        Root<User> root = criteriaQuery.from(com.security.userModel.User.class);
-        ParameterExpression<String> nameParam = builder.parameter(String.class);
-        criteriaQuery.select(root)
-                .where(builder.equal(root.get("username"), nameParam));
-
-        Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createQuery(criteriaQuery);
-        query.setParameter(nameParam, username);
-        User user = query.getSingleResult();
-//                .orElseThrow(() -> new UsernameNotFoundException("No such user was found"));
-        if (user == null) {
-            throw new UsernameNotFoundException("Unknown user:" + username);
-        }
-
-        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        for (Role role : user.getRoles()) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
-        }
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(), user.getPassword(), grantedAuthorities);
-    }
-
-}
+////                .orElseThrow(() -> new UsernameNotFoundException("No such user was found"));
+//        if (user == null) {
+//            throw new UsernameNotFoundException("Unknown user:" + username);
+//        }
+//
+//        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+//        for (Role role : user.getRoles()) {
+//            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+//        }
+//
+//        return new org.springframework.security.core.userdetails.User(
+//                user.getUsername(), user.getPassword(), grantedAuthorities);
+//    }
+//}

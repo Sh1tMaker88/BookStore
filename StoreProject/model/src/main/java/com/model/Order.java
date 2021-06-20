@@ -13,18 +13,17 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "ordering")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
 public class Order extends AIdentity implements Serializable {
     static final long serialVersionUID = 4L;
 
-    @EqualsAndHashCode.Include
     @Column(name = "customer_name")
     private String customerName;
 
@@ -37,7 +36,6 @@ public class Order extends AIdentity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"))
     private List<Book> books;
 
-    @EqualsAndHashCode.Include
     @Column(name = "price")
     private double totalPrice;
 
@@ -48,7 +46,6 @@ public class Order extends AIdentity implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @EqualsAndHashCode.Include
     @Column(name = "order_date")
     private LocalDateTime orderDate;
 
@@ -134,5 +131,23 @@ public class Order extends AIdentity implements Serializable {
 
     public void setDateOfDone(LocalDateTime dateOfDone) {
         this.dateOfDone = dateOfDone;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Double.compare(order.totalPrice, totalPrice) == 0 &&
+                Objects.equals(customerName, order.customerName) &&
+                Objects.equals(books, order.books) &&
+                status == order.status &&
+                Objects.equals(orderDate, order.orderDate) &&
+                Objects.equals(dateOfDone, order.dateOfDone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(customerName, books, totalPrice, status, orderDate, dateOfDone);
     }
 }

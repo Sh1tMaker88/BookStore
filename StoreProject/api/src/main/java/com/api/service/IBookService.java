@@ -27,9 +27,9 @@ public interface IBookService {
 
     Book discardBook(Long bookId);
 
-    void showDescription(Long id);
+    String showDescription(Long id);
 
-    List<Book> booksNotBoughtMoreThanSixMonth();
+    List<Book> unsoldBooks();
 
     List<Book> sortBooksBy(BookSort bookSort);
 }

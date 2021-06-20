@@ -84,7 +84,7 @@ public class BookController {
     @GetMapping("/poor-purchased")
     public ResponseEntity<List<Book>> getPoorPurchasedBooks() {
         log.info("Received GET request /books/poor-purchased");
-        return ResponseEntity.ok(bookService.booksNotBoughtMoreThanSixMonth());
+        return ResponseEntity.ok(bookService.unsoldBooks());
     }
 
 //    @GetMapping

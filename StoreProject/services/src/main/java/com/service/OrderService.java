@@ -183,9 +183,10 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void showDetails(Long orderId) {
-        Order order =  orderDao.getById(orderId);
+    public Order showDetails(Long orderId) {
+        Order order = orderDao.getById(orderId);
         LOGGER.info("\n" + order);
+        return order;
     }
 
     @Deprecated

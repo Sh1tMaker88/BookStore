@@ -1,9 +1,6 @@
-package com.configuration;
+package daoTest.testConfig;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -12,61 +9,38 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.sql.DataSource;
-import java.beans.PropertyVetoException;
 import java.util.Properties;
 
 import static org.hibernate.cfg.AvailableSettings.*;
 
 @Configuration
-//@ComponentScan("com")
-@PropertySource("classpath:server.properties")
 @EnableTransactionManagement
-public class SpringPersistenceConfig {
+@PropertySource("classpath:server.properties")
+@ComponentScan({"com.dao", "com.model"})
+public class TestDaoConfiguration {
 
-    @Value("${URL}")
-    private String url;
-    @Value("${NAME}")
-    private String username;
-    @Value("${PASSWORD}")
-    private String password;
-    @Value("${DRIVER}")
-    private String driver;
+    private final String driver = "org.h2.Driver";
+    private final String url =
+            "jdbc:h2:file:C:/Users/User/IdeaProjects/StoreProject/dao/MyTestDB;" +
+                    "DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE";
+    private final String username = "user";
+    private final String password = "";
     @Value("${PACKAGES_TO_SCAN}")
     private String packageToScan;
-    @Value("${PACKAGES_TO_SCAN2}")
+    @Value("${PACKAGE_TO_SCAN_DAO_TEST}")
     private String packageToScan2;
-    @Value("${DIALECT}")
+    @Value("${TEST_DIALECT}")
     private String dialect;
-
-//    @Autowired
-//    public SpringPersistenceConfig(ApplicationContext applicationContext) {
-//        this.applicationContext = applicationContext;
-//    }
-
-//    @Bean
-//    public DataSource dataSource() {
-//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-//        dataSource.setDriverClassName(driver);
-//        dataSource.setUrl(url);
-//        dataSource.setUsername(username);
-//        dataSource.setPassword(password);
-//        return dataSource;
-//    }
 
     @Bean
     public DataSource dataSource() {
-        ComboPooledDataSource dataSource = new ComboPooledDataSource();
-        try {
-            dataSource.setDriverClass(driver);
-            dataSource.setJdbcUrl(url);
-            dataSource.setUser(username);
-            dataSource.setPassword(password);
-        } catch (PropertyVetoException e) {
-            e.getLocalizedMessage();
-        }
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(driver);
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
         return dataSource;
     }
 
@@ -97,5 +71,4 @@ public class SpringPersistenceConfig {
         transactionManager.setNestedTransactionAllowed(true);
         return transactionManager;
     }
-
 }

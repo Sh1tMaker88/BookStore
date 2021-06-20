@@ -24,7 +24,7 @@ public class GetBooksNotBoughtMoreThanSixMonth {
 
     public List<Book> doIt() {
         try {
-            return facade.getBookService().booksNotBoughtMoreThanSixMonth();
+            return facade.getBookService().unsoldBooks();
         } catch (ServiceException e) {
             LOGGER.warn("Method doIt from class GetBooksNotBoughtMoreThanSixMonth failed", e);
             throw new ActionException("Method doIt failed", e);

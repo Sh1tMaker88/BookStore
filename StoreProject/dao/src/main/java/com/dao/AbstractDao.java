@@ -10,12 +10,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import java.util.List;
 
 @Repository
-public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> {
+public abstract class  AbstractDao<T extends AIdentity> implements GenericDao<T> {
 
     private static final Logger LOGGER = LogManager.getLogger(AbstractDao.class.getName());
 
@@ -36,6 +37,7 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
     }
 
     @Override
+    @Deprecated
     public T create(T entity) {
         Session session = sessionFactory.getCurrentSession();
         session.persist(entity);
@@ -53,10 +55,10 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
         Query query = session.createQuery(getQuery(getClassName()) + " WHERE o.id=(:entityId)");
         query.setParameter("entityId", id);
         T t = (T)query.getSingleResult();
-//        if (t == null) {
-//            LOGGER.warn("No such ID=" + id);
-//            throw new DaoException("No such id=" + id);
-//        }
+        if (t == null) {
+            LOGGER.warn("No such ID=" + id);
+            throw new DaoException("No such id=" + id);
+        }
         return t;
     }
 
@@ -86,6 +88,7 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
 
     @Override
     public void delete(Long id) {
+        getById(id);
         Session session = sessionFactory.getCurrentSession();
         String q = String.format("DELETE FROM %s WHERE id=(:entityId)", getClassName());
         Query query = session.createQuery(q);
@@ -107,13 +110,13 @@ public abstract class AbstractDao<T extends AIdentity> implements GenericDao<T> 
         String query;
         switch (column) {
             case "Book":
-                query = "SELECT o FROM Book AS o LEFT JOIN FETCH o.orders LEFT JOIN FETCH o.request";
+                query = "SELECT DISTINCT o FROM Book AS o LEFT JOIN FETCH o.orders LEFT JOIN FETCH o.request";
                 break;
             case "Order":
-                query = "SELECT o FROM Order AS o LEFT JOIN FETCH o.books";
+                query = "SELECT DISTINCT o FROM Order AS o LEFT JOIN FETCH o.books";
                 break;
             case "Request":
-                query = "SELECT o FROM Request AS o LEFT JOIN FETCH o.book book";
+                query = "SELECT DISTINCT o FROM Request AS o LEFT JOIN FETCH o.book book";
                 break;
             default:
                 query = "from Book";

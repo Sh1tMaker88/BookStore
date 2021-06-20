@@ -14,10 +14,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Objects;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "request")
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
@@ -25,13 +25,11 @@ public class Request extends AIdentity implements Serializable {
     static final long serialVersionUID = 4L;
 
     @JsonIgnoreProperties({"orders", "request"})
-    @EqualsAndHashCode.Include
     @OneToOne (cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @EqualsAndHashCode.Include
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @Column(name = "date")
@@ -97,5 +95,21 @@ public class Request extends AIdentity implements Serializable {
 
     public void setRequestStatus(RequestStatus requestStatus) {
         this.requestStatus = requestStatus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Request request = (Request) o;
+        return requestCount == request.requestCount &&
+                Objects.equals(book, request.book) &&
+                Objects.equals(requestDate, request.requestDate) &&
+                requestStatus == request.requestStatus;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(book, requestDate, requestCount, requestStatus);
     }
 }

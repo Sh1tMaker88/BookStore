@@ -16,8 +16,6 @@ import java.util.stream.Collectors;
 @Repository
 public class BookDao extends AbstractDao<Book> implements IBookDao {
 
-    private static final Logger LOGGER = LogManager.getLogger(BookDao.class.getName());
-
     @Override
     protected String getClassName() {
         return "Book";
@@ -30,7 +28,7 @@ public class BookDao extends AbstractDao<Book> implements IBookDao {
 
     @Override
     public String getDescription(Long id) {
-        return getById(id).getDescription().toString();
+        return getById(id).getDescription();
     }
 
     @Override
