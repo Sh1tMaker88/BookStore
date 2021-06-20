@@ -23,7 +23,7 @@ import static org.hibernate.cfg.AvailableSettings.*;
 @Configuration
 //@ComponentScan("com")
 @PropertySource("classpath:server.properties")
-@EnableTransactionManagement/*(proxyTargetClass = true)*/
+@EnableTransactionManagement
 public class SpringPersistenceConfig {
 
 //    private final ApplicationContext applicationContext;

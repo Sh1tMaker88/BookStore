@@ -39,6 +39,18 @@ allprojects {
 
         implementation 'mysql:mysql-connector-java:8.0.23'
         implementation group: 'com.mchange', name: 'c3p0', version: '0.9.5.5'
+        implementation group: 'org.springframework', name: 'spring-core', version: springVersion
+        implementation group: 'org.springframework', name: 'spring-context', version: springVersion
+        implementation group: 'org.springframework', name: 'spring-beans', version: springVersion
+        implementation group: 'org.springframework', name: 'spring-tx', version: springVersion
+        implementation group: 'org.springframework', name: 'spring-orm', version: springVersion
+        implementation group: 'org.springframework', name: 'spring-web', version: springVersion
+        implementation group: 'org.springframework', name: 'spring-webmvc', version: springVersion
+
+        implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.3'
+
+        implementation 'mysql:mysql-connector-java:8.0.23'
+        implementation group: 'com.mchange', name: 'c3p0', version: '0.9.5.2'
         compileOnly group: 'org.hibernate', name: 'hibernate-jpamodelgen', version: '5.4.31.Final'
         implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.4.31.Final'
 
