@@ -1,5 +1,10 @@
 package com.model;
 
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +20,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "ordering")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
 public class Order extends AIdentity implements Serializable {
     static final long serialVersionUID = 4L;
 
@@ -22,6 +28,8 @@ public class Order extends AIdentity implements Serializable {
     @Column(name = "customer_name")
     private String customerName;
 
+    @JsonIgnoreProperties("orders")
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE}
             , fetch = FetchType.LAZY)
     @JoinTable(name = "ordering_book",
@@ -37,12 +45,18 @@ public class Order extends AIdentity implements Serializable {
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.NEW;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     @EqualsAndHashCode.Include
     @Column(name = "order_date")
     private LocalDateTime orderDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     @Column(name = "date_of_done")
-    private LocalDateTime DateOfDone;
+    private LocalDateTime dateOfDone;
 
     public Order() {
 
@@ -70,7 +84,7 @@ public class Order extends AIdentity implements Serializable {
                 ", status=" + status +
                 ", totalPrice=" + totalPrice +
                 ", ordered=" + orderDate +
-                ", completed=" + DateOfDone +
+                ", completed=" + dateOfDone +
                 "}\n";
     }
 
@@ -115,10 +129,10 @@ public class Order extends AIdentity implements Serializable {
     }
 
     public LocalDateTime getDateOfDone() {
-        return DateOfDone;
+        return dateOfDone;
     }
 
     public void setDateOfDone(LocalDateTime dateOfDone) {
-        DateOfDone = dateOfDone;
+        this.dateOfDone = dateOfDone;
     }
 }

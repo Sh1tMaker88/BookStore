@@ -11,6 +11,10 @@ public interface IRequestService {
 
     Request getById(Long id);
 
+    void saveRequest(Request request);
+
+    void deleteRequest(Long id);
+
     Request closeRequest(Long requestID);
 
     Request addRequest(Long bookId);

@@ -1,5 +1,6 @@
-package com.configuration;
+package com.controller.configuration;
 
+import com.configuration.SpringPersistenceConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 

@@ -15,13 +15,19 @@ public interface IOrderService {
 
     Order getById(Long id);
 
+    void saveOrder(Order order);
+
+    void deleteOrder(Long id);
+
     Order addOrder(String customerName, List<Book> books);
 
-    void cancelOrder(Long orderId);
+    Order addOrderUsingId(String customerName, List<Long> booksId);
 
-    void changeOrderStatus(Long orderId, OrderStatus status);
+    Order cancelOrder(Long orderId);
 
-    double priceGetByPeriodOfTime(LocalDate fromDate, LocalDate tillDate);
+    Order changeOrderStatus(Long orderId, OrderStatus status);
+
+    Double priceGetByPeriodOfTime(LocalDate fromDate, LocalDate tillDate);
 
     List<Order> ordersDoneByPeriodOfTime(LocalDate fromDate, LocalDate tillDate);
 

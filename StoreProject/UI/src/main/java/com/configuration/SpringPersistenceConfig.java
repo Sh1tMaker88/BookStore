@@ -1,5 +1,6 @@
 package com.configuration;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -14,12 +15,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.sql.DataSource;
+import java.beans.PropertyVetoException;
 import java.util.Properties;
 
 import static org.hibernate.cfg.AvailableSettings.*;
 
 @Configuration
-@ComponentScan("com")
+@ComponentScan({"com.menu", "com.action", "com.exception", "com.facade", "com.service", "com.dao"})
 @PropertySource("classpath:server.properties")
 @EnableTransactionManagement
 public class SpringPersistenceConfig {
@@ -43,13 +45,27 @@ public class SpringPersistenceConfig {
 //        this.applicationContext = applicationContext;
 //    }
 
+//    @Bean
+//    public DataSource dataSource() {
+//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//        dataSource.setDriverClassName(driver);
+//        dataSource.setUrl(url);
+//        dataSource.setUsername(username);
+//        dataSource.setPassword(password);
+//        return dataSource;
+//    }
+
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(driver);
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
+        ComboPooledDataSource dataSource = new ComboPooledDataSource();
+        try {
+            dataSource.setDriverClass(driver);
+            dataSource.setJdbcUrl(url);
+            dataSource.setUser(username);
+            dataSource.setPassword(password);
+        } catch (PropertyVetoException e) {
+            e.getLocalizedMessage();
+        }
         return dataSource;
     }
 
@@ -76,6 +92,7 @@ public class SpringPersistenceConfig {
     public HibernateTransactionManager transactionManager() {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory().getObject());
+        transactionManager.setNestedTransactionAllowed(true);
         return transactionManager;
     }
 

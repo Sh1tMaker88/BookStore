@@ -34,16 +34,27 @@ allprojects {
         implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.3'
 
         implementation 'mysql:mysql-connector-java:8.0.23'
+        implementation group: 'com.mchange', name: 'c3p0', version: '0.9.5.2'
         compileOnly group: 'org.hibernate', name: 'hibernate-jpamodelgen', version: '5.4.31.Final'
         implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.4.31.Final'
+
+        implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.2.0.Final'
 
         compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
         implementation group: 'javax.servlet', name: 'jstl', version: '1.2'
 //        compileOnly group: 'javax.servlet', name: 'servlet-api', version: '2.5'
 
 
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
+        implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.3'
+
 
     }
+}
+
+task explodedWar(type: Sync) {
+    into "${buildDir}/exploded"
+    with war
 }
 
 dependencies {

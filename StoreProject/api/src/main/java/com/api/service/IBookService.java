@@ -19,6 +19,10 @@ public interface IBookService {
     Book createBook(String name, String author, String isbn, int pageNumber
             , double price, int yearOfPublish, String description);
 
+    void saveBook(Book book);
+
+    void deleteBook(Long id);
+
     Book addBookToStock(Long bookId);
 
     Book discardBook(Long bookId);

@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +45,16 @@ public class RequestService implements IRequestService {
     @Override
     public Request getById(Long id) {
         return requestDao.getById(id);
+    }
+
+    @Override
+    public void saveRequest(Request request) {
+        requestDao.saveOrUpdate(request);
+    }
+
+    @Override
+    public void deleteRequest(Long id) {
+        requestDao.delete(id);
     }
 
     @Override
@@ -98,7 +109,7 @@ public class RequestService implements IRequestService {
             } else {
                 Book book = bookDao.getById(bookId);
                 request = new Request(book);
-                requestDao.create(request);
+                requestDao.saveOrUpdate(request);
                 LOGGER.info("Created request" + request);
             }
             return request;

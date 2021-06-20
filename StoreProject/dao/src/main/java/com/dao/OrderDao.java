@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Repository
+
 public class OrderDao extends AbstractDao<Order> implements IOrderDao {
 
     private static final Logger LOGGER = LogManager.getLogger(OrderDao.class.getName());
